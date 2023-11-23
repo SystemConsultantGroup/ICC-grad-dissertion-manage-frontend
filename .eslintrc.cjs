@@ -17,4 +17,4 @@ module.exports = {
     "require-jsdoc": "off",
     quotes: ["error", "double"],
   },
-};
+}
