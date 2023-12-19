@@ -1,6 +1,6 @@
 import { usePathname } from "next/navigation";
 import { AppShell } from "@mantine/core";
-import NavLink from "@/components/molecules/NavLink/NavLink";
+import NavLink from "@/components/AppShell/_elements/NavLink";
 import { ADMIN_NAVBAR_LIST, PROF_NAVBAR_LIST, STUDENT_NAVBAR_LIST } from "./constant/navbarList";
 
 export type Role = "ADMIN" | "PROFESSOR" | "STUDENT";

@@ -1,6 +1,6 @@
 import { Box, Image, AppShell } from "@mantine/core";
-import Profile from "@/components/organisms/AppShell/Profile/Profile";
-import NavbarList from "@/components/organisms/AppShell/Navbar/NavbarList/NavbarList";
+import Profile from "@/components/AppShell/_elements/Profile";
+import NavbarList from "@/components/AppShell/_elements/NavbarList";
 
 function Navbar() {
   return (
