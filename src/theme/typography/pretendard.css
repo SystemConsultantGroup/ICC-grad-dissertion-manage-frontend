@@ -1,0 +1,11 @@
+@import url("./pretendardvariable-dynamic-subset.css");
+
+/* A output from next font optimizer */
+@font-face {
+  font-family: "__Pretendard_Fallback_e223ab";
+  src: local("Arial");
+  ascent-override: 93.76%;
+  descent-override: 23.75%;
+  line-gap-override: 0%;
+  size-adjust: 101.55%;
+}
