@@ -1,7 +1,7 @@
-import { ADMIN_NAVBAR_LIST, PROF_NAVBAR_LIST, STUDENT_NAVBAR_LIST } from "./constant/navbarList";
+import { usePathname } from "next/navigation";
 import { AppShell } from "@mantine/core";
 import NavLink from "@/components/molecules/NavLink/NavLink";
-import { usePathname } from "next/navigation";
+import { ADMIN_NAVBAR_LIST, PROF_NAVBAR_LIST, STUDENT_NAVBAR_LIST } from "./constant/navbarList";
 
 export type Role = "ADMIN" | "PROFESSOR" | "STUDENT";
 
@@ -34,34 +34,32 @@ function NavbarList({ userType }: Props) {
       } else {
         isActive[child.label] = false;
       }
+      return null;
     });
+    return null;
   });
 
   return (
     <AppShell.Section>
-      {navbarList.map((parent) => {
-        return (
-          <NavLink
-            key={parent.label}
-            href={parent.href}
-            icon={parent.icon}
-            label={parent.label}
-            active={isActive[parent.label]}
-          >
-            {parent.children &&
-              parent.children.map((child) => {
-                return (
-                  <NavLink
-                    key={child.label}
-                    href={child.href}
-                    label={child.label}
-                    active={isActive[child.label]}
-                  />
-                );
-              })}
-          </NavLink>
-        );
-      })}
+      {navbarList.map((parent) => (
+        <NavLink
+          key={parent.label}
+          href={parent.href}
+          icon={parent.icon}
+          label={parent.label}
+          active={isActive[parent.label]}
+        >
+          {parent.children &&
+            parent.children.map((child) => (
+              <NavLink
+                key={child.label}
+                href={child.href}
+                label={child.label}
+                active={isActive[child.label]}
+              />
+            ))}
+        </NavLink>
+      ))}
     </AppShell.Section>
   );
 }

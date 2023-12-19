@@ -21,7 +21,7 @@ function Navbar() {
         <Profile />
       </AppShell.Section>
       {/* Todo: 유저 정보 api 연결 */}
-      <NavbarList userType={"ADMIN"} />
+      <NavbarList userType="ADMIN" />
     </AppShell.Navbar>
   );
 }

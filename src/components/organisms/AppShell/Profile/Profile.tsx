@@ -33,7 +33,6 @@ function Profile() {
             stroke={1}
             onClick={() => {
               // Todo: logout 추가
-              console.log("logout");
             }}
           />
         </Group>
