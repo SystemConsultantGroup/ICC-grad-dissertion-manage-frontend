@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { ReactNode, useState } from "react";
 import { NavLink as MantineNavLink } from "@mantine/core";

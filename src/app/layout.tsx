@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import "@mantine/core/styles.css";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
+import AppShell from "@/components/organisms/AppShell/AppShell";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -9,7 +10,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ColorSchemeScript />
       </head>
       <body>
-        <MantineProvider>{children}</MantineProvider>
+        <MantineProvider>
+          <AppShell>{children}</AppShell>
+        </MantineProvider>
       </body>
     </html>
   );

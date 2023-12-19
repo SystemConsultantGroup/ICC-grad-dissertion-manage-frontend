@@ -1,6 +1,7 @@
 .navLink {
+  height: 52px;
   width: "100%";
-  padding: "14px";
+  padding: 12px;
 }
 
 .label {
