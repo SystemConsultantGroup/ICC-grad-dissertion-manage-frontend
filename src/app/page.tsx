@@ -1,9 +1,17 @@
-export default async function HomePage() {
-  const data = await (await fetch("https://example.com/")).json();
+import { Box, Image } from "@mantine/core";
+
+export default function HomePage() {
   return (
     <>
-      <h1>App Router 사용하기!</h1>
-      <pre>{JSON.stringify(data)}</pre>
+      <Box
+        style={{
+          padding: "20px",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <Image src="/images/largeTitle.svg" alt="SKKU logo" fit="contain" w={500} h={116.4} />
+      </Box>
     </>
   );
 }

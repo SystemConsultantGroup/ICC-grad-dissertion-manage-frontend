@@ -1,0 +1,69 @@
+import { ADMIN_NAVBAR_LIST, PROF_NAVBAR_LIST, STUDENT_NAVBAR_LIST } from "./constant/navbarList";
+import { AppShell } from "@mantine/core";
+import NavLink from "@/components/molecules/NavLink/NavLink";
+import { usePathname } from "next/navigation";
+
+export type Role = "ADMIN" | "PROFESSOR" | "STUDENT";
+
+interface Props {
+  userType: Role;
+}
+
+const USER_TYPE_NAVBAR_LIST = {
+  ADMIN: ADMIN_NAVBAR_LIST,
+  PROFESSOR: PROF_NAVBAR_LIST,
+  STUDENT: STUDENT_NAVBAR_LIST,
+};
+
+function NavbarList({ userType }: Props) {
+  const navbarList = USER_TYPE_NAVBAR_LIST[userType];
+  const pathname = usePathname();
+
+  function isNavbarActive(href: string | undefined): boolean {
+    return href ? (href === "/" ? pathname === "/" : pathname.startsWith(href)) : false;
+  }
+
+  // active 여부를 현재 페이지 기준으로 미리 매핑
+  const isActive: { [key: string]: boolean } = {};
+  navbarList.map((parent) => {
+    isActive[parent.label] = isNavbarActive(parent.href);
+    parent.children?.map((child) => {
+      if (isNavbarActive(child.href)) {
+        isActive[child.label] = true;
+        isActive[parent.label] = true;
+      } else {
+        isActive[child.label] = false;
+      }
+    });
+  });
+
+  return (
+    <AppShell.Section>
+      {navbarList.map((parent) => {
+        return (
+          <NavLink
+            key={parent.label}
+            href={parent.href}
+            icon={parent.icon}
+            label={parent.label}
+            active={isActive[parent.label]}
+          >
+            {parent.children &&
+              parent.children.map((child) => {
+                return (
+                  <NavLink
+                    key={child.label}
+                    href={child.href}
+                    label={child.label}
+                    active={isActive[child.label]}
+                  />
+                );
+              })}
+          </NavLink>
+        );
+      })}
+    </AppShell.Section>
+  );
+}
+
+export default NavbarList;
