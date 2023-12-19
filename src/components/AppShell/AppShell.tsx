@@ -1,7 +1,7 @@
 "use client";
 
 import { AppShell as MantineAppShell } from "@mantine/core";
-import Navbar from "@/components/organisms/AppShell/Navbar/Navbar";
+import Navbar from "@/components/AppShell/_elements/Navbar";
 import { ReactNode } from "react";
 
 interface Props {
