@@ -1,7 +1,8 @@
 import { Metadata } from "next";
 import "@mantine/core/styles.css";
+import "@mantine/dates/styles.css";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
-import AppShell from "@/components/AppShell/AppShell";
+import { AppShell } from "@/components/AppShell";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
