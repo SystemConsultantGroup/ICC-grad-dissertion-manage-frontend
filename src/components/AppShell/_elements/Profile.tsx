@@ -1,13 +1,15 @@
-import { Avatar, Box, Group, Stack, Text, UnstyledButton } from "@mantine/core";
+import { Avatar, Box, Group, Stack, Text, UnstyledButton, useMantineTheme } from "@mantine/core";
 import { IconLogout } from "@tabler/icons-react";
 
 function Profile() {
-  // Todo: Theme 적용, 유저정보 api 연결
+  // Todo:  유저정보 api 연결
+
+  const theme = useMantineTheme();
 
   return (
     <Box
       style={{
-        borderBottom: `1px solid gray`,
+        borderBottom: `1px solid ${theme.colors.gray[2]}`,
       }}
     >
       <UnstyledButton

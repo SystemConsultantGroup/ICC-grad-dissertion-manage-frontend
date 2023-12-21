@@ -1,18 +1,22 @@
-import { Box, Image, AppShell } from "@mantine/core";
+import { Box, Image, AppShell, useMantineTheme } from "@mantine/core";
 import Profile from "@/components/AppShell/_elements/Profile";
 import NavbarList from "@/components/AppShell/_elements/NavbarList";
 
 function Navbar() {
+  const theme = useMantineTheme();
+
   return (
     <AppShell.Navbar>
       <AppShell.Section>
         <Box
           style={{
-            borderBottom: `1px solid gray`,
+            borderBottom: `1px solid ${theme.colors.gray[2]}`,
             padding: "20px",
             display: "flex",
             justifyContent: "center",
           }}
+          component="a"
+          href="/"
         >
           <Image src="/images/smallTitle.svg" alt="SKKU logo" fit="contain" w={200} h={46} />
         </Box>
