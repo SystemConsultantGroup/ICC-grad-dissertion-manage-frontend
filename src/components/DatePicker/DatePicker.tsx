@@ -4,8 +4,8 @@ import {
   DatePickerInput as MantineDatePicker,
 } from "@mantine/dates";
 import { IconCalendarEvent } from "@tabler/icons-react";
+import { DATE_FORMAT_HYPHEN } from "@/constants/date";
 import classes from "./DatePicker.module.css";
-import { DATE_FORMAT_HYPHEN } from "./constant/date";
 import "dayjs/locale/ko";
 
 function DatePicker(props: DatePickerInputProps<DatePickerType>) {
