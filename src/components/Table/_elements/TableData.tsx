@@ -1,4 +1,4 @@
-import { Text } from "@mantine/core";
+import { Table, Text } from "@mantine/core";
 import React, { ReactNode } from "react";
 
 interface Props {
@@ -7,9 +7,9 @@ interface Props {
 
 function TableData({ children }: Props) {
   return (
-    <td>
+    <Table.Td>
       <Text fz="md">{children}</Text>
-    </td>
+    </Table.Td>
   );
 }
 

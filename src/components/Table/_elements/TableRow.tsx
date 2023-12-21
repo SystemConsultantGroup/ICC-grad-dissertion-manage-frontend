@@ -1,4 +1,5 @@
 import React, { ReactNode } from "react";
+import { Table } from "@mantine/core";
 import classes from "./TableRow.module.css";
 
 interface Props {
@@ -8,17 +9,15 @@ interface Props {
 
 function TableRow({ children, onClick }: Props) {
   return (
-    <tr
+    <Table.Tr
+      onClick={onClick}
       className={classes.tableRow}
       style={{
         height: 56,
-        // eslint-disable-next-line no-extra-boolean-cast
-        cursor: !!onClick ? "pointer" : "default",
       }}
-      onClick={onClick}
     >
       {children}
-    </tr>
+    </Table.Tr>
   );
 }
 
