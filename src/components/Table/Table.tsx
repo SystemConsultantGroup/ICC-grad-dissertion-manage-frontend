@@ -13,8 +13,8 @@ interface Props {
 function Table({ headers, children }: Props) {
   return (
     <MantineTable>
-      <thead>
-        <tr>
+      <MantineTable.Thead>
+        <MantineTable.Tr>
           {headers.map((header, index) => (
             <TableHeader
               key={index}
@@ -22,9 +22,9 @@ function Table({ headers, children }: Props) {
               widthPercentage={header.widthPercentage}
             />
           ))}
-        </tr>
-      </thead>
-      <tbody>{children}</tbody>
+        </MantineTable.Tr>
+      </MantineTable.Thead>
+      <MantineTable.Tbody>{children}</MantineTable.Tbody>
     </MantineTable>
   );
 }
