@@ -1,26 +1,33 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { IconSearch } from "@tabler/icons-react";
-import { useDebouncedState } from "@mantine/hooks";
+import { useDebouncedValue } from "@mantine/hooks";
 import { MantineStyleProp, Group, Text, TextInput } from "@mantine/core";
 
 const DEBOUNCE_VALUE = 500;
 
 interface Props {
   onChange?: (search: string) => void;
-  sx?: MantineStyleProp;
+  onInvalid?: (invalid: boolean) => void;
+  style?: MantineStyleProp;
 }
 
-function SearchInput({ onChange, sx }: Props) {
-  const [debouncedInput, setDebouncedInput] = useDebouncedState("", DEBOUNCE_VALUE);
+function SearchInput({ onChange, onInvalid, style }: Props) {
+  const [value, setValue] = useState("");
+  const [debounced] = useDebouncedValue(value, DEBOUNCE_VALUE);
 
   useEffect(() => {
-    onChange?.(debouncedInput);
-  }, [debouncedInput, onChange]);
+    onInvalid?.(true);
+  }, [value, onInvalid]);
+
+  useEffect(() => {
+    onChange?.(debounced);
+    onInvalid?.(false);
+  }, [debounced, onChange, onInvalid]);
 
   return (
-    <Group gap={20} style={sx}>
+    <Group gap={20} style={style}>
       <Text c="blue" fz="sm">
         검색:
       </Text>
@@ -28,7 +35,7 @@ function SearchInput({ onChange, sx }: Props) {
         c="blue"
         rightSection={<IconSearch size={20} />}
         onChange={(event) => {
-          setDebouncedInput(event.currentTarget.value);
+          setValue(event.currentTarget.value);
         }}
       />
     </Group>

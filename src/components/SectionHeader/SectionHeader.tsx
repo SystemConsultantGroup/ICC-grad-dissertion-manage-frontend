@@ -12,6 +12,7 @@ interface Props extends PaginationDataProps {
   endIndex?: number;
   style?: MantineStyleProp;
   onSearchChange?: (search: string) => void;
+  onInvalidChange?: (invalid: boolean) => void;
   withPageSizeSelector?: boolean; // - 개 씩 보기 드롭다운 추가 여부
   withSearchBar?: boolean; // 검색 바 추가 여부
   children?: ReactNode; // 우측 끝에 들어갈 컴포넌트/element
@@ -23,6 +24,7 @@ function SectionHeader({
   endIndex,
   style,
   onSearchChange,
+  onInvalidChange,
   pageSize,
   setPageSize,
   withPageSizeSelector = false,
@@ -51,7 +53,7 @@ function SectionHeader({
       </Group>
       {/* children 과 widthSearchBar 이 동시에 true 일 경우 예측할 수 없는 행동을 보일 수 있음.  */}
       <Group gap={20}>
-        {withSearchBar && <SearchInput onChange={onSearchChange} />}
+        {withSearchBar && <SearchInput onChange={onSearchChange} onInvalid={onInvalidChange} />}
         {children}
       </Group>
     </Group>

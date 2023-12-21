@@ -1,6 +1,6 @@
 "use client";
 
-import { Center, ScrollArea, Stack } from "@mantine/core";
+import { Center, ScrollArea, Stack, Text } from "@mantine/core";
 import Pagination from "@/components/Pagination";
 import { SectionHeader } from "@/components/SectionHeader";
 import { Table } from "@/components/Table";
@@ -22,7 +22,8 @@ const REFRESH_DEFAULT_PAGE_NUMBER = 1; // 검색 필터 변경시 페이지네�
 function TableTest() {
   const [pageSize, setPageSize] = useState<string | null>(String(PAGE_SIZES[0]));
   const [pageNumber, setPageNumber] = useState(1);
-
+  const [searchValue, setSearchValue] = useState<string>();
+  const [invalid, setInvalid] = useState<boolean>();
   useEffect(() => {
     setPageNumber(REFRESH_DEFAULT_PAGE_NUMBER);
   }, [pageSize]);
@@ -34,6 +35,8 @@ function TableTest() {
         pageSize={pageSize}
         setPageSize={setPageSize}
         total={0}
+        onSearchChange={setSearchValue}
+        onInvalidChange={setInvalid}
         startIndex={1}
         endIndex={10}
       ></SectionHeader>
@@ -60,6 +63,9 @@ function TableTest() {
       <Center>
         <Pagination value={pageNumber} onChange={setPageNumber} total={1} />
       </Center>
+
+      <Text>{searchValue}</Text>
+      <Text>{invalid ? "수정중" : "검색결과"}</Text>
     </Stack>
   );
 }
