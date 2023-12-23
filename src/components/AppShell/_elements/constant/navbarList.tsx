@@ -13,7 +13,6 @@ import { ReactNode } from "react";
 
 export const ADMIN_MANAGE_PROFESSOR_LABEL = "교수 관리";
 export const ADMIN_MANAGE_STUDENT_LABEL = "학생 관리";
-export const ADMIN_MANAGE_QNA_LABEL = "지도교수님과의 소통";
 
 interface Props {
   label: string;

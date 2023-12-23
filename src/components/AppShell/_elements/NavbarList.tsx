@@ -1,9 +1,8 @@
 import { usePathname } from "next/navigation";
 import { AppShell } from "@mantine/core";
 import NavLink from "@/components/AppShell/_elements/NavLink";
+import { Role } from "@/api/_types/common";
 import { ADMIN_NAVBAR_LIST, PROF_NAVBAR_LIST, STUDENT_NAVBAR_LIST } from "./constant/navbarList";
-
-export type Role = "ADMIN" | "PROFESSOR" | "STUDENT";
 
 interface Props {
   userType: Role;
