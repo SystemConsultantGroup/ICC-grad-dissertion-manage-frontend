@@ -1,8 +1,10 @@
 import { Metadata } from "next";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
+import "@mantine/notifications/styles.css";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { AppShell } from "@/components/AppShell";
+import { Notifications } from "@mantine/notifications";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -12,12 +14,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <MantineProvider>
+          <Notifications />
           <AppShell>{children}</AppShell>
         </MantineProvider>
       </body>
     </html>
   );
 }
+
 
 export const metadata: Metadata = {
   title: "정보통신대학원 졸업논문시스템",
