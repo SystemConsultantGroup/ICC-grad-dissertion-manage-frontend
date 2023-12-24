@@ -1,8 +1,11 @@
 import PageHeader from "@/components/PageHeader";
 import Section from "@/components/Section";
+import { AuthSSR } from "@/components/AuthSSR";
 import TableTest from "./TableTest";
 
-export default function HomePage() {
+export default async function StudentsPage() {
+  await AuthSSR({ userType: "ADMIN" });
+
   return (
     <>
       <PageHeader
