@@ -1,9 +1,10 @@
+import { useAuth } from "@/components/AuthProvider";
 import { Avatar, Box, Group, Stack, Text, UnstyledButton, useMantineTheme } from "@mantine/core";
 import { IconLogout } from "@tabler/icons-react";
 
 function Profile() {
   // Todo:  유저정보 api 연결
-
+  const { logout } = useAuth();
   const theme = useMantineTheme();
 
   return (
@@ -34,7 +35,7 @@ function Profile() {
             size={18}
             stroke={1}
             onClick={() => {
-              // Todo: logout 추가
+              logout && logout();
             }}
           />
         </Group>
