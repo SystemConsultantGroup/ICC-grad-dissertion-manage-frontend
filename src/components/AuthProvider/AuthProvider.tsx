@@ -3,11 +3,11 @@
 "use client";
 
 import { JWT_COOKIE_NAME, JWT_MAX_AGE } from "@/components/AuthProvider/constant/jwt";
-import { AppCookies } from "@/components/AppCookies";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { CommonApiResponse, Role } from "@/api/_types/common";
 import { ClientAxios } from "@/components/ClientAxios";
 import { jwtDecode } from "jwt-decode";
+import Cookies from "js-cookie";
 import { CustomJwtPayload } from "./_types/jwtPayload";
 
 type TLoginAsUser = {
@@ -53,7 +53,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     setIsLoadingCookie(true);
 
-    const storedValue = AppCookies.get(JWT_COOKIE_NAME);
+    const storedValue = Cookies.get(JWT_COOKIE_NAME);
     if (storedValue) {
       setToken(storedValue);
       ClientAxios.defaults.headers.Authorization = `Bearer ${token}`;
@@ -73,7 +73,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     setToken(token);
     ClientAxios.defaults.headers.Authorization = `Bearer ${token}`;
-    AppCookies.set(JWT_COOKIE_NAME, token, { "max-age": String(JWT_MAX_AGE) });
+    Cookies.set(JWT_COOKIE_NAME, token, { "max-age": String(JWT_MAX_AGE) });
     // fetchAndSetUser(token);
 
     // user Type 저장
@@ -99,7 +99,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     setToken(null);
     setUserType(null);
-    AppCookies.remove(JWT_COOKIE_NAME);
+    Cookies.remove(JWT_COOKIE_NAME);
 
     setIsLoadingCookie(false);
     window.location.replace("/login");
