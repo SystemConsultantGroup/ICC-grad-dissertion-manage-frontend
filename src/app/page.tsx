@@ -1,9 +1,7 @@
-import MainImage from "@/components/MainImage";
+import { AuthMain } from "@/components/AuthSSR/AuthMain";
 
-export default function HomePage() {
-  return (
-    <>
-      <MainImage />
-    </>
-  );
+export default async function HomePage() {
+  await AuthMain();
+
+  return <></>;
 }
