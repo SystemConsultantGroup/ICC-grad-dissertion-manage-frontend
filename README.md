@@ -49,3 +49,13 @@
     대체하게 할 수는 있습니다.
   
 - **organism**은 
+
+---
+## local 에서 백엔드 연결하는 법
+
+- 프로젝트의 root 에 `.env.local` 파일을 생성해주세요.
+- 아래의 내용을 입력해주세요.
+
+```bash
+NEXT_PUBLIC_API_ENDPOINT = http://localhost:8000/v1/
+```
