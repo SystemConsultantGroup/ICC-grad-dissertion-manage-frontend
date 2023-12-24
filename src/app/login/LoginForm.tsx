@@ -67,14 +67,26 @@ function LoginForm() {
           <form onSubmit={onSubmit(handleSubmit)}>
             <Stack gap={24} mb={40}>
               <Group gap={30}>
-                <Text fw={500}>아이디</Text>
-                <TextInput size="md" style={{ width: "280px" }} {...getInputProps("loginId")} />
-              </Group>
-              <Group>
-                <Text fw={500}>비밀번호</Text>
-                <PasswordInput
+                <label style={{ fontWeight: 500 }} htmlFor="input-id">
+                  아이디
+                </label>
+                <TextInput
+                  id="input-id"
                   size="md"
                   style={{ width: "280px" }}
+                  autoComplete="username"
+                  {...getInputProps("loginId")}
+                />
+              </Group>
+              <Group>
+                <label style={{ fontWeight: 500 }} htmlFor="input-password">
+                  비밀번호
+                </label>
+                <PasswordInput
+                  id="input-password"
+                  size="md"
+                  style={{ width: "280px" }}
+                  autoComplete="current-password"
                   {...getInputProps("password")}
                 />
               </Group>
