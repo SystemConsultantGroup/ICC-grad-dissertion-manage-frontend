@@ -57,5 +57,5 @@
 - 아래의 내용을 입력해주세요.
 
 ```bash
-NEXT_PUBLIC_API_ENDPOINT = http://localhost:8000/v1/
+NEXT_PUBLIC_API_ENDPOINT = http://localhost:4000/v1/
 ```
