@@ -9,9 +9,10 @@ export const ClientAxios = axios.create({
 
 ClientAxios.interceptors.response.use(
   (response) => {
+    //TODO: 200 등 응답에 따른 메세지 알맞게 추가
     if (response.status === 201) {
       showNotificationSuccess({
-        message: "로그인 성공",
+        message: response?.data.message,
       });
     }
     return Promise.resolve(response);
@@ -19,10 +20,10 @@ ClientAxios.interceptors.response.use(
   (error) => {
     // 4xx, 5xx status code (오류 코드 발생) 시 할 일.
 
-    // 로그인 JWT 만료 또는 없을 시 로그인 페이지로 리다이렉트
+    // 로그인 JWT 만료 또는 없을 시 & 로그인 실패 시 로그인 페이지로 리다이렉트
     if (error.response?.status === 401) {
       showNotificationError({
-        title: "로그인 에러",
+        title: error.response?.statusText,
         message: error.response?.data.message,
       });
       redirect("/login");
