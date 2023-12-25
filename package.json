@@ -31,7 +31,9 @@
     "@tiptap/pm": "^2.1.13",
     "@tiptap/react": "^2.1.13",
     "@tiptap/starter-kit": "^2.1.13",
+    "@types/intl": "^1.2.2",
     "dayjs": "^1.11.10",
+    "intl": "^1.2.5",
     "next": "^14.0.3",
     "react": "^18",
     "react-dom": "^18"
