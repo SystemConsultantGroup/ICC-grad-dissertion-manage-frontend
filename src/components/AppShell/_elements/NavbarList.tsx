@@ -1,9 +1,13 @@
 import { usePathname } from "next/navigation";
 import { AppShell } from "@mantine/core";
 import NavLink from "@/components/AppShell/_elements/NavLink";
-import { ADMIN_NAVBAR_LIST, PROF_NAVBAR_LIST, STUDENT_NAVBAR_LIST } from "./constant/navbarList";
-
-export type Role = "ADMIN" | "PROFESSOR" | "STUDENT";
+import { Role } from "@/api/_types/common";
+import {
+  ADMIN_NAVBAR_LIST,
+  PROF_NAVBAR_LIST,
+  STUDENT_NAVBAR_LIST,
+  USER_TYPE_MAIN,
+} from "./constant/navbarList";
 
 interface Props {
   userType: Role;
@@ -20,7 +24,11 @@ function NavbarList({ userType }: Props) {
   const pathname = usePathname();
 
   function isNavbarActive(href: string | undefined): boolean {
-    return href ? (href === "/" ? pathname === "/" : pathname.startsWith(href)) : false;
+    return href
+      ? href === "/"
+        ? pathname === USER_TYPE_MAIN[userType]
+        : pathname.startsWith(href)
+      : false;
   }
 
   // active 여부를 현재 페이지 기준으로 미리 매핑
