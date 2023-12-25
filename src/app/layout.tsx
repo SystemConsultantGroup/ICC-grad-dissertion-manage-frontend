@@ -1,10 +1,18 @@
 import { Metadata } from "next";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
+import "@mantine/notifications/styles.css";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { AppShell } from "@/components/AppShell";
+import { Notifications } from "@mantine/notifications";
+import { AuthProvider } from "@/components/AuthProvider/AuthProvider";
+import { ReactNode } from "react";
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+interface Props {
+  children: ReactNode;
+}
+
+export default function RootLayout({ children }: Props) {
   return (
     <html lang="ko">
       <head>
@@ -12,7 +20,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <MantineProvider>
-          <AppShell>{children}</AppShell>
+          <AuthProvider>
+            <Notifications />
+            <AppShell>{children}</AppShell>
+          </AuthProvider>
         </MantineProvider>
       </body>
     </html>
