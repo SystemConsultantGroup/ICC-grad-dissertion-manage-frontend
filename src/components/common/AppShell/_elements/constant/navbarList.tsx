@@ -59,6 +59,11 @@ export const ADMIN_NAVBAR_LIST: Props[] = [
     href: "/admin/department",
     icon: <IconSchool size="24" stroke={1} />,
   },
+  {
+    label: "관리자정보 수정",
+    href: "/admin/account",
+    icon: <IconSettings size="24" stroke={1} />,
+  },
 ];
 export const STUDENT_NAVBAR_LIST: Props[] = [
   { label: "메인", href: "/", icon: <IconHome size="24" stroke={1} /> },
