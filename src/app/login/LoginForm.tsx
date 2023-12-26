@@ -6,8 +6,8 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import skkuLogo from "@/images/skku-logo.svg";
 import { CommonApiResponse } from "@/api/_types/common";
-import { ClientAxios } from "@/components/ClientAxios";
-import { useAuth } from "@/components/AuthProvider/AuthProvider";
+import { ClientAxios } from "@/api/ClientAxios";
+import { useAuth } from "@/components/common/AuthProvider/AuthProvider";
 
 interface LoginFormInputs {
   loginId: string;
