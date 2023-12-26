@@ -1,10 +1,10 @@
 "use client";
 
 import { Center, ScrollArea, Stack, Text } from "@mantine/core";
-import Pagination from "@/components/Pagination";
-import { SectionHeader } from "@/components/SectionHeader";
-import { Table } from "@/components/Table";
-import { TableHeaderProps } from "@/components/Table/_elements/TableHeader";
+import Pagination from "@/components/common/Pagination";
+import { SectionHeader } from "@/components/common/SectionHeader";
+import { Table } from "@/components/common/Table";
+import { TableHeaderProps } from "@/components/common/Table/_elements/TableHeader";
 import { useEffect, useState } from "react";
 import { PAGE_SIZES } from "@/constants/pageSize";
 

@@ -1,4 +1,4 @@
-import { AuthMain } from "@/components/AuthSSR/AuthMain";
+import { AuthMain } from "@/api/AuthSSR/AuthMain";
 
 export default async function HomePage() {
   await AuthMain();
