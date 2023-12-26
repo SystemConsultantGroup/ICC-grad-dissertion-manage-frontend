@@ -3,9 +3,9 @@ import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import "@mantine/notifications/styles.css";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
-import { AppShell } from "@/components/AppShell";
+import { AppShell } from "@/components/common/AppShell";
 import { Notifications } from "@mantine/notifications";
-import { AuthProvider } from "@/components/AuthProvider/AuthProvider";
+import { AuthProvider } from "@/components/common/AuthProvider/AuthProvider";
 import { ReactNode } from "react";
 
 interface Props {
