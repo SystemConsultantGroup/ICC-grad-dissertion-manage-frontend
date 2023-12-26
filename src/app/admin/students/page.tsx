@@ -1,6 +1,6 @@
-import PageHeader from "@/components/PageHeader";
-import Section from "@/components/Section";
-import { AuthSSR } from "@/components/AuthSSR";
+import PageHeader from "@/components/common/PageHeader";
+import Section from "@/components/common/Section";
+import { AuthSSR } from "@/api/AuthSSR";
 import TableTest from "./TableTest";
 
 export default async function StudentsPage() {

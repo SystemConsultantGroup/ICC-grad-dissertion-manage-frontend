@@ -1,4 +1,4 @@
-import { formatTime } from "@/components/date";
+import { formatTime } from "@/components/common/Clock/date/format";
 import { NextResponse } from "next/server";
 
 export async function GET() {

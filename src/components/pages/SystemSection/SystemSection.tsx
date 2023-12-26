@@ -1,8 +1,8 @@
-import Clock from "@/components/Clock";
-import { Row } from "@/components/Rows";
-import HeaderRow from "@/components/Rows/HeaderRow/HeaderRow";
-import Section from "@/components/Section";
-import Split from "@/components/Split";
+import Clock from "@/components/common/Clock/Clock";
+import { Row } from "@/components/common/Rows";
+import HeaderRow from "@/components/common/Rows/HeaderRow/HeaderRow";
+import Section from "@/components/common/Section";
+import Split from "@/components/common/Split";
 import { Stack, Text } from "@mantine/core";
 
 function SystemSection() {
