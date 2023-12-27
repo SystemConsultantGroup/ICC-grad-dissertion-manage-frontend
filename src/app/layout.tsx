@@ -7,7 +7,7 @@ import { AppShell } from "@/components/common/AppShell";
 import { Notifications } from "@mantine/notifications";
 import { AuthProvider } from "@/components/common/AuthProvider/AuthProvider";
 import { ReactNode } from "react";
-import { SWRProvider } from "@/api/SWR/SWRProvider/SWRProvider";
+import { SWRProvider } from "@/api/SWR/SWRProvider";
 
 interface Props {
   children: ReactNode;
