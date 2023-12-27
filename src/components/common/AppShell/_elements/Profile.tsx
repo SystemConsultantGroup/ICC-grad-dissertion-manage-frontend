@@ -4,7 +4,7 @@ import { IconLogout } from "@tabler/icons-react";
 
 function Profile() {
   // Todo:  유저정보 api 연결
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const theme = useMantineTheme();
 
   return (
@@ -25,10 +25,10 @@ function Profile() {
           <Avatar src="" radius="xl" size={60} />
           <Stack gap={0} w="50%">
             <Text size="md" fw={500} truncate>
-              김ㅇㅇ
+              {user?.name}
             </Text>
             <Text c="dimmed" size="sm" truncate>
-              asdfasdf@asdf.com
+              {user?.loginId}
             </Text>
           </Stack>
           <IconLogout
