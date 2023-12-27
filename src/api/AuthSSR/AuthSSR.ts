@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
 import { CustomJwtPayload } from "@/components/common/AuthProvider/_types/jwtPayload";
-import { Role } from "@/api/_types/common";
+import { Role } from "@/api/_types/user";
 
 interface Props {
   userType: Role;

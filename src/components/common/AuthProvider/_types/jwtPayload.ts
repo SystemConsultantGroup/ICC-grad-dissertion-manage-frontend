@@ -1,4 +1,4 @@
-import { Role } from "@/api/_types/common";
+import { Role } from "@/api/_types/user";
 import { JwtPayload } from "jwt-decode";
 
 export interface CustomJwtPayload extends JwtPayload {
