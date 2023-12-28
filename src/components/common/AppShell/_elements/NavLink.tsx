@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link, { LinkProps } from "next/link";
 import { ReactNode, useState } from "react";
 import { NavLink as MantineNavLink } from "@mantine/core";
 import classes from "./NavLink.module.css";
@@ -6,7 +6,7 @@ import classes from "./NavLink.module.css";
 interface Props {
   icon?: ReactNode;
   label: string;
-  href?: string;
+  href?: LinkProps["href"];
   children?: ReactNode;
   active?: boolean;
 }
