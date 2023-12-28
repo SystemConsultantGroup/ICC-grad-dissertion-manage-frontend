@@ -1,3 +1,5 @@
+"use client";
+
 import { MantineTheme, createTheme } from "@mantine/core";
 import { Interpolation } from "@emotion/react";
 import { Pretendard } from "./typography/fonts";
