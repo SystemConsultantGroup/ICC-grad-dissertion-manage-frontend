@@ -1,6 +1,6 @@
 "use client";
 
-import { MantineTheme, createTheme } from "@mantine/core";
+import { MantineTheme, MantineThemeComponent, createTheme } from "@mantine/core";
 import { Interpolation } from "@emotion/react";
 import { Pretendard } from "./typography/fonts";
 
@@ -10,7 +10,16 @@ export const AppTheme = createTheme({
   headings: {
     fontFamily: "inherit",
   },
+
   // lineHeight: 1 // no such
+
+  lineHeights: {
+    xs: "1",
+    sm: "1",
+    md: "1",
+    lg: "1",
+    xl: "1",
+  },
 
   other: {
     fontWeights: {
@@ -55,11 +64,19 @@ export const AppTheme = createTheme({
         },
       },
     },
+    Card: {
+      defaultProps: { radius: "lg" },
+      styles: {
+        root: {
+          border: "1px solid var(--mantine-color-dimmed-border)",
+        },
+      },
+    },
   } satisfies MantineThemeComponents,
 });
 
 type MantineThemeComponents = Record<
   string,
   // 왜 styles: any라고 돼있을까요
-  /* MantineThemeComponent & */ { styles: Interpolation<MantineTheme> }
+  Omit<MantineThemeComponent, "styles"> & { styles: Interpolation<MantineTheme> }
 >;
