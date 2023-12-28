@@ -1,19 +1,33 @@
 import { Metadata } from "next";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
+import "@mantine/notifications/styles.css";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
-import { AppShell } from "@/components/AppShell";
+import { AppShell } from "@/components/common/AppShell";
+import { Notifications } from "@mantine/notifications";
+import { AuthProvider } from "@/components/common/AuthProvider/AuthProvider";
+import { ReactNode } from "react";
+import { SWRProvider } from "@/api/SWR/SWRProvider";
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+interface Props {
+  children: ReactNode;
+}
+
+export default function RootLayout({ children }: Props) {
   return (
     <html lang="ko">
       <head>
         <ColorSchemeScript />
       </head>
       <body>
-        <MantineProvider>
-          <AppShell>{children}</AppShell>
-        </MantineProvider>
+        <SWRProvider>
+          <MantineProvider>
+            <AuthProvider>
+              <Notifications />
+              <AppShell>{children}</AppShell>
+            </AuthProvider>
+          </MantineProvider>
+        </SWRProvider>
       </body>
     </html>
   );
