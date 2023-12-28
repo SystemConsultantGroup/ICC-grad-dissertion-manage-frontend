@@ -13,7 +13,7 @@ export interface User {
   department: Omit<Department, "userCount">;
 }
 
-export interface UserResponse extends CommonApiResponse {
+export interface UserResponse extends CommonApiResponse, User {
   createdAt: string;
   updatedAt: string;
 }
