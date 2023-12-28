@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import "@mantine/notifications/styles.css";
+import "@/theme/global.css";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { AppShell } from "@/components/common/AppShell";
 import { Notifications } from "@mantine/notifications";
