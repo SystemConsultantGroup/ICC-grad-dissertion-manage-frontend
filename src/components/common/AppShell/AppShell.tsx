@@ -11,9 +11,9 @@ interface Props {
 }
 
 function AppShell({ children }: Props) {
-  const { userType } = useAuth();
+  const { user } = useAuth();
   const pathname = usePathname();
-  const disabledAppShell = userType === null || pathname === "/login";
+  const disabledAppShell = user?.type === null || pathname === "/login";
 
   return (
     <MantineAppShell
@@ -22,7 +22,7 @@ function AppShell({ children }: Props) {
       styles={{ main: { background: "#FCFCFE" } }}
       disabled={disabledAppShell}
     >
-      <Navbar userType={userType} />
+      <Navbar userType={user?.type} />
       <MantineAppShell.Main>{children}</MantineAppShell.Main>
     </MantineAppShell>
   );
