@@ -1,0 +1,17 @@
+.content {
+  min-width: 90;
+  font-size: 12;
+  color: var(--mantine-color-dimmed);
+  justify-content: start;
+}
+.wrapper {
+  min-width: 411;
+  background-color: var(--mantine-color-white);
+  padding-left: 18;
+  padding-right: 20;
+  height: 112;
+  width: 100%;
+  border-bottom: 1px solid var(--mantine-color-gray-2);
+  align-items: start;
+  padding: 20;
+}
