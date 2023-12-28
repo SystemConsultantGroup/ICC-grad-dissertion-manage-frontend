@@ -11,17 +11,10 @@ import { useConditionalSWR } from "./useConditionalSWR";
 function useDepartments(shouldFetch = true) {
   const { token } = useAuth();
 
-  const { data, mutate, error, isLoading } = useConditionalSWR<DepartmentsResponse>(
+  return useConditionalSWR<DepartmentsResponse>(
     { url: API_ROUTES.department.get(), token },
     !!token && shouldFetch
   );
-
-  return {
-    data,
-    isLoading,
-    error,
-    mutate,
-  };
 }
 
 export default useDepartments;
