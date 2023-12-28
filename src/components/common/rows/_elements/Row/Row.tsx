@@ -1,6 +1,6 @@
 import { Box, Group, Text } from "@mantine/core";
 import { ReactNode } from "react";
-import classes from "Row.module.css";
+import classes from "./Row.module.css";
 import RowValueText from "../RowValueText/RowValueText";
 
 export interface RowProps {
