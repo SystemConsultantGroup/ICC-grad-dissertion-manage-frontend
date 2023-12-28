@@ -7,6 +7,7 @@ import { AppShell } from "@/components/common/AppShell";
 import { Notifications } from "@mantine/notifications";
 import { AuthProvider } from "@/components/common/AuthProvider/AuthProvider";
 import { ReactNode } from "react";
+import { SWRProvider } from "@/api/SWR/SWRProvider";
 
 interface Props {
   children: ReactNode;
@@ -19,12 +20,14 @@ export default function RootLayout({ children }: Props) {
         <ColorSchemeScript />
       </head>
       <body>
-        <MantineProvider>
-          <AuthProvider>
-            <Notifications />
-            <AppShell>{children}</AppShell>
-          </AuthProvider>
-        </MantineProvider>
+        <SWRProvider>
+          <MantineProvider>
+            <AuthProvider>
+              <Notifications />
+              <AppShell>{children}</AppShell>
+            </AuthProvider>
+          </MantineProvider>
+        </SWRProvider>
       </body>
     </html>
   );

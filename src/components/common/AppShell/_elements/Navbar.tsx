@@ -1,11 +1,11 @@
 import { Image, AppShell, useMantineTheme } from "@mantine/core";
 import Profile from "@/components/common/AppShell/_elements/Profile";
 import NavbarList from "@/components/common/AppShell/_elements/NavbarList";
-import { Role } from "@/api/_types/common";
+import { Role } from "@/api/_types/user";
 import Link from "next/link";
 
 interface Props {
-  userType: Role | null;
+  userType?: Role;
 }
 
 function Navbar({ userType }: Props) {

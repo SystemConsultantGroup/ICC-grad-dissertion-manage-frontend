@@ -1,7 +1,7 @@
 import { usePathname } from "next/navigation";
 import { AppShell } from "@mantine/core";
 import NavLink from "@/components/common/AppShell/_elements/NavLink";
-import { Role } from "@/api/_types/common";
+import { Role } from "@/api/_types/user";
 import {
   ADMIN_NAVBAR_LIST,
   PROF_NAVBAR_LIST,
