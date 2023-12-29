@@ -6,5 +6,7 @@
   "cSpell.words": [
     "Mantine",
     "Pretendard"
-  ]
+  ],
+  "typescript.preferences.importModuleSpecifierEnding": "minimal",
+  "typescript.tsdk": "node_modules\\typescript\\lib"
 }
