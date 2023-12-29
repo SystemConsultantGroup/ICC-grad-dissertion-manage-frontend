@@ -35,7 +35,7 @@ export interface StudentResponse extends Student, CommonApiResponse {
   updatedAt: string;
 }
 
-export interface PagedStudentResponse extends PagedApiResponse<Omit<StudentResponse, "message">> {}
+export interface PagedStudentsResponse extends PagedApiResponse<Omit<StudentResponse, "message">> {}
 
 export interface CreateStudentRequestBody extends Omit<Student, "id" | "department" | "phase"> {
   password: string;
