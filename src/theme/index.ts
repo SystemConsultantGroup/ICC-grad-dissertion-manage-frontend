@@ -1,6 +1,11 @@
 "use client";
 
-import { MantineTheme, MantineThemeComponent, createTheme } from "@mantine/core";
+import {
+  createTheme,
+  CSSVariablesResolver,
+  MantineThemeComponent,
+  MantineTheme,
+} from "@mantine/core";
 import { Interpolation } from "@emotion/react";
 import { Pretendard } from "./typography/fonts";
 
@@ -73,6 +78,21 @@ export const AppTheme = createTheme({
       },
     },
   } satisfies MantineThemeComponents,
+});
+
+export const resolver: CSSVariablesResolver = (theme) => ({
+  variables: {
+    "--mantine-other-font-weights-regular": theme.other.fontWeights.regular,
+    "--mantine-other-font-weights-bold": theme.other.fontWeights.bold,
+  },
+  dark: {
+    "--mantine-color-main-background": theme.colors.gray[7],
+    "--mantine-color-dimmed-border": theme.colors.gray[9],
+  },
+  light: {
+    "--mantine-color-main-background": "#FAFAFA",
+    "--mantine-color-dimmed-border": theme.colors.gray[1],
+  },
 });
 
 type MantineThemeComponents = Record<

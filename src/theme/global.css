@@ -1,11 +1,1 @@
 @import url(./typography/pretendard.css);
-
-:root[data-mantine-color-scheme="light"] {
-  --color-main: #fafafa;
-  --mantine-color-dimmed-border: var(--mantine-color-gray-1);
-}
-
-:root[data-mantine-color-scheme="dark"] {
-  --color-main: var(--mantine-color-dark-7);
-  --mantine-color-dimmed-border: var(--mantine-color-gray-9);
-}
