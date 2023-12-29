@@ -1,6 +1,6 @@
 import { Text } from "@mantine/core";
 import { ReactNode } from "react";
-import classes from "RowSubfieldText.module.css";
+import classes from "./RowSubfieldText.module.css";
 
 interface Props {
   children: ReactNode;
