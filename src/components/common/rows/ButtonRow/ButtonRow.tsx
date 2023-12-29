@@ -1,6 +1,8 @@
+"use client";
+
 import { Group } from "@mantine/core";
 import { ReactNode } from "react";
-import classes from "ButtonRow.module.css";
+import classes from "./ButtonRow.module.css";
 
 interface Props {
   buttons: ReactNode[];
