@@ -47,3 +47,8 @@ export interface CreateStudentRequestBody extends Omit<Student, "id" | "departme
   preThesisTitle?: string;
   mainThesisTitle?: string;
 }
+
+export interface SelectStudentFormValues {
+  departmentId: Student["department"]["id"];
+  studentId: number;
+}
