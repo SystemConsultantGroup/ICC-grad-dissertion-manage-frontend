@@ -1,6 +1,6 @@
 import { Text } from "@mantine/core";
 import { ReactNode } from "react";
-import classes from "RowValueText.module.css";
+import classes from "./RowValueText.module.css";
 
 interface Props {
   children: ReactNode;
