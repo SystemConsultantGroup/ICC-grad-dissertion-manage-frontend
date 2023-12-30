@@ -19,7 +19,7 @@ function AppShell({ children }: Props) {
     <MantineAppShell
       padding={40}
       navbar={{ width: 300, breakpoint: "sm" }}
-      styles={{ main: { background: "#FCFCFE" } }}
+      styles={{ main: { background: "var(--mantine-color-main-background)" } }}
       disabled={disabledAppShell}
     >
       <Navbar userType={user?.type} />
