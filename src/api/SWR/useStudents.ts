@@ -1,3 +1,5 @@
+"use client";
+
 import { API_ROUTES } from "@/api/apiRoute";
 import { useAuth } from "@/components/common/AuthProvider";
 import { PagedStudentsRequestQuery, PagedStudentsResponse } from "@/api/_types/students";
@@ -19,7 +21,7 @@ function useStudents(queryParams: PagedStudentsRequestQuery, shouldFetch = true)
   );
 
   return {
-    data: result.data?.contents,
+    data: result.data?.content,
     pageData: result.data && {
       pageSize: result.data.pageSize,
       pageNumber: result.data.pageNumber,
