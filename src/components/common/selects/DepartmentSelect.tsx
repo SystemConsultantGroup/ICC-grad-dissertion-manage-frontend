@@ -12,7 +12,7 @@ export function DepartmentSelect({ disabled, ...props }: Props) {
     <Select
       disabled={isLoading || disabled}
       {...props}
-      placeholder="소속 선택"
+      placeholder="소속을 선택해주세요"
       data={data?.departments.map((department) => ({
         value: String(department.id),
         label: department.name,
