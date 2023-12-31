@@ -1,6 +1,6 @@
 import PageHeader from "@/components/common/PageHeader";
-import SystemSection from "@/components/pages/SystemSection/SystemSection";
 import { AuthSSR } from "@/api/AuthSSR";
+import SystemSection from "@/components/pages/system/SystemSection";
 
 export default async function SystemPage() {
   await AuthSSR({ userType: "ADMIN" });

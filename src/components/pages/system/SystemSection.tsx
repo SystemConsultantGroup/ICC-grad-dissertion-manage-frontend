@@ -1,11 +1,11 @@
 import Clock from "@/components/common/Clock/Clock";
 import { DatePicker } from "@/components/common/DatePicker";
-import BasicRow from "@/components/common/Rows/BasicRow";
-import HeaderRow from "@/components/common/Rows/HeaderRow/HeaderRow";
-import RowGroup from "@/components/common/Rows/_elements/RowGroup";
-import Section from "@/components/common/Section";
+import { Section } from "@/components/common/Section";
 import Split from "@/components/common/Split";
 import { Button, Group, Select, Stack, Text } from "@mantine/core";
+import Row from "@/components/common/rows/BasicRow/BasicRow";
+import { RowGroup } from "@/components/common/rows";
+import HeaderRow from "@/components/common/rows/HeaderRow/HeaderRow";
 
 function SystemSection() {
   return (
@@ -34,70 +34,70 @@ function SystemSection() {
       </HeaderRow>
       <Stack gap={0}>
         <RowGroup>
-          <BasicRow field="학생 선택">
+          <Row field="학생 선택">
             <Group gap="sm">
               <Select />
               <Select />
             </Group>
-          </BasicRow>
+          </Row>
         </RowGroup>
         <RowGroup>
-          <BasicRow field="예심">
+          <Row field="예심">
             <></>
-          </BasicRow>
+          </Row>
         </RowGroup>
         <RowGroup withBorderBottom={false}>
-          <BasicRow field="논문 업로드 기간">
+          <Row field="논문 업로드 기간">
             <Group>
               <DatePicker type="range" w={400} />
               <Button>즉시 실행</Button>
             </Group>
-          </BasicRow>
+          </Row>
         </RowGroup>
         <RowGroup withBorderBottom={false}>
-          <BasicRow field="심사 기간">
+          <Row field="심사 기간">
             <Group>
               <DatePicker type="range" w={400} />
               <Button>즉시 실행</Button>
             </Group>
-          </BasicRow>
+          </Row>
         </RowGroup>
         <RowGroup>
-          <BasicRow field="최종 심사 기간">
+          <Row field="최종 심사 기간">
             <Group>
               <DatePicker type="range" w={400} />
               <Button>즉시 실행</Button>
             </Group>
-          </BasicRow>
+          </Row>
         </RowGroup>
         <RowGroup>
-          <BasicRow field="본심">
+          <Row field="본심">
             <></>
-          </BasicRow>
+          </Row>
         </RowGroup>
         <RowGroup withBorderBottom={false}>
-          <BasicRow field="논문 업로드 기간">
+          <Row field="논문 업로드 기간">
             <Group>
               <DatePicker type="range" w={400} />
               <Button>즉시 실행</Button>
             </Group>
-          </BasicRow>
+          </Row>
         </RowGroup>
         <RowGroup withBorderBottom={false}>
-          <BasicRow field="심사 기간">
+          <Row field="심사 기간">
             <Group>
               <DatePicker type="range" w={400} />
               <Button>즉시 실행</Button>
             </Group>
-          </BasicRow>
+          </Row>
         </RowGroup>
         <RowGroup>
-          <BasicRow field="최종 심사 기간">
+          <Row field="최종 심사 기간">
             <Group>
               <DatePicker type="range" w={400} />
               <Button>즉시 실행</Button>
             </Group>
-          </BasicRow>
+          </Row>
         </RowGroup>
       </Stack>
     </Section>

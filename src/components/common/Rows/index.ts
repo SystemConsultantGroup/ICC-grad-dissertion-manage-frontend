@@ -1,2 +1,4 @@
-export { default as Row } from "@/components/common/Rows/BasicRow";
-export { default as HeaderRow } from "@/components/common/Rows/HeaderRow/HeaderRow";
+export { default as TextAreaRow } from "@/components/common/rows/TextAreaRow/TextAreaRow";
+export { default as TitleRow } from "@/components/common/rows/TitleRow/TitleRow";
+export { default as RowGroup } from "@/components/common/rows/RowGroup/RowGroup";
+export { default as FileRow } from "@/components/common/rows/FileRow/FileRow";
