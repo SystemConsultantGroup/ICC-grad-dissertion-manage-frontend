@@ -2,10 +2,10 @@
 
 import useDepartments from "@/api/SWR/useDepartments";
 import { DepartmentTable, DepartmentTableRow } from "@/components/pages/department/DepartmentTable";
-import HeaderRow from "@/components/common/Rows/HeaderRow/HeaderRow";
-import Section from "@/components/common/Section";
+import { Section } from "@/components/common/Section";
 import Split from "@/components/common/Split";
 import { Stack } from "@mantine/core";
+import HeaderRow from "@/components/common/rows/HeaderRow/HeaderRow";
 
 function DepartmentManageSection() {
   const { data, isLoading, mutate } = useDepartments();
