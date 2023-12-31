@@ -8,6 +8,7 @@ import { Notifications } from "@mantine/notifications";
 import { AuthProvider } from "@/components/common/AuthProvider/AuthProvider";
 import { ReactNode } from "react";
 import { SWRProvider } from "@/api/SWR/SWRProvider";
+import { AppTheme, resolver } from "@/theme";
 
 interface Props {
   children: ReactNode;
@@ -21,7 +22,7 @@ export default function RootLayout({ children }: Props) {
       </head>
       <body>
         <SWRProvider>
-          <MantineProvider>
+          <MantineProvider theme={AppTheme} cssVariablesResolver={resolver}>
             <AuthProvider>
               <Notifications />
               <AppShell>{children}</AppShell>
