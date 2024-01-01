@@ -12,7 +12,7 @@ export interface RowProps {
 function Row({ field = "", fieldSize = "md", children, ...props }: RowProps) {
   return (
     <Box {...props} className={classes.wrapper}>
-      <Group gap={0}>
+      <Group gap={0} wrap="nowrap">
         <Text
           style={{
             minWidth:
