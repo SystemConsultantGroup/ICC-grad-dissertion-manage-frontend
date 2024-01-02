@@ -6,39 +6,44 @@ import ButtonRow from "@/components/common/rows/ButtonRow/ButtonRow";
 import { RowGroup } from "@/components/common/rows";
 import { useAuth } from "@/components/common/AuthProvider";
 import { isEmail, isNotEmpty, useForm } from "@mantine/form";
-import { Department } from "@/api/_types/department";
 import { useState } from "react";
+import { ClientAxios } from "@/api/ClientAxios";
+import { API_ROUTES } from "@/api/apiRoute";
+import { showNotificationSuccess } from "@/components/common/Notifications";
 
 interface UserInfoEditFormInputs {
   password: string;
   email?: string;
   phone?: string;
-  department?: Omit<Department, "userCount">;
 }
 
 function UserInfoEditSection() {
   const { user } = useAuth();
   const [isPwEditing, setIsPwEditing] = useState(false);
 
-  const { onSubmit, getInputProps } = useForm<UserInfoEditFormInputs>({
+  const { onSubmit, getInputProps, setFieldValue, isDirty } = useForm<UserInfoEditFormInputs>({
     initialValues: {
       password: "",
       email: user?.email,
       phone: user?.phone,
-      department: user?.department,
     },
     validate: {
       password: (value, values) =>
         isPwEditing && !values.password ? "비밀번호를 입력하거나 수정을 취소해주세요." : null,
       email: isEmail("이메일 형식이 맞지 않습니다."),
       phone: isNotEmpty("전화번호를 입력해주세요."),
-      department: isNotEmpty("소속을 입력해주세요."),
     },
   });
 
   const handleSubmit = async (values: UserInfoEditFormInputs) => {
     try {
-      console.log(values);
+      const body = {
+        password: isPwEditing ? values.password : undefined,
+        email: isDirty("email") ? values.email : undefined,
+        phone: isDirty("phone") ? values.phone : undefined,
+      };
+      await ClientAxios.put(API_ROUTES.user.put(), body);
+      showNotificationSuccess({ message: "회원 정보가 수정되었습니다." });
     } catch (error) {
       console.error(error);
     }
@@ -58,6 +63,7 @@ function UserInfoEditSection() {
                 <Group>
                   <Button
                     onClick={() => {
+                      setFieldValue("password", "");
                       setIsPwEditing(false);
                     }}
                     color="red"
