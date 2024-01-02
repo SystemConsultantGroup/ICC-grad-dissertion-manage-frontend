@@ -1,14 +1,25 @@
-/* commit을 위한 임시 코드입니다. */
+import { GroupProps, Group } from "@mantine/core";
+import { CSSProperties, ReactNode } from "react";
+import { useRowGroupStyles } from "./RowGroup.css";
 
-import { Group } from "@mantine/core";
-import { ReactNode } from "react";
-
-interface Props {
+interface Props extends GroupProps {
   children: ReactNode;
+  withBorderBottom?: boolean;
+  backgroundColor?: CSSProperties["backgroundColor"];
 }
 
-function RowGroup({ children, ...props }: Props) {
-  return <Group {...props}>{children}</Group>;
+function RowGroup({
+  children,
+  withBorderBottom = true,
+  backgroundColor = "white",
+  ...props
+}: Props) {
+  const style = useRowGroupStyles({ backgroundColor, withBorderBottom });
+  return (
+    <Group {...props} gap={0} style={style}>
+      {children}
+    </Group>
+  );
 }
 
 export default RowGroup;
