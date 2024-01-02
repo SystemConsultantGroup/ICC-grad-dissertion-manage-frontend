@@ -1,3 +1,5 @@
+"use client";
+
 import { Group, UnstyledButton } from "@mantine/core";
 import { IconFileMinus } from "@tabler/icons-react";
 import Row from "@/components/common/rows/_elements/Row/Row";
