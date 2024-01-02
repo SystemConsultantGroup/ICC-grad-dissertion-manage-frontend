@@ -8,6 +8,9 @@ import { useAuth } from "@/components/common/AuthProvider";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { Department } from "@/api/_types/department";
 import { useState } from "react";
+import { ClientAxios } from "@/api/ClientAxios";
+import { API_ROUTES } from "@/api/apiRoute";
+import { showNotificationSuccess } from "@/components/common/Notifications";
 
 interface AdminInfoEditFormInputs {
   password: string;
@@ -20,7 +23,7 @@ function AdminInfoEditSection() {
   const { user } = useAuth();
   const [isPwEditing, setIsPwEditing] = useState(false);
 
-  const { onSubmit, getInputProps } = useForm<AdminInfoEditFormInputs>({
+  const { onSubmit, getInputProps, setFieldValue } = useForm<AdminInfoEditFormInputs>({
     initialValues: {
       password: "",
     },
@@ -31,7 +34,11 @@ function AdminInfoEditSection() {
 
   const handleSubmit = async (values: AdminInfoEditFormInputs) => {
     try {
-      console.log(values);
+      const body = {
+        password: isPwEditing ? values.password : undefined,
+      };
+      await ClientAxios.put(API_ROUTES.user.put(), body);
+      showNotificationSuccess({ message: "관리자 정보가 수정되었습니다." });
     } catch (error) {
       console.error(error);
     }
@@ -51,6 +58,7 @@ function AdminInfoEditSection() {
                 <Group>
                   <Button
                     onClick={() => {
+                      setFieldValue("password", "");
                       setIsPwEditing(false);
                     }}
                     color="red"
