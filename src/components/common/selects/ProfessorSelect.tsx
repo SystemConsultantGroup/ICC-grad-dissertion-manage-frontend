@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { UseFormReturnType } from "@mantine/form";
 import { Select, SelectProps } from "@mantine/core";
 import { PAGE_NUMBER_GET_ALL, PAGE_SIZE_GET_ALL } from "@/constants/pagination";
-import useProfessors from "@/api/SWR/useProfessor";
+import useProfessors from "@/api/SWR/useProfessors";
 import { SelectProfessorFormValues } from "@/api/_types/professors";
 
 interface Props extends Omit<SelectProps, "data" | "form"> {
