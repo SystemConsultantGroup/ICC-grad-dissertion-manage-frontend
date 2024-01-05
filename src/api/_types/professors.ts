@@ -38,3 +38,8 @@ export interface CreateProfessorRequestBody extends Omit<Professor, "id" | "depa
   password: string;
   deptId: number;
 }
+
+export interface SelectProfessorFormValues {
+  departmentId: Professor["department"]["id"];
+  professorId: number;
+}
