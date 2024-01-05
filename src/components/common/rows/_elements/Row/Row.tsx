@@ -1,6 +1,6 @@
 import { Box, Group, Text } from "@mantine/core";
 import { ReactNode } from "react";
-import classes from "Row.module.css";
+import classes from "./Row.module.css";
 import RowValueText from "../RowValueText/RowValueText";
 
 export interface RowProps {
@@ -12,7 +12,7 @@ export interface RowProps {
 function Row({ field = "", fieldSize = "md", children, ...props }: RowProps) {
   return (
     <Box {...props} className={classes.wrapper}>
-      <Group gap={0}>
+      <Group gap={0} wrap="nowrap">
         <Text
           style={{
             minWidth:
