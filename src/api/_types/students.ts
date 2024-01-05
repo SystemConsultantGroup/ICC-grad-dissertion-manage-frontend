@@ -5,13 +5,14 @@ import { Phase } from "./phase";
 export interface PagedStudentsRequestQuery extends PagedQueryRequest {
   studentNumber?: string;
   name?: string;
-  phone?: number;
+  email?: string;
+  phone?: string;
   departmentId?: number;
   phaseId?: number;
   isLock?: boolean;
 }
 
-export interface StudentExcelRequestQuery {
+export interface StudentsExcelRequestQuery {
   studentNumber?: string;
   name?: string;
   phone?: number;
@@ -21,7 +22,7 @@ export interface StudentExcelRequestQuery {
 }
 
 export interface Student {
-  id: string;
+  id: number;
   loginId: string;
   name: string;
   email: string;
