@@ -55,7 +55,6 @@ export function ProfessorSelect({
 
   return (
     <Select
-      {...props}
       onChange={onChange}
       disabled={isLoading || error || disabled}
       placeholder={error ? "교수 정보 불러오기 실패" : "교수를 선택해주세요"}
@@ -63,6 +62,7 @@ export function ProfessorSelect({
         label: professor.name,
         value: String(professor.id),
       }))}
+      {...props}
     />
   );
 }
