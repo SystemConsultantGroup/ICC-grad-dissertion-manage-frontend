@@ -1,4 +1,5 @@
 import { AuthSSR } from "@/api/AuthSSR";
+import PageHeader from "@/components/common/PageHeader";
 import DepartmentManageSection from "@/components/pages/department/DepartmentManageSection";
 
 export default async function DepartmentPage() {
@@ -6,6 +7,7 @@ export default async function DepartmentPage() {
 
   return (
     <>
+      <PageHeader title="학과 관리" />
       <DepartmentManageSection />
     </>
   );
