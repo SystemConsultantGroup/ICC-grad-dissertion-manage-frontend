@@ -49,7 +49,7 @@ function SystemSection() {
         <RowGroup withBorderBottom={false}>
           <Row field="논문 업로드 기간">
             <Group>
-              <DatePicker type="range" w={400} />
+              <DatePicker type="range" />
               <Button>즉시 실행</Button>
             </Group>
           </Row>
@@ -57,7 +57,7 @@ function SystemSection() {
         <RowGroup withBorderBottom={false}>
           <Row field="심사 기간">
             <Group>
-              <DatePicker type="range" w={400} />
+              <DatePicker type="range" />
               <Button>즉시 실행</Button>
             </Group>
           </Row>
@@ -65,7 +65,7 @@ function SystemSection() {
         <RowGroup>
           <Row field="최종 심사 기간">
             <Group>
-              <DatePicker type="range" w={400} />
+              <DatePicker type="range" />
               <Button>즉시 실행</Button>
             </Group>
           </Row>
@@ -78,7 +78,7 @@ function SystemSection() {
         <RowGroup withBorderBottom={false}>
           <Row field="논문 업로드 기간">
             <Group>
-              <DatePicker type="range" w={400} />
+              <DatePicker type="range" />
               <Button>즉시 실행</Button>
             </Group>
           </Row>
@@ -86,7 +86,7 @@ function SystemSection() {
         <RowGroup withBorderBottom={false}>
           <Row field="심사 기간">
             <Group>
-              <DatePicker type="range" w={400} />
+              <DatePicker type="range" />
               <Button>즉시 실행</Button>
             </Group>
           </Row>
@@ -94,7 +94,7 @@ function SystemSection() {
         <RowGroup>
           <Row field="최종 심사 기간">
             <Group>
-              <DatePicker type="range" w={400} />
+              <DatePicker type="range" />
               <Button>즉시 실행</Button>
             </Group>
           </Row>
