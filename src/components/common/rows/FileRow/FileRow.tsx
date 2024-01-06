@@ -18,7 +18,7 @@ function FilePostRow({ field, url, name }: Props) {
     saveAs(blob, name);
   };
   return (
-    <Row field={field} fieldSize="sm">
+    <Row field={field}>
       <Group gap={16}>
         <IconFileMinus size={24} />
         <UnstyledButton onClick={saveFile}>

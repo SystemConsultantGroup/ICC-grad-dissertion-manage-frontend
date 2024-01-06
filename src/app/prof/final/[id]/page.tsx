@@ -1,3 +1,5 @@
+"use client";
+
 import PageHeader from "@/components/common/PageHeader";
 import { ArticleInfo } from "@/components/pages/review/ArticleInfo";
 import { ExamineCard } from "@/components/pages/review/Review/ExamineCard";
