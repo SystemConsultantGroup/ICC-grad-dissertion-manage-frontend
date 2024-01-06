@@ -23,9 +23,7 @@ export function FinalExamine() {
           </Group>
         </BasicRow>
       </RowGroup>
-      <RowGroup>
-        <TextAreaRow field="심사 의견" />
-      </RowGroup>
+      <TextAreaRow field="심사 의견" />
       <RowGroup>
         <FileUploadRow field="심사 의견 파일" />
       </RowGroup>
