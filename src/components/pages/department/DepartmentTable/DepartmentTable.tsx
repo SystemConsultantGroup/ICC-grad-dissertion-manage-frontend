@@ -1,16 +1,13 @@
-"use client";
-
 import React, { ReactNode } from "react";
-import { Box, Stack, useMantineTheme } from "@mantine/core";
+import { Box, Stack } from "@mantine/core";
+import classes from "./DepartmentTable.module.css";
 
 interface Props {
   children: ReactNode;
 }
 function DepartmentTable({ children }: Props) {
-  const theme = useMantineTheme();
-
   return (
-    <Box style={{}}>
+    <Box className={classes.wrapper}>
       <Stack gap={0}>{children}</Stack>
     </Box>
   );
