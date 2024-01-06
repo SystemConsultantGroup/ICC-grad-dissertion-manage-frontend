@@ -11,12 +11,12 @@ export function PhaseSelect({ disabled, ...props }: Props) {
   return (
     <Select
       disabled={isLoading || disabled}
-      {...props}
       placeholder={error ? "단계 불러오기 실패" : "단계를 선택해주세요"}
       data={data?.phases.map((Phase) => ({
         value: String(Phase.id),
         label: Phase.title,
       }))}
+      {...props}
     />
   );
 }

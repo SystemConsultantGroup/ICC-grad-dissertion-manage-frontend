@@ -52,7 +52,6 @@ export function StudentSelect({
 
   return (
     <Select
-      {...props}
       onChange={onChange}
       disabled={isLoading || error || disabled}
       placeholder={error ? "학생 정보 불러오기 실패" : "학생을 선택해주세요"}
@@ -60,6 +59,7 @@ export function StudentSelect({
         label: student.name,
         value: String(student.id),
       }))}
+      {...props}
     />
   );
 }

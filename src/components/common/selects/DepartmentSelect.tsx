@@ -11,12 +11,12 @@ export function DepartmentSelect({ disabled, ...props }: Props) {
   return (
     <Select
       disabled={isLoading || disabled}
-      {...props}
       placeholder={error ? "소속 불러오기 실패" : "소속을 선택해주세요"}
       data={data?.departments.map((department) => ({
         value: String(department.id),
         label: department.name,
       }))}
+      {...props}
     />
   );
 }
