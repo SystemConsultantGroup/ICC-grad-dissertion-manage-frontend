@@ -5,7 +5,7 @@ interface Props {
   /** 페이지 제목 */
   title: string;
   /** 페이지 설명 */
-  description: string;
+  description?: string;
 }
 
 /** 페이지 상단에 들어가는 헤더 컴포넌트 */
