@@ -36,7 +36,7 @@ export function ProfessorExamine({ onTemporarySave, onSave }: ProfessorExaminePr
             <Button key="temp" color="grape" variant="outline" onClick={onTemporarySave}>
               임시저장
             </Button>,
-            <Button key="temp" color="blue" onClick={onSave}>
+            <Button key="final" color="blue" onClick={onSave}>
               최종저장
             </Button>,
           ]}
