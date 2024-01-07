@@ -17,3 +17,11 @@ export const PROF_TABLE_HEADERS: TableHeaderProps[] = [
   { label: "연락처", widthPercentage: 10 },
   { label: "소속", widthPercentage: 10 },
 ];
+
+export const REVIEW_RESULT_TABLE_HEADERS: TableHeaderProps[] = [
+  { label: "순번", widthPercentage: 5 },
+  { label: "구분", widthPercentage: 7 },
+  { label: "저자", widthPercentage: 7 },
+  { label: "논문 제목", widthPercentage: 30 },
+  { label: "심사 결과", widthPercentage: 7 },
+];

@@ -20,6 +20,7 @@ export interface Review {
   stage: Stage;
   title: string;
   status: Status;
+  summary: Status;
 }
 
 export interface DetailedReview extends Omit<Review, "stage"> {
