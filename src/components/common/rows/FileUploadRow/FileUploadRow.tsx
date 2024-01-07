@@ -1,3 +1,5 @@
+"use client";
+
 import { Button, FileButton, FileInput, Group } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 import { useEffect, useRef, useState } from "react";
