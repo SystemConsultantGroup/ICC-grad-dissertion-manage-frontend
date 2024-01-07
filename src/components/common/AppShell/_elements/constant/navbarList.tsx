@@ -21,9 +21,6 @@ interface Props {
   children?: Props[];
 }
 
-/**
- * @todo href 수정
- */
 export const ADMIN_NAVBAR_LIST: Props[] = [
   { label: "메인", href: "/", icon: <IconHome size="24" stroke={1} /> },
   {
@@ -36,7 +33,7 @@ export const ADMIN_NAVBAR_LIST: Props[] = [
     icon: <IconUser size="24" stroke={1} />,
     children: [
       { label: "교수 현황", href: "/admin/professors" },
-      { label: "교수 등록 및 수정", href: "/admin/prof-register" },
+      { label: "교수 등록", href: "/admin/prof-register" },
       { label: "교수 일괄 등록", href: "/admin/prof-excel-register" },
     ],
   },
@@ -45,7 +42,7 @@ export const ADMIN_NAVBAR_LIST: Props[] = [
     icon: <IconUsers size="24" stroke={1} />,
     children: [
       { label: "학생 현황", href: "/admin/students" },
-      { label: "학생 등록 및 수정", href: "/admin/student-register" },
+      { label: "학생 등록", href: "/admin/student-register" },
       { label: "학생 일괄 등록", href: "/admin/student-excel-register" },
     ],
   },
