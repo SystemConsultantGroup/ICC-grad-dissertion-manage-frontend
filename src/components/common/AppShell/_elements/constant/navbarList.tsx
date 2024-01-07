@@ -48,7 +48,7 @@ export const ADMIN_NAVBAR_LIST: Props[] = [
   },
   {
     label: "심사 결과",
-    href: "/admin/examine",
+    href: "/admin/reviews",
     icon: <IconProgressCheck size="24" stroke={1} />,
   },
   {

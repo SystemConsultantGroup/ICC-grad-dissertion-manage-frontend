@@ -2,16 +2,13 @@
 
 "use client";
 
-import useProfessors from "@/api/SWR/useProfessors";
-import { PagedProfessorsRequestQuery } from "@/api/_types/professors";
 import { getPageSizeStartEndNumber } from "@/api/_utils/getPageSizeStartEndNumber";
-import { handleDownloadFile } from "@/api/_utils/handleDownloadFile";
-import { objectToQueryString } from "@/api/_utils/objectToUrl";
-import { API_ROUTES } from "@/api/apiRoute";
-import { DATE_TIME_FORMAT_HYPHEN } from "@/constants/date";
+// import { handleDownloadFile } from "@/api/_utils/handleDownloadFile";
+// import { objectToQueryString } from "@/api/_utils/objectToUrl";
+// import { API_ROUTES } from "@/api/apiRoute";
+// import dayjs from "dayjs";
 import { PAGE_SIZES } from "@/constants/pageSize";
 import { useDebouncedState } from "@mantine/hooks";
-import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
 import {
@@ -21,25 +18,26 @@ import {
   Group,
   Popover,
   ScrollArea,
+  Select,
   Skeleton,
   Stack,
 } from "@mantine/core";
 import { SectionHeader } from "@/components/common/SectionHeader";
-import { IconDownload, IconPlus } from "@tabler/icons-react";
-import Link from "next/link";
+import { IconDownload } from "@tabler/icons-react";
 import { Table } from "@/components/common/Table";
-import { DepartmentSelect } from "@/components/common/selects/DepartmentSelect";
 import Pagination from "@/components/common/Pagination";
-import { PROF_TABLE_HEADERS } from "../_constants/table";
+import useReviewResults from "@/api/SWR/useReviewResults";
+import { PagedReviewResultsRequestQuery } from "@/api/_types/reviews";
 import { REFRESH_DEFAULT_PAGE_NUMBER } from "../_constants/page";
 import { TChangeQueryArg } from "../_types/common";
+import { REVIEW_RESULT_TABLE_HEADERS } from "../_constants/table";
 
-function ProfessorListSection() {
+function ReviewResultListSection() {
   const { push } = useRouter();
   const [pageSize, setPageSize] = useState<string | null>(String(PAGE_SIZES[0]));
   const [pageNumber, setPageNumber] = useState(1);
   const pageSizeNumber = Number(pageSize);
-  const [query, setQuery] = useDebouncedState<PagedProfessorsRequestQuery>(
+  const [query, setQuery] = useDebouncedState<PagedReviewResultsRequestQuery>(
     {
       pageNumber,
       pageSize: pageSizeNumber,
@@ -47,37 +45,24 @@ function ProfessorListSection() {
     500
   );
   const {
-    data: professors,
+    data: reviewResults,
     isLoading,
     pageData,
-  } = useProfessors({ ...query, pageNumber, pageSize: pageSizeNumber });
+  } = useReviewResults({ ...query, pageNumber, pageSize: pageSizeNumber });
 
   const { startNumber, endNumber } = getPageSizeStartEndNumber({
     pageNumber,
     pageSize: Number(pageSize ?? 0),
-    arrayLength: professors?.length ?? 0,
+    arrayLength: reviewResults?.length ?? 0,
   });
 
   const startIndex = pageData?.pageNumber
     ? (pageData.pageNumber - 1) * Number(pageData.pageSize) + 1
     : 0;
-  const endIndex = professors ? startIndex + professors.length - 1 : 0;
+  const endIndex = reviewResults ? startIndex + reviewResults.length - 1 : 0;
 
-  // Todo: 파일명 및 필터 저장 방식 논의
-  const handleDownloadProfessorExcel = (option: "all" | "filtered") => {
-    const dateString = dayjs().format(DATE_TIME_FORMAT_HYPHEN);
-    const queryString = objectToQueryString({ ...query });
-
-    const isAll = option === "all";
-    const urlSuffix = isAll ? "" : queryString;
-
-    const fileLink = API_ROUTES.professor.excel.get() + urlSuffix;
-
-    handleDownloadFile({
-      fileLink,
-      fileName: `학생 일괄 다운로드 파일_${dateString}.xlsx`,
-    });
-  };
+  // Todo: 심사보고서 출력 방식 논의
+  const handleDownloadReviewResults = (option: "all" | "filtered") => {};
 
   const handleChangeFilter = <T,>({ name, value }: TChangeQueryArg<T>) => {
     // useDebuncedState 에서 update 함수 타입이 정의되어 있지 않아 타입에러 발생
@@ -105,9 +90,6 @@ function ProfessorListSection() {
       >
         <SectionHeader.Buttons>
           <Group>
-            <Button size="xs" leftSection={<IconPlus />} component={Link} href="prof-register">
-              교수 추가
-            </Button>
             <Popover width={200} position="bottom" withArrow shadow="md">
               <Popover.Target>
                 <ActionIcon variant="outline" color="blue">
@@ -118,18 +100,18 @@ function ProfessorListSection() {
                 <Stack>
                   <Button
                     onClick={() => {
-                      handleDownloadProfessorExcel("all");
+                      handleDownloadReviewResults("all");
                     }}
                   >
-                    전체 교수 엑셀 저장
+                    심사보고서 전체 출력
                   </Button>
                   <Button
                     variant="outline"
                     onClick={() => {
-                      handleDownloadProfessorExcel("filtered");
+                      handleDownloadReviewResults("filtered");
                     }}
                   >
-                    필터 교수 엑셀 저장
+                    심사보고서 필터 출력
                   </Button>
                 </Stack>
               </Popover.Dropdown>
@@ -139,73 +121,72 @@ function ProfessorListSection() {
       </SectionHeader>
       {isLoading && <Skeleton />}
       <ScrollArea type="hover" offsetScrollbars style={{ width: "100%", overflow: "visible" }}>
-        <Table headers={PROF_TABLE_HEADERS}>
+        <Table headers={REVIEW_RESULT_TABLE_HEADERS}>
           {/* 필터 영역 */}
           <Table.Row pointer={false}>
             <Table.Data>필터</Table.Data>
             <Table.Data>
-              <Table.TextInput
-                w={150}
-                placeholder="아이디"
-                onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                  handleChangeFilter<string>({ name: "loginId", value: event.target.value });
-                }}
-              />
-            </Table.Data>
-            <Table.Data>
-              <Table.TextInput
-                w={150}
-                placeholder="이름"
-                onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                  handleChangeFilter<string>({ name: "name", value: event.target.value });
-                }}
-              />
-            </Table.Data>
-            <Table.Data>
-              <Table.TextInput
-                w={150}
-                placeholder="이메일"
-                onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                  handleChangeFilter<string>({ name: "email", value: event.target.value });
-                }}
-              />
-            </Table.Data>
-            <Table.Data>
-              <Table.TextInput
-                w={150}
-                placeholder="연락처"
-                onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                  handleChangeFilter<string>({ name: "phone", value: event.target.value });
-                }}
-              />
-            </Table.Data>
-            <Table.Data>
-              <DepartmentSelect
-                w={150}
-                placeholder="소속"
+              <Select
+                w={90}
+                placeholder="구분"
                 onChange={(value) => {
-                  handleChangeFilter<string | null>({ name: "deptId", value });
+                  handleChangeFilter<string | null>({ name: "stage", value });
                 }}
+                allowDeselect
+                data={[
+                  { label: "예심", value: "PRELIMINARY" },
+                  { label: "본심", value: "MAIN" },
+                ]}
+              />
+            </Table.Data>
+            <Table.Data>
+              <Table.TextInput
+                w={90}
+                placeholder="저자"
+                onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                  handleChangeFilter<string>({ name: "author", value: event.target.value });
+                }}
+              />
+            </Table.Data>
+            <Table.Data>
+              <Table.TextInput
+                w={500}
+                placeholder="논문 제목"
+                onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                  handleChangeFilter<string>({ name: "title", value: event.target.value });
+                }}
+              />
+            </Table.Data>
+            <Table.Data>
+              <Select
+                w={90}
+                placeholder="결과"
+                onChange={(value) => {
+                  handleChangeFilter<string | null>({ name: "summary", value });
+                }}
+                data={[
+                  { label: "합격", value: "PASS" },
+                  { label: "불합격", value: "FAIL" },
+                ]}
                 allowDeselect
               />
             </Table.Data>
           </Table.Row>
-          {professors?.map((professor, index) => {
-            const { id, loginId, name, email, phone, department } = professor;
+          {reviewResults?.map((reviewResult, index) => {
+            const { id, stage, student, title, summary } = reviewResult;
 
             return (
               <Table.Row
                 key={id}
                 onClick={() => {
-                  push(`professors/${id}`);
+                  push(`reviews/${id}`);
                 }}
               >
                 <Table.Data>{index + 1 + (pageNumber - 1) * pageSizeNumber}</Table.Data>
-                <Table.Data>{loginId}</Table.Data>
-                <Table.Data>{name}</Table.Data>
-                <Table.Data>{email}</Table.Data>
-                <Table.Data>{phone}</Table.Data>
-                <Table.Data>{department.name}</Table.Data>
+                <Table.Data>{stage === "MAIN" ? "본심" : "예심"}</Table.Data>
+                <Table.Data>{student}</Table.Data>
+                <Table.Data>{title}</Table.Data>
+                <Table.Data>{summary === "PASS" ? "합격" : "불합격"}</Table.Data>
               </Table.Row>
             );
           })}
@@ -222,4 +203,4 @@ function ProfessorListSection() {
   );
 }
 
-export default ProfessorListSection;
+export default ReviewResultListSection;
