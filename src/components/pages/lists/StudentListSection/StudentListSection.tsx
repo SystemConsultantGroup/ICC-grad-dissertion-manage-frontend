@@ -141,7 +141,7 @@ function StudentListSection() {
       <ScrollArea type="hover" offsetScrollbars style={{ width: "100%", overflow: "visible" }}>
         <Table headers={STUDENTS_TABLE_HEADERS}>
           {/* 필터 영역 */}
-          <Table.Row>
+          <Table.Row pointer={false}>
             <Table.Data>필터</Table.Data>
             <Table.Data>
               <Table.TextInput
