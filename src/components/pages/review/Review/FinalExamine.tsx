@@ -10,7 +10,12 @@ import {
   TitleRow,
 } from "@/components/common/rows";
 
-export function FinalExamine() {
+export interface FinalExamineProps {
+  onTemporarySave: () => void;
+  onSave: () => void;
+}
+
+export function FinalExamine({ onTemporarySave, onSave }: FinalExamineProps) {
   return (
     <Stack gap={0}>
       <TitleRow title="최종 심사하기" />
@@ -30,10 +35,10 @@ export function FinalExamine() {
       <RowGroup>
         <ButtonRow
           buttons={[
-            <Button key="temp" color="grape" variant="outline">
+            <Button key="temp" color="grape" variant="outline" onClick={onTemporarySave}>
               임시저장
             </Button>,
-            <Button key="temp" color="blue">
+            <Button key="final" color="blue" onClick={onSave}>
               최종저장
             </Button>,
           ]}
