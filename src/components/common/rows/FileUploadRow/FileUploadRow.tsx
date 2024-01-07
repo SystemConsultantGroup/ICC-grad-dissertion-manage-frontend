@@ -2,14 +2,18 @@ import { Button, FileButton, FileInput, Group } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 import { useEffect, useRef, useState } from "react";
 import Row from "@/components/common/rows/_elements/Row/Row";
+import { UseFormReturnType } from "@mantine/form";
 
 interface Props {
   field: string;
   onChange?: (file: File | null) => void;
   defaultFile?: File;
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  form?: UseFormReturnType<any>;
+  formKey?: string;
 }
 
-function FileUploadRow({ field, onChange, defaultFile }: Props) {
+function FileUploadRow({ field, onChange, defaultFile, form, formKey = "file" }: Props) {
   const [file, setFile] = useState<File | null>(null);
   const resetRef = useRef<() => void>(null);
   const clearFile = () => {
@@ -29,7 +33,7 @@ function FileUploadRow({ field, onChange, defaultFile }: Props) {
   }, [defaultFile]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <Row field={field} fieldSize="sm">
+    <Row field={field}>
       <Group gap={16}>
         <FileButton onChange={handleFileChange} resetRef={resetRef}>
           {(props) => <Button {...props}>파일 선택</Button>}
@@ -39,6 +43,7 @@ function FileUploadRow({ field, onChange, defaultFile }: Props) {
           value={file}
           onChange={handleFileChange}
           defaultValue={defaultFile}
+          {...form?.getInputProps(formKey)}
         >
           {file?.name}
         </FileInput>
