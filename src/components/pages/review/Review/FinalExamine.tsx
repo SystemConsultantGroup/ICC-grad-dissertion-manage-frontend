@@ -1,5 +1,3 @@
-"use client";
-
 import { Button, Group, Stack } from "@mantine/core";
 import {
   BasicRow,
