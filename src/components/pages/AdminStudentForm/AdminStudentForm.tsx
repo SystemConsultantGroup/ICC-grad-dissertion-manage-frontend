@@ -12,7 +12,7 @@ import { useEffect } from "react";
 import { useAuth } from "@/components/common/AuthProvider/AuthProvider";
 
 interface Props {
-  professorId?: number | string;
+  studentId?: number | string;
 }
 
 interface loginInputs {
@@ -29,7 +29,7 @@ interface AdminProfFormInputs {
   department: string;
 }
 
-function AdminProfForm({ professorId }: Props) {
+function AdminStudentForm({ studentId }: Props) {
   const router = useRouter();
   const { login } = useAuth();
   const { data, isLoading, error } = useDepartments();
@@ -54,37 +54,37 @@ function AdminProfForm({ professorId }: Props) {
   });
 
   useEffect(() => {
-    const fetchProfessorDetails = async () => {
+    const fetchstudentDetails = async () => {
       try {
-        if (professorId) {
-          const response = await ClientAxios.get(API_ROUTES.professor.get(professorId));
-          const professorDetails = response.data;
+        if (studentId) {
+          const response = await ClientAxios.get(API_ROUTES.student.get(studentId));
+          const studentDetails = response.data;
 
           setValues({
-            loginId: professorDetails.loginId,
-            password: professorDetails.password,
-            name: professorDetails.name,
-            email: professorDetails.email,
-            phone: professorDetails.phone,
-            department: String(professorDetails.department.id),
+            loginId: studentDetails.loginId,
+            password: studentDetails.password,
+            name: studentDetails.name,
+            email: studentDetails.email,
+            phone: studentDetails.phone,
+            department: String(studentDetails.department.id),
           });
         }
       } catch (err) {
         console.error(err);
       }
     };
-    fetchProfessorDetails();
-  }, [professorId, setValues]);
+    fetchstudentDetails();
+  }, [studentId, setValues]);
 
   const handleSubmit = async (values: AdminProfFormInputs) => {
     try {
-      if (!professorId) {
-        await ClientAxios.post(API_ROUTES.professor.post(), values);
-        router.push("/admin/prof");
+      if (!studentId) {
+        await ClientAxios.post(API_ROUTES.student.post(), values);
+        router.push("/admin/students");
         // TODO: 등록 완료 알림
       } else {
-        await ClientAxios.post(API_ROUTES.professor.put(professorId), values);
-        router.push(`/admin/prof/${professorId}`);
+        await ClientAxios.post(API_ROUTES.student.put(studentId), values);
+        router.push(`/admin/students/${studentId}`);
         // TODO: 수정 완료 알림
       }
     } catch (err) {
@@ -111,7 +111,7 @@ function AdminProfForm({ professorId }: Props) {
 
   return (
     <Stack gap={0}>
-      {professorId && (
+      {studentId && (
         <RowGroup>
           <ButtonRow
             buttons={[
@@ -134,7 +134,7 @@ function AdminProfForm({ professorId }: Props) {
         </RowGroup>
       )}
 
-      <TitleRow title="교수 기본 정보" />
+      <TitleRow title="학생 기본 정보" />
       <form onSubmit={onSubmit(handleSubmit)}>
         <Stack gap={0}>
           <RowGroup>
@@ -178,7 +178,7 @@ function AdminProfForm({ professorId }: Props) {
           </RowGroup>
           <Space h="md" />
           <RowGroup>
-            {professorId ? (
+            {studentId ? (
               <ButtonRow
                 buttons={[
                   <Button key="edit" type="submit">
@@ -202,4 +202,4 @@ function AdminProfForm({ professorId }: Props) {
   );
 }
 
-export default AdminProfForm;
+export default AdminStudentForm;
