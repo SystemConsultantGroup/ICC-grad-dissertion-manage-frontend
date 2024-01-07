@@ -5,7 +5,6 @@
 import useStudents from "@/api/SWR/useStudents";
 import { PagedStudentsRequestQuery } from "@/api/_types/students";
 import { getPageSizeStartEndNumber } from "@/api/_utils/getPageSizeStartEndNumber";
-import { TableHeaderProps } from "@/components/common/Table/_elements/TableHeader";
 import { PAGE_SIZES } from "@/constants/pageSize";
 import { useDebouncedState } from "@mantine/hooks";
 import { ChangeEvent, useEffect, useState } from "react";
@@ -31,22 +30,9 @@ import { Table } from "@/components/common/Table";
 import { DepartmentSelect } from "@/components/common/selects/DepartmentSelect";
 import Pagination from "@/components/common/Pagination";
 import { useRouter } from "next/navigation";
-
-type TChangeQueryArg<T> = {
-  name: string;
-  value: T;
-};
-
-const STUDENTS_TABLE_HEADERS: TableHeaderProps[] = [
-  { label: "순번", widthPercentage: 5 },
-  { label: "아이디", widthPercentage: 10 },
-  { label: "이름", widthPercentage: 10 },
-  { label: "이메일", widthPercentage: 15 },
-  { label: "연락처", widthPercentage: 10 },
-  { label: "소속", widthPercentage: 10 },
-];
-
-const REFRESH_DEFAULT_PAGE_NUMBER = 1;
+import { REFRESH_DEFAULT_PAGE_NUMBER } from "../_constants/page";
+import { STUDENTS_TABLE_HEADERS } from "../_constants/table";
+import { TChangeQueryArg } from "../_types/common";
 
 function StudentListSection() {
   const { push } = useRouter();
@@ -77,7 +63,7 @@ function StudentListSection() {
     : 0;
   const endIndex = students ? startIndex + students.length - 1 : 0;
 
-  // 학생 일괄 엑셀 다운로드
+  // Todo: 파일명 및 필터 저장 방식 논의
   const handleDownloadStudentExcel = (option: "all" | "filtered") => {
     const dateString = dayjs().format(DATE_TIME_FORMAT_HYPHEN);
     const queryString = objectToQueryString({ ...query });
@@ -160,7 +146,7 @@ function StudentListSection() {
             <Table.Data>
               <Table.TextInput
                 w={150}
-                placeholder="학번"
+                placeholder="아이디"
                 onChange={(event: ChangeEvent<HTMLInputElement>) => {
                   handleChangeFilter<string>({ name: "studentNumber", value: event.target.value });
                 }}
