@@ -2,7 +2,7 @@ import Clock from "@/components/common/Clock/Clock";
 import { DatePicker } from "@/components/common/DatePicker";
 import { Section } from "@/components/common/Section";
 import Split from "@/components/common/Split";
-import { Button, Group, Select, Stack, Text } from "@mantine/core";
+import { Button, Group, Stack, Text } from "@mantine/core";
 import { RowGroup } from "@/components/common/rows";
 import HeaderRow from "@/components/common/rows/HeaderRow/HeaderRow";
 import Row from "@/components/common/rows/BasicRow/BasicRow";
