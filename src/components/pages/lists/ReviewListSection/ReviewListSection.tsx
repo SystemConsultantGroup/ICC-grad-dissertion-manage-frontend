@@ -200,7 +200,7 @@ function ReviewListSection({ isFinal }: Props) {
               <Table.Row
                 key={id}
                 onClick={() => {
-                  push(`reviews/${id}`);
+                  push(`review/${id}`);
                 }}
               >
                 <Table.Data>{index + 1 + (pageNumber - 1) * pageSizeNumber}</Table.Data>
