@@ -12,7 +12,7 @@ import { PagedReviewsRequestQuery, PagedReviewsResponse } from "../_types/review
  * @param isFinal true면 최종심사, false 기본값
  * @default shouldFetch = true
  */
-function useReviews(queryParams: PagedReviewsRequestQuery, shouldFetch = true, isFinal = false) {
+function useReviews(queryParams: PagedReviewsRequestQuery, isFinal: boolean, shouldFetch = true) {
   const { token } = useAuth();
   const query = { ...queryParams };
 

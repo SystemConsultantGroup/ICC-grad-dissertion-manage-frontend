@@ -11,7 +11,7 @@ import { PagedReviewResultsRequestQuery, PagedReviewsResponse } from "../_types/
  * @param shouldFetch true면 fetch, false면 fetch하지 않음
  * @default shouldFetch = true
  */
-function useReviews(queryParams: PagedReviewResultsRequestQuery, shouldFetch = true) {
+function useReviewResults(queryParams: PagedReviewResultsRequestQuery, shouldFetch = true) {
   const { token } = useAuth();
   const query = { ...queryParams };
 
@@ -40,4 +40,4 @@ function useReviews(queryParams: PagedReviewResultsRequestQuery, shouldFetch = t
   };
 }
 
-export default useReviews;
+export default useReviewResults;
