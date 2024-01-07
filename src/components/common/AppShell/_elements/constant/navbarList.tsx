@@ -74,7 +74,7 @@ export const STUDENT_NAVBAR_LIST: Props[] = [
 ];
 export const PROF_NAVBAR_LIST: Props[] = [
   { label: "메인", href: "/", icon: <IconHome size="24" stroke={1} /> },
-  { label: "논문 심사", href: "/prof/examine", icon: <IconChecklist size="24" stroke={1} /> },
+  { label: "논문 심사", href: "/prof/review", icon: <IconChecklist size="24" stroke={1} /> },
   { label: "최종 판정", href: "/prof/final", icon: <IconProgressCheck size="24" stroke={1} /> },
   { label: "회원정보 수정", href: "/prof/account", icon: <IconSettings size="24" stroke={1} /> },
 ];
