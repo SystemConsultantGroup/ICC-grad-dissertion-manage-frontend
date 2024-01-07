@@ -127,7 +127,7 @@ function ReviewResultListSection() {
             <Table.Data>필터</Table.Data>
             <Table.Data>
               <Select
-                w={90}
+                w={80}
                 placeholder="구분"
                 onChange={(value) => {
                   handleChangeFilter<string | null>({ name: "stage", value });
@@ -141,7 +141,7 @@ function ReviewResultListSection() {
             </Table.Data>
             <Table.Data>
               <Table.TextInput
-                w={90}
+                w={80}
                 placeholder="저자"
                 onChange={(event: ChangeEvent<HTMLInputElement>) => {
                   handleChangeFilter<string>({ name: "author", value: event.target.value });
@@ -159,7 +159,7 @@ function ReviewResultListSection() {
             </Table.Data>
             <Table.Data>
               <Select
-                w={90}
+                w={80}
                 placeholder="결과"
                 onChange={(value) => {
                   handleChangeFilter<string | null>({ name: "summary", value });
