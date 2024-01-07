@@ -36,7 +36,7 @@ function AdminProfForm({ professorId }: Props) {
 
   const { onSubmit, getInputProps, setValues } = useForm<AdminProfFormInputs>({
     initialValues: {
-      loginId: "???",
+      loginId: "",
       password: "",
       name: "",
       email: "",
