@@ -21,9 +21,6 @@ interface Props {
   children?: Props[];
 }
 
-/**
- * @todo href 수정
- */
 export const ADMIN_NAVBAR_LIST: Props[] = [
   { label: "메인", href: "/", icon: <IconHome size="24" stroke={1} /> },
   {
@@ -36,7 +33,7 @@ export const ADMIN_NAVBAR_LIST: Props[] = [
     icon: <IconUser size="24" stroke={1} />,
     children: [
       { label: "교수 현황", href: "/admin/professors" },
-      { label: "교수 등록 및 수정", href: "/admin/prof-register" },
+      { label: "교수 등록", href: "/admin/prof-register" },
       { label: "교수 일괄 등록", href: "/admin/prof-excel-register" },
     ],
   },
@@ -45,13 +42,13 @@ export const ADMIN_NAVBAR_LIST: Props[] = [
     icon: <IconUsers size="24" stroke={1} />,
     children: [
       { label: "학생 현황", href: "/admin/students" },
-      { label: "학생 등록 및 수정", href: "/admin/student-register" },
+      { label: "학생 등록", href: "/admin/student-register" },
       { label: "학생 일괄 등록", href: "/admin/student-excel-register" },
     ],
   },
   {
     label: "심사 결과",
-    href: "/admin/examine",
+    href: "/admin/reviews",
     icon: <IconProgressCheck size="24" stroke={1} />,
   },
   {
@@ -77,7 +74,7 @@ export const STUDENT_NAVBAR_LIST: Props[] = [
 ];
 export const PROF_NAVBAR_LIST: Props[] = [
   { label: "메인", href: "/", icon: <IconHome size="24" stroke={1} /> },
-  { label: "논문 심사", href: "/prof/examine", icon: <IconChecklist size="24" stroke={1} /> },
+  { label: "논문 심사", href: "/prof/review", icon: <IconChecklist size="24" stroke={1} /> },
   { label: "최종 판정", href: "/prof/final", icon: <IconProgressCheck size="24" stroke={1} /> },
   { label: "회원정보 수정", href: "/prof/account", icon: <IconSettings size="24" stroke={1} /> },
 ];

@@ -1,5 +1,3 @@
-"use client";
-
 import { Button, Group, Stack } from "@mantine/core";
 import {
   BasicRow,
@@ -10,7 +8,12 @@ import {
   TitleRow,
 } from "@/components/common/rows";
 
-export function FinalExamine() {
+export interface FinalExamineProps {
+  onTemporarySave: () => void;
+  onSave: () => void;
+}
+
+export function FinalExamine({ onTemporarySave, onSave }: FinalExamineProps) {
   return (
     <Stack gap={0}>
       <TitleRow title="최종 심사하기" />
@@ -23,19 +26,17 @@ export function FinalExamine() {
           </Group>
         </BasicRow>
       </RowGroup>
-      <RowGroup>
-        <TextAreaRow field="심사 의견" />
-      </RowGroup>
+      <TextAreaRow field="심사 의견" />
       <RowGroup>
         <FileUploadRow field="심사 의견 파일" />
       </RowGroup>
       <RowGroup>
         <ButtonRow
           buttons={[
-            <Button key="temp" color="grape" variant="outline">
+            <Button key="temp" color="grape" variant="outline" onClick={onTemporarySave}>
               임시저장
             </Button>,
-            <Button key="temp" color="blue">
+            <Button key="final" color="blue" onClick={onSave}>
               최종저장
             </Button>,
           ]}
