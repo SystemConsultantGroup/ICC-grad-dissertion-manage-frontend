@@ -1,12 +1,9 @@
 "use client";
 
-import { ClientAxios } from "@/api/ClientAxios";
-import { CommonApiResponse } from "@/api/_types/common";
-import { useAuth } from "@/components/common/AuthProvider";
 import { BasicRow, FileUploadRow, RowGroup, TextAreaRow, TitleRow } from "@/components/common/rows";
 import { Button, Stack, TextInput } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
-import { useRouter } from "next/navigation";
+import classes from "./PaperSubmissionForm.module.css";
 
 interface PaperSubmissionFormInputs {
   title: string;
@@ -46,6 +43,11 @@ function PaperSubmissionForm() {
       <Stack gap={0}>
         <TitleRow title="논문 투고" />
         <RowGroup>
+          <BasicRow field="저자">
+            <TextInput disabled />
+          </BasicRow>
+        </RowGroup>
+        <RowGroup>
           <BasicRow field="논문 제목">
             <TextInput {...getInputProps("title")} />
           </BasicRow>
@@ -57,7 +59,9 @@ function PaperSubmissionForm() {
         <RowGroup>
           <FileUploadRow field="논문 발표 파일" form={form} formKey="presentationFile" />
         </RowGroup>
-        <Button type="submit">투고하기</Button>
+        <Button type="submit" className={classes.submitButton}>
+          투고하기
+        </Button>
       </Stack>
     </form>
   );
