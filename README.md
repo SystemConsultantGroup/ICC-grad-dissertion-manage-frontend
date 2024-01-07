@@ -59,3 +59,16 @@
 ```bash
 NEXT_PUBLIC_API_ENDPOINT = http://localhost:4000/v1/
 ```
+
+---
+## 빌드 및 테스트
+
+```bash
+yarn install
+```
+
+ctrl(command) + shift + p => typescript 버전선택 => 작업 영역 버전 사용 선택
+
+```bash
+yarn dev
+```
