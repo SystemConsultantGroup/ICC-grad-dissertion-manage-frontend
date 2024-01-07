@@ -1,0 +1,1 @@
+export { ArticleInfo } from "./ArticleInfo";
