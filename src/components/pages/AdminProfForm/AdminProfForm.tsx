@@ -32,7 +32,6 @@ interface AdminProfFormInputs {
 function AdminProfForm({ professorId }: Props) {
   const router = useRouter();
   const { login } = useAuth();
-  const { data, isLoading, error } = useDepartments();
 
   const { onSubmit, getInputProps, setValues } = useForm<AdminProfFormInputs>({
     initialValues: {
@@ -164,15 +163,15 @@ function AdminProfForm({ professorId }: Props) {
           </RowGroup>
           <RowGroup>
             <BasicRow field="소속">
+              {/* TODO: DepartmentsSelect 컴포넌트로 대체 */}
               <Select
-                disabled={isLoading}
-                placeholder={error ? "소속 불러오기 실패" : "소속을 선택해주세요"}
-                data={data?.departments.map((department) => ({
-                  value: String(department.id),
-                  label: department.name,
-                }))}
+                placeholder="소속을 선택해주세요"
                 {...getInputProps("department")}
-                allowDeselect={false}
+                styles={{
+                  wrapper: {
+                    width: 300,
+                  },
+                }}
               />
             </BasicRow>
           </RowGroup>
