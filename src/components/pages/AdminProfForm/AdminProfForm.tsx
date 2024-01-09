@@ -26,7 +26,7 @@ interface AdminProfFormInputs {
   name: string;
   email: string;
   phone: string;
-  department: string;
+  deptId: string;
 }
 
 function AdminProfForm({ professorId }: Props) {
@@ -41,7 +41,7 @@ function AdminProfForm({ professorId }: Props) {
       name: "",
       email: "",
       phone: "",
-      department: "",
+      deptId: "",
     },
     validate: {
       loginId: isNotEmpty(),
@@ -49,16 +49,15 @@ function AdminProfForm({ professorId }: Props) {
       name: isNotEmpty(),
       email: isEmail("형식이 올바르지 않습니다."),
       phone: isNotEmpty(),
-      department: isNotEmpty(),
+      deptId: isNotEmpty(),
     },
   });
 
-  // 수정 모드인 경우 기존 정보 반영
   useEffect(() => {
     const fetchProfessorDetails = async () => {
       try {
         if (professorId) {
-          const response = await ClientAxios.get(API_ROUTES.professor.get(String(professorId)));
+          const response = await ClientAxios.get(API_ROUTES.professor.get(professorId));
           const professorDetails = response.data;
 
           setValues({
@@ -67,7 +66,7 @@ function AdminProfForm({ professorId }: Props) {
             name: professorDetails.name,
             email: professorDetails.email,
             phone: professorDetails.phone,
-            department: String(professorDetails.department.id),
+            deptId: String(professorDetails.deptId.id),
           });
         }
       } catch (err) {
@@ -79,12 +78,13 @@ function AdminProfForm({ professorId }: Props) {
 
   const handleSubmit = async (values: AdminProfFormInputs) => {
     try {
+      const realValues = { ...values, deptId: parseInt(values.deptId, 10) };
       if (!professorId) {
-        await ClientAxios.post(API_ROUTES.professor.post(), values);
+        await ClientAxios.post(API_ROUTES.professor.post(), realValues);
         router.push("/admin/prof");
         // TODO: 등록 완료 알림
       } else {
-        await ClientAxios.post(API_ROUTES.professor.put(String(professorId)), values);
+        await ClientAxios.post(API_ROUTES.professor.put(professorId), realValues);
         router.push(`/admin/prof/${professorId}`);
         // TODO: 수정 완료 알림
       }
@@ -164,7 +164,6 @@ function AdminProfForm({ professorId }: Props) {
           </RowGroup>
           <RowGroup>
             <BasicRow field="소속">
-              {/* TODO: DepartmentsSelect 컴포넌트로 대체 */}
               <Select
                 disabled={isLoading}
                 placeholder={error ? "소속 불러오기 실패" : "소속을 선택해주세요"}
