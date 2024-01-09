@@ -29,15 +29,16 @@ import Pagination from "@/components/common/Pagination";
 import { PagedReviewsRequestQuery } from "@/api/_types/reviews";
 import useReviews from "@/api/SWR/useReviews";
 import { DATE_TIME_FORMAT_HYPHEN } from "@/constants/date";
+import { DepartmentSelect } from "@/components/common/selects/DepartmentSelect";
 import { REFRESH_DEFAULT_PAGE_NUMBER } from "../_constants/page";
 import { TChangeQueryArg } from "../_types/common";
-import { REVIEW_TABLE_HEADERS } from "../_constants/table";
+import { PROF_REVIEW_TABLE_HEADERS } from "../_constants/table";
 
 interface Props {
   isFinal: boolean;
 }
 
-function ReviewListSection({ isFinal }: Props) {
+function ProfReviewListSection({ isFinal }: Props) {
   const { push } = useRouter();
   const [pageSize, setPageSize] = useState<string | null>(String(PAGE_SIZES[0]));
   const [pageNumber, setPageNumber] = useState(1);
@@ -140,13 +141,14 @@ function ReviewListSection({ isFinal }: Props) {
       </SectionHeader>
       {isLoading && <Skeleton />}
       <ScrollArea type="hover" offsetScrollbars style={{ width: "100%", overflow: "visible" }}>
-        <Table headers={REVIEW_TABLE_HEADERS}>
+        <Table headers={PROF_REVIEW_TABLE_HEADERS}>
           {/* 필터 영역 */}
           <Table.Row pointer={false}>
             <Table.Data>필터</Table.Data>
             <Table.Data>
               <Select
-                w={80}
+                w="100%"
+                miw={80}
                 placeholder="구분"
                 onChange={(value) => {
                   handleChangeFilter<string | null>({ name: "stage", value });
@@ -160,7 +162,8 @@ function ReviewListSection({ isFinal }: Props) {
             </Table.Data>
             <Table.Data>
               <Table.TextInput
-                w={80}
+                w="100%"
+                miw={80}
                 placeholder="저자"
                 onChange={(event: ChangeEvent<HTMLInputElement>) => {
                   handleChangeFilter<string>({ name: "author", value: event.target.value });
@@ -168,9 +171,21 @@ function ReviewListSection({ isFinal }: Props) {
               />
             </Table.Data>
             <Table.Data>
+            <DepartmentSelect
+                w="100%"
+                miw={150}
+                placeholder="전공"
+                onChange={(value) => {
+                  handleChangeFilter<string | null>({ name: "department", value });
+                }}
+                allowDeselect
+              />
+            </Table.Data>
+            <Table.Data>
               <Table.TextInput
-                w={500}
-                placeholder="논문 제목"
+                w="100%"
+                miw={300}
+                placeholder="논문 제목"     
                 onChange={(event: ChangeEvent<HTMLInputElement>) => {
                   handleChangeFilter<string>({ name: "title", value: event.target.value });
                 }}
@@ -178,7 +193,8 @@ function ReviewListSection({ isFinal }: Props) {
             </Table.Data>
             <Table.Data>
               <Select
-                w={80}
+                w="100%"
+                miw={80}
                 placeholder="현황"
                 onChange={(value) => {
                   handleChangeFilter<string | null>({ name: "status", value });
@@ -194,7 +210,7 @@ function ReviewListSection({ isFinal }: Props) {
             </Table.Data>
           </Table.Row>
           {reviews?.map((review, index) => {
-            const { id, stage, student, title, status } = review;
+            const { id, stage, student, department, title, status } = review;
 
             return (
               <Table.Row
@@ -206,6 +222,7 @@ function ReviewListSection({ isFinal }: Props) {
                 <Table.Data>{index + 1 + (pageNumber - 1) * pageSizeNumber}</Table.Data>
                 <Table.Data>{stage === "MAIN" ? "본심" : "예심"}</Table.Data>
                 <Table.Data>{student}</Table.Data>
+                <Table.Data>{department}</Table.Data>
                 <Table.Data>{title}</Table.Data>
                 <Table.Data>
                   {status === "UNEXAMINED"
@@ -232,4 +249,4 @@ function ReviewListSection({ isFinal }: Props) {
   );
 }
 
-export default ReviewListSection;
+export default ProfReviewListSection;
