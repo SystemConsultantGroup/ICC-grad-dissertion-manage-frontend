@@ -28,6 +28,7 @@ import { Table } from "@/components/common/Table";
 import Pagination from "@/components/common/Pagination";
 import useReviewResults from "@/api/SWR/useReviewResults";
 import { PagedReviewResultsRequestQuery } from "@/api/_types/reviews";
+import { DepartmentSelect } from "@/components/common/selects/DepartmentSelect";
 import { REFRESH_DEFAULT_PAGE_NUMBER } from "../_constants/page";
 import { TChangeQueryArg } from "../_types/common";
 import { REVIEW_RESULT_TABLE_HEADERS } from "../_constants/table";
@@ -127,7 +128,8 @@ function ReviewResultListSection() {
             <Table.Data>필터</Table.Data>
             <Table.Data>
               <Select
-                w={80}
+                w="100%"
+                miw={80}
                 placeholder="구분"
                 onChange={(value) => {
                   handleChangeFilter<string | null>({ name: "stage", value });
@@ -141,7 +143,8 @@ function ReviewResultListSection() {
             </Table.Data>
             <Table.Data>
               <Table.TextInput
-                w={80}
+                w="100%"
+                miw={80}
                 placeholder="저자"
                 onChange={(event: ChangeEvent<HTMLInputElement>) => {
                   handleChangeFilter<string>({ name: "author", value: event.target.value });
@@ -149,8 +152,20 @@ function ReviewResultListSection() {
               />
             </Table.Data>
             <Table.Data>
+            <DepartmentSelect
+                w="100%"
+                miw={150}
+                placeholder="전공"
+                onChange={(value) => {
+                  handleChangeFilter<string | null>({ name: "department", value });
+                }}
+                allowDeselect
+              />
+            </Table.Data>
+            <Table.Data>
               <Table.TextInput
-                w={500}
+                w="100%"
+                miw={300}
                 placeholder="논문 제목"
                 onChange={(event: ChangeEvent<HTMLInputElement>) => {
                   handleChangeFilter<string>({ name: "title", value: event.target.value });
@@ -159,7 +174,8 @@ function ReviewResultListSection() {
             </Table.Data>
             <Table.Data>
               <Select
-                w={80}
+                w="100%"
+                miw={80}
                 placeholder="결과"
                 onChange={(value) => {
                   handleChangeFilter<string | null>({ name: "summary", value });
@@ -173,7 +189,7 @@ function ReviewResultListSection() {
             </Table.Data>
           </Table.Row>
           {reviewResults?.map((reviewResult, index) => {
-            const { id, stage, student, title, summary } = reviewResult;
+            const { id, stage, student, department, title, summary } = reviewResult;
 
             return (
               <Table.Row
@@ -185,6 +201,7 @@ function ReviewResultListSection() {
                 <Table.Data>{index + 1 + (pageNumber - 1) * pageSizeNumber}</Table.Data>
                 <Table.Data>{stage === "MAIN" ? "본심" : "예심"}</Table.Data>
                 <Table.Data>{student}</Table.Data>
+                <Table.Data>{department}</Table.Data>
                 <Table.Data>{title}</Table.Data>
                 <Table.Data>{summary === "PASS" ? "합격" : "불합격"}</Table.Data>
               </Table.Row>
