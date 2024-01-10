@@ -1,6 +1,16 @@
 "use client";
 
-import { Button, Center, Group, PasswordInput, Stack, Text, TextInput, Title } from "@mantine/core";
+import {
+  Button,
+  Center,
+  Group,
+  PasswordInput,
+  Radio,
+  Stack,
+  Text,
+  TextInput,
+  Title,
+} from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -8,6 +18,7 @@ import skkuLogo from "@/images/skku-logo.svg";
 import { CommonApiResponse } from "@/api/_types/common";
 import { ClientAxios } from "@/api/ClientAxios";
 import { useAuth } from "@/components/common/AuthProvider/AuthProvider";
+import { useState } from "react";
 
 interface LoginFormInputs {
   loginId: string;
@@ -17,6 +28,8 @@ interface LoginFormInputs {
 function LoginForm() {
   const { login } = useAuth();
   const router = useRouter();
+
+  const [type, setType] = useState<string>("");
 
   const { onSubmit, getInputProps } = useForm<LoginFormInputs>({
     initialValues: {
@@ -55,7 +68,7 @@ function LoginForm() {
         />
 
         <Stack align="center">
-          <Stack align="center" gap={16} mb={42}>
+          <Stack align="center" gap={16} mb={24}>
             <Text fz={32} fw={900} c="dimmed">
               정보통신대학 대학원
             </Text>
@@ -64,9 +77,17 @@ function LoginForm() {
             </Title>
           </Stack>
 
+          <Radio.Group value={type} onChange={setType}>
+            <Stack align="left" gap={16} mb={24} ml={16}>
+              <Radio value="student" label="학생" />
+              <Radio value="professor" label="교수(심사위원)" />
+              <Radio value="admin" label="관리자" />
+            </Stack>
+          </Radio.Group>
+
           <form onSubmit={onSubmit(handleSubmit)}>
-            <Stack gap={24} mb={40}>
-              <Group gap={30}>
+            <Stack gap={0} mb={36}>
+              <Group gap={30} mb={18}>
                 <label style={{ fontWeight: 500 }} htmlFor="input-id">
                   아이디
                 </label>
@@ -78,7 +99,7 @@ function LoginForm() {
                   {...getInputProps("loginId")}
                 />
               </Group>
-              <Group>
+              <Group mb={8}>
                 <label style={{ fontWeight: 500 }} htmlFor="input-password">
                   비밀번호
                 </label>
@@ -90,6 +111,11 @@ function LoginForm() {
                   {...getInputProps("password")}
                 />
               </Group>
+              <Text fw={500} ml={74}>
+                {type === "student" && "아이디는 학번, 비밀번호는 생년월일입니다."}
+                {type === "professor" && "아이디와 비밀번호는 내선번호입니다."}
+                {type === "admin" && "관리자 계정은 행정실에 문의해주세요."}
+              </Text>
             </Stack>
             <Center>
               <Button type="submit" color="blue.5" size="md" style={{ width: "fit-content" }}>
