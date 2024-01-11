@@ -1,5 +1,5 @@
-function AdminAchievementListPage() {
+function StudentAchievementListPage() {
   return <></>;
 }
 
-export default AdminAchievementListPage;
+export default StudentAchievementListPage;

@@ -70,7 +70,7 @@ function LoginForm() {
         <Stack align="center">
           <Stack align="center" gap={16} mb={24}>
             <Text fz={32} fw={900} c="dimmed">
-              정보통신대학 대학원
+              정보통신/소프트웨어융합대학 일반대학원
             </Text>
             <Title order={1} fz={52} fw={900}>
               학위논문 심사 시스템
