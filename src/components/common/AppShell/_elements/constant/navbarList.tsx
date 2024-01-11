@@ -8,9 +8,9 @@ import {
   IconUsers,
   IconSchool,
   IconChecklist,
-  IconCircleCheckFilled,
   IconFileCheck,
-  IconFileUpload,
+  IconMicroscope,
+  IconCircleCheck,
 } from "@tabler/icons-react";
 import { ReactNode } from "react";
 
@@ -60,12 +60,17 @@ export const ADMIN_NAVBAR_LIST: Props[] = [
   {
     label: "심사 결과",
     href: "/admin/results",
-    icon: <IconCircleCheckFilled size="24" stroke={1} />,
+    icon: <IconCircleCheck size="24" stroke={1} />,
   },
   {
     label: "학과 관리",
     href: "/admin/department",
     icon: <IconSchool size="24" stroke={1} />,
+  },
+  {
+    label: "연구실적 조회",
+    href: "/admin/achievement",
+    icon: <IconMicroscope size="24" stroke={1} />,
   },
   {
     label: "관리자정보 수정",
@@ -89,7 +94,7 @@ export const STUDENT_NAVBAR_LIST: Props[] = [
   {
     label: "연구실적 등록",
     href: "/student/achievement",
-    icon: <IconFileUpload size="24" stroke={1} />,
+    icon: <IconMicroscope size="24" stroke={1} />,
   },
   { label: "회원정보 수정", href: "/student/account", icon: <IconSettings size="24" stroke={1} /> },
 ];
