@@ -17,18 +17,15 @@ function DepartmentManageSection() {
           <TitleRow title="학과 목록" />
           <DepartmentTable>
             {!isLoading &&
-              data?.departments.map((department, index) => {
-                const { id, name, userCount } = department;
-                return (
-                  <DepartmentTableRow
-                    id={id}
-                    key={index}
-                    name={name}
-                    userCount={userCount}
-                    mutate={mutate}
-                  />
-                );
-              })}
+              data?.departments.map((department, index) => (
+                <DepartmentTableRow
+                  id={department.id}
+                  key={index}
+                  name={department.name}
+                  userCount={department.userCount}
+                  mutate={mutate}
+                />
+              ))}
           </DepartmentTable>
         </Stack>
         <Stack gap={0}>
