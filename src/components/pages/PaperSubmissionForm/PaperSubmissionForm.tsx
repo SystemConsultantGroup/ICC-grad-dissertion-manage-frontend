@@ -3,38 +3,56 @@
 import { BasicRow, FileUploadRow, RowGroup, TextAreaRow, TitleRow } from "@/components/common/rows";
 import { Button, Stack, TextInput } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
-import classes from "./PaperSubmissionForm.module.css";
+import classes from "@/components/pages/PaperSubmissionForm/PaperSubmissionForm.module.css";
+import { useAuth } from "@/components/common/AuthProvider";
+import { uploadFile } from "@/api/_utils/uploadFile";
+import { ClientAxios } from "@/api/ClientAxios";
+import { API_ROUTES } from "@/api/apiRoute";
+import { useState } from "react";
 
 interface PaperSubmissionFormInputs {
   title: string;
   abstract: string;
-  paperFile: File | null;
+  thesisFile: File | null;
   presentationFile: File | null;
 }
 
 function PaperSubmissionForm() {
+  const { user } = useAuth();
   const form = useForm<PaperSubmissionFormInputs>({
     initialValues: {
       title: "",
       abstract: "",
-      paperFile: null,
+      thesisFile: null,
       presentationFile: null,
     },
     validate: {
       title: isNotEmpty("논문 제목을 입력해주세요."),
       abstract: isNotEmpty("논문 초록을 입력해주세요."),
-      paperFile: isNotEmpty("논문 파일을 첨부해주세요."),
+      thesisFile: isNotEmpty("논문 파일을 첨부해주세요."),
       presentationFile: isNotEmpty("논문 발표 파일을 첨부해주세요."),
     },
   });
   const { onSubmit, getInputProps } = form;
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (values: PaperSubmissionFormInputs) => {
+    setIsSubmitting(true);
     try {
-      console.log(values);
+      const thesisFileUUID = (await uploadFile(values.thesisFile!)).uuid;
+      const presentationFileUUID = (await uploadFile(values.presentationFile!)).uuid;
+      const { title, abstract } = values;
+      ClientAxios.put(API_ROUTES.student.putThesis(user!.id), {
+        title,
+        abstract,
+        thesisFileUUID,
+        presentationFileUUID,
+      });
     } catch (error) {
       console.error(error);
       // TODO: Notification & 에러 처리
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -44,7 +62,7 @@ function PaperSubmissionForm() {
         <TitleRow title="논문 투고" />
         <RowGroup>
           <BasicRow field="저자">
-            <TextInput disabled />
+            {user ? <TextInput disabled value={user.name} /> : <TextInput disabled value="" />}
           </BasicRow>
         </RowGroup>
         <RowGroup>
@@ -54,12 +72,12 @@ function PaperSubmissionForm() {
         </RowGroup>
         <TextAreaRow field="논문 초록" form={form} formKey="abstract" />
         <RowGroup>
-          <FileUploadRow field="논문 파일" form={form} formKey="paperFile" />
+          <FileUploadRow field="논문 파일" form={form} formKey="thesisFile" />
         </RowGroup>
         <RowGroup>
           <FileUploadRow field="논문 발표 파일" form={form} formKey="presentationFile" />
         </RowGroup>
-        <Button type="submit" className={classes.submitButton}>
+        <Button type="submit" className={classes.submitButton} loading={isSubmitting}>
           투고하기
         </Button>
       </Stack>

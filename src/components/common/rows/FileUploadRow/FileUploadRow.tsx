@@ -37,12 +37,13 @@ function FileUploadRow({ field, onChange, defaultFile, form, formKey = "file" }:
   return (
     <Row field={field}>
       <Group gap={16}>
-        <FileButton onChange={handleFileChange} resetRef={resetRef}>
+        {/* form API와 함께 사용시 예기치 못한 동작이 발생하여 주석처리 */}
+        {/* <FileButton onChange={handleFileChange} resetRef={resetRef}>
           {(props) => <Button {...props}>파일 선택</Button>}
-        </FileButton>
+        </FileButton> */}
         <FileInput
           style={{ width: 300 }}
-          value={file}
+          value={form ? undefined : file}
           onChange={handleFileChange}
           defaultValue={defaultFile}
           {...form?.getInputProps(formKey)}
@@ -53,8 +54,8 @@ function FileUploadRow({ field, onChange, defaultFile, form, formKey = "file" }:
           color="red"
           variant="outline"
           leftSection={<IconTrash size={20} />}
-          disabled={!file}
-          onClick={clearFile}
+          disabled={form ? !form.values[formKey] : !file}
+          onClick={form ? () => form.setValues({ ...form.values, [formKey]: null }) : clearFile}
         >
           삭제
         </Button>
