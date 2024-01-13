@@ -46,7 +46,7 @@ function ProfReviewListSection({ isFinal }: Props) {
     pageData,
   } = useReviews({ ...query, pageNumber, pageSize: pageSizeNumber }, isFinal);
 
-  const { startNumber, endNumber } = getPageSizeStartEndNumber({
+  const { startNumber } = getPageSizeStartEndNumber({
     pageNumber,
     pageSize: Number(pageSize ?? 0),
     arrayLength: reviews?.length ?? 0,
