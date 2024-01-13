@@ -9,7 +9,10 @@ interface Props {
 
 function TableRow({ children, onClick }: Props) {
   return (
-    <Table.Tr onClick={onClick} className={classes.container}>
+    <Table.Tr
+      onClick={onClick}
+      className={onClick ? classes.container : classes.containerNoPointer}
+    >
       {children}
     </Table.Tr>
   );

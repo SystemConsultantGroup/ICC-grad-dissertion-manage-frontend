@@ -11,10 +11,11 @@ import classes from "./Table.module.css";
 interface Props {
   headers: TableHeaderProps[];
   children: ReactNode;
+  simple?: boolean;
 }
-function Table({ headers, children }: Props) {
+function Table({ headers, children, simple = false }: Props) {
   return (
-    <ScrollArea type="hover" offsetScrollbars className={classes.container}>
+    <ScrollArea type="hover" offsetScrollbars className={!simple ? classes.container : undefined}>
       <MantineTable>
         <MantineTable.Thead className={classes.header}>
           <MantineTable.Tr>
