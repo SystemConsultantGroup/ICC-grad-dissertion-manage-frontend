@@ -11,17 +11,7 @@ import { PAGE_SIZES } from "@/constants/pageSize";
 import { useDebouncedState } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
-import {
-  ActionIcon,
-  Button,
-  Center,
-  Group,
-  Popover,
-  ScrollArea,
-  Select,
-  Skeleton,
-  Stack,
-} from "@mantine/core";
+import { ActionIcon, Button, Center, Group, Popover, Select, Skeleton, Stack } from "@mantine/core";
 import { SectionHeader } from "@/components/common/SectionHeader";
 import { IconDownload } from "@tabler/icons-react";
 import { Table } from "@/components/common/Table";
@@ -140,100 +130,99 @@ function ProfReviewListSection({ isFinal }: Props) {
         </SectionHeader.Buttons>
       </SectionHeader>
       {isLoading && <Skeleton />}
-      <ScrollArea type="hover" offsetScrollbars style={{ width: "100%", overflow: "visible" }}>
-        <Table headers={PROF_REVIEW_TABLE_HEADERS}>
-          {/* 필터 영역 */}
-          <Table.Row pointer={false}>
-            <Table.Data>필터</Table.Data>
+
+      <Table headers={PROF_REVIEW_TABLE_HEADERS}>
+        {/* 필터 영역 */}
+        <Table.FilterRow>
+          <Table.Data>필터</Table.Data>
+          <Table.Data>
+            <Select
+              w="100%"
+              miw={80}
+              placeholder="구분"
+              onChange={(value) => {
+                handleChangeFilter<string | null>({ name: "stage", value });
+              }}
+              allowDeselect
+              data={[
+                { label: "예심", value: "PRELIMINARY" },
+                { label: "본심", value: "MAIN" },
+              ]}
+            />
+          </Table.Data>
+          <Table.Data>
+            <Table.TextInput
+              w="100%"
+              miw={80}
+              placeholder="저자"
+              onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                handleChangeFilter<string>({ name: "author", value: event.target.value });
+              }}
+            />
+          </Table.Data>
+          <Table.Data>
+            <DepartmentSelect
+              w="100%"
+              miw={150}
+              placeholder="전공"
+              onChange={(value) => {
+                handleChangeFilter<string | null>({ name: "department", value });
+              }}
+              allowDeselect
+            />
+          </Table.Data>
+          <Table.Data>
+            <Table.TextInput
+              w="100%"
+              miw={300}
+              placeholder="논문 제목"
+              onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                handleChangeFilter<string>({ name: "title", value: event.target.value });
+              }}
+            />
+          </Table.Data>
+          <Table.Data>
+            <Select
+              w="100%"
+              miw={80}
+              placeholder="현황"
+              onChange={(value) => {
+                handleChangeFilter<string | null>({ name: "status", value });
+              }}
+              data={[
+                { label: "진행중", value: "UNEXAMINED" },
+                { label: "합격", value: "PASS" },
+                { label: "불합격", value: "FAIL" },
+                { label: "보류", value: "PENDING" },
+              ]}
+              allowDeselect
+            />
+          </Table.Data>
+        </Table.FilterRow>
+        {reviews?.map((review, index) => (
+          <Table.Row
+            key={review.id}
+            onClick={() => {
+              push(isFinal ? `final/${review.id}` : `review/${review.id}`);
+            }}
+          >
+            <Table.Data>{index + 1 + (pageNumber - 1) * pageSizeNumber}</Table.Data>
+            <Table.Data>{review.stage === "MAIN" ? "본심" : "예심"}</Table.Data>
+            <Table.Data>{review.student}</Table.Data>
+            <Table.Data>{review.department}</Table.Data>
+            <Table.Data>{review.title}</Table.Data>
             <Table.Data>
-              <Select
-                w="100%"
-                miw={80}
-                placeholder="구분"
-                onChange={(value) => {
-                  handleChangeFilter<string | null>({ name: "stage", value });
-                }}
-                allowDeselect
-                data={[
-                  { label: "예심", value: "PRELIMINARY" },
-                  { label: "본심", value: "MAIN" },
-                ]}
-              />
-            </Table.Data>
-            <Table.Data>
-              <Table.TextInput
-                w="100%"
-                miw={80}
-                placeholder="저자"
-                onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                  handleChangeFilter<string>({ name: "author", value: event.target.value });
-                }}
-              />
-            </Table.Data>
-            <Table.Data>
-              <DepartmentSelect
-                w="100%"
-                miw={150}
-                placeholder="전공"
-                onChange={(value) => {
-                  handleChangeFilter<string | null>({ name: "department", value });
-                }}
-                allowDeselect
-              />
-            </Table.Data>
-            <Table.Data>
-              <Table.TextInput
-                w="100%"
-                miw={300}
-                placeholder="논문 제목"
-                onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                  handleChangeFilter<string>({ name: "title", value: event.target.value });
-                }}
-              />
-            </Table.Data>
-            <Table.Data>
-              <Select
-                w="100%"
-                miw={80}
-                placeholder="현황"
-                onChange={(value) => {
-                  handleChangeFilter<string | null>({ name: "status", value });
-                }}
-                data={[
-                  { label: "진행중", value: "UNEXAMINED" },
-                  { label: "합격", value: "PASS" },
-                  { label: "불합격", value: "FAIL" },
-                  { label: "보류", value: "PENDING" },
-                ]}
-                allowDeselect
-              />
+              {review.status === "UNEXAMINED"
+                ? "진행중"
+                : review.status === "PASS"
+                  ? "합격"
+                  : review.status === "FAIL"
+                    ? "불합격"
+                    : "보류"}
             </Table.Data>
           </Table.Row>
-          {reviews?.map((review, index) => (
-            <Table.Row
-              key={review.id}
-              onClick={() => {
-                push(isFinal ? `final/${review.id}` : `review/${review.id}`);
-              }}
-            >
-              <Table.Data>{index + 1 + (pageNumber - 1) * pageSizeNumber}</Table.Data>
-              <Table.Data>{review.stage === "MAIN" ? "본심" : "예심"}</Table.Data>
-              <Table.Data>{review.student}</Table.Data>
-              <Table.Data>{review.department}</Table.Data>
-              <Table.Data>{review.title}</Table.Data>
-              <Table.Data>
-                {review.status === "UNEXAMINED"
-                  ? "진행중"
-                  : review.status === "PASS"
-                    ? "합격"
-                    : review.status === "FAIL"
-                      ? "불합격"
-                      : "보류"}
-              </Table.Data>
-            </Table.Row>
-          ))}
-        </Table>
-      </ScrollArea>
+        ))}
+      </Table>
       <Center>
         <Pagination
           value={pageNumber}

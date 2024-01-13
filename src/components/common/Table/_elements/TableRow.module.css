@@ -1,8 +1,7 @@
-.tableRow:hover {
+.container {
+  height: 56px;
+}
+.container:hover {
   background-color: rgba(0, 0, 0, 0.05);
   cursor: pointer;
-}
-
-.tableRowNoPointer:hover {
-  background-color: rgba(0, 0, 0, 0.05);
 }

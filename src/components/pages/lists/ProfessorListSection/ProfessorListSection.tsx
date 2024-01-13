@@ -14,16 +14,7 @@ import { useDebouncedState } from "@mantine/hooks";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
-import {
-  ActionIcon,
-  Button,
-  Center,
-  Group,
-  Popover,
-  ScrollArea,
-  Skeleton,
-  Stack,
-} from "@mantine/core";
+import { ActionIcon, Button, Center, Group, Popover, Skeleton, Stack } from "@mantine/core";
 import { SectionHeader } from "@/components/common/SectionHeader";
 import { IconDownload, IconPlus } from "@tabler/icons-react";
 import Link from "next/link";
@@ -138,75 +129,73 @@ function ProfessorListSection() {
         </SectionHeader.Buttons>
       </SectionHeader>
       {isLoading && <Skeleton />}
-      <ScrollArea type="hover" offsetScrollbars style={{ width: "100%", overflow: "visible" }}>
-        <Table headers={PROF_TABLE_HEADERS}>
-          {/* 필터 영역 */}
-          <Table.Row pointer={false}>
-            <Table.Data>필터</Table.Data>
-            <Table.Data>
-              <Table.TextInput
-                w={150}
-                placeholder="아이디"
-                onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                  handleChangeFilter<string>({ name: "loginId", value: event.target.value });
-                }}
-              />
-            </Table.Data>
-            <Table.Data>
-              <Table.TextInput
-                w={150}
-                placeholder="이름"
-                onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                  handleChangeFilter<string>({ name: "name", value: event.target.value });
-                }}
-              />
-            </Table.Data>
-            <Table.Data>
-              <Table.TextInput
-                w={150}
-                placeholder="이메일"
-                onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                  handleChangeFilter<string>({ name: "email", value: event.target.value });
-                }}
-              />
-            </Table.Data>
-            <Table.Data>
-              <Table.TextInput
-                w={150}
-                placeholder="연락처"
-                onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                  handleChangeFilter<string>({ name: "phone", value: event.target.value });
-                }}
-              />
-            </Table.Data>
-            <Table.Data>
-              <DepartmentSelect
-                w={150}
-                placeholder="소속"
-                onChange={(value) => {
-                  handleChangeFilter<string | null>({ name: "deptId", value });
-                }}
-                allowDeselect
-              />
-            </Table.Data>
-          </Table.Row>
-          {professors?.map((professor, index) => (
-            <Table.Row
-              key={professor.id}
-              onClick={() => {
-                push(`professors/${professor.id}`);
+      <Table headers={PROF_TABLE_HEADERS}>
+        {/* 필터 영역 */}
+        <Table.FilterRow>
+          <Table.Data>필터</Table.Data>
+          <Table.Data>
+            <Table.TextInput
+              w={150}
+              placeholder="아이디"
+              onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                handleChangeFilter<string>({ name: "loginId", value: event.target.value });
               }}
-            >
-              <Table.Data>{index + 1 + (pageNumber - 1) * pageSizeNumber}</Table.Data>
-              <Table.Data>{professor.loginId}</Table.Data>
-              <Table.Data>{professor.name}</Table.Data>
-              <Table.Data>{professor.email}</Table.Data>
-              <Table.Data>{professor.phone}</Table.Data>
-              <Table.Data>{professor.department.name}</Table.Data>
-            </Table.Row>
-          ))}
-        </Table>
-      </ScrollArea>
+            />
+          </Table.Data>
+          <Table.Data>
+            <Table.TextInput
+              w={150}
+              placeholder="이름"
+              onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                handleChangeFilter<string>({ name: "name", value: event.target.value });
+              }}
+            />
+          </Table.Data>
+          <Table.Data>
+            <Table.TextInput
+              w={150}
+              placeholder="이메일"
+              onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                handleChangeFilter<string>({ name: "email", value: event.target.value });
+              }}
+            />
+          </Table.Data>
+          <Table.Data>
+            <Table.TextInput
+              w={150}
+              placeholder="연락처"
+              onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                handleChangeFilter<string>({ name: "phone", value: event.target.value });
+              }}
+            />
+          </Table.Data>
+          <Table.Data>
+            <DepartmentSelect
+              w={150}
+              placeholder="소속"
+              onChange={(value) => {
+                handleChangeFilter<string | null>({ name: "deptId", value });
+              }}
+              allowDeselect
+            />
+          </Table.Data>
+        </Table.FilterRow>
+        {professors?.map((professor, index) => (
+          <Table.Row
+            key={professor.id}
+            onClick={() => {
+              push(`professors/${professor.id}`);
+            }}
+          >
+            <Table.Data>{index + 1 + (pageNumber - 1) * pageSizeNumber}</Table.Data>
+            <Table.Data>{professor.loginId}</Table.Data>
+            <Table.Data>{professor.name}</Table.Data>
+            <Table.Data>{professor.email}</Table.Data>
+            <Table.Data>{professor.phone}</Table.Data>
+            <Table.Data>{professor.department.name}</Table.Data>
+          </Table.Row>
+        ))}
+      </Table>
       <Center>
         <Pagination
           value={pageNumber}
