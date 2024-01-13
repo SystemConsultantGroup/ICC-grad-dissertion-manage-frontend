@@ -3,20 +3,13 @@ import { Table } from "@mantine/core";
 import classes from "./TableRow.module.css";
 
 interface Props {
-  pointer?: boolean;
   children: ReactNode;
   onClick?: () => void;
 }
 
-function TableRow({ children, onClick, pointer = true }: Props) {
+function TableRow({ children, onClick }: Props) {
   return (
-    <Table.Tr
-      onClick={onClick}
-      className={pointer ? classes.tableRow : classes.tableRowNoPointer}
-      style={{
-        height: 56,
-      }}
-    >
+    <Table.Tr onClick={onClick} className={classes.container}>
       {children}
     </Table.Tr>
   );

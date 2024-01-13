@@ -13,16 +13,7 @@ import { DATE_TIME_FORMAT_HYPHEN } from "@/constants/date";
 import { objectToQueryString } from "@/api/_utils/objectToUrl";
 import { API_ROUTES } from "@/api/apiRoute";
 import { handleDownloadFile } from "@/api/_utils/handleDownloadFile";
-import {
-  ActionIcon,
-  Button,
-  Center,
-  Group,
-  Popover,
-  ScrollArea,
-  Skeleton,
-  Stack,
-} from "@mantine/core";
+import { ActionIcon, Button, Center, Group, Popover, Skeleton, Stack } from "@mantine/core";
 import { SectionHeader } from "@/components/common/SectionHeader";
 import { IconDownload, IconPlus } from "@tabler/icons-react";
 import Link from "next/link";
@@ -138,75 +129,73 @@ function StudentListSection() {
         </SectionHeader.Buttons>
       </SectionHeader>
       {isLoading && <Skeleton />}
-      <ScrollArea type="hover" offsetScrollbars style={{ width: "100%", overflow: "visible" }}>
-        <Table headers={STUDENTS_TABLE_HEADERS}>
-          {/* 필터 영역 */}
-          <Table.Row pointer={false}>
-            <Table.Data>필터</Table.Data>
-            <Table.Data>
-              <Table.TextInput
-                w={150}
-                placeholder="아이디"
-                onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                  handleChangeFilter<string>({ name: "studentNumber", value: event.target.value });
-                }}
-              />
-            </Table.Data>
-            <Table.Data>
-              <Table.TextInput
-                w={150}
-                placeholder="이름"
-                onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                  handleChangeFilter<string>({ name: "name", value: event.target.value });
-                }}
-              />
-            </Table.Data>
-            <Table.Data>
-              <Table.TextInput
-                w={150}
-                placeholder="이메일"
-                onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                  handleChangeFilter<string>({ name: "email", value: event.target.value });
-                }}
-              />
-            </Table.Data>
-            <Table.Data>
-              <Table.TextInput
-                w={150}
-                placeholder="연락처"
-                onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                  handleChangeFilter<string>({ name: "phone", value: event.target.value });
-                }}
-              />
-            </Table.Data>
-            <Table.Data>
-              <DepartmentSelect
-                w={150}
-                placeholder="학과"
-                onChange={(value) => {
-                  handleChangeFilter<string | null>({ name: "departmentId", value });
-                }}
-                allowDeselect
-              />
-            </Table.Data>
-          </Table.Row>
-          {students?.map((student, index) => (
-            <Table.Row
-              key={student.id}
-              onClick={() => {
-                push(`students/${student.id}`);
+      <Table headers={STUDENTS_TABLE_HEADERS}>
+        {/* 필터 영역 */}
+        <Table.FilterRow>
+          <Table.Data>필터</Table.Data>
+          <Table.Data>
+            <Table.TextInput
+              w={150}
+              placeholder="아이디"
+              onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                handleChangeFilter<string>({ name: "studentNumber", value: event.target.value });
               }}
-            >
-              <Table.Data>{index + 1 + (pageNumber - 1) * pageSizeNumber}</Table.Data>
-              <Table.Data>{student.loginId}</Table.Data>
-              <Table.Data>{student.name}</Table.Data>
-              <Table.Data>{student.email}</Table.Data>
-              <Table.Data>{student.phone}</Table.Data>
-              <Table.Data>{student.department.name}</Table.Data>
-            </Table.Row>
-          ))}
-        </Table>
-      </ScrollArea>
+            />
+          </Table.Data>
+          <Table.Data>
+            <Table.TextInput
+              w={150}
+              placeholder="이름"
+              onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                handleChangeFilter<string>({ name: "name", value: event.target.value });
+              }}
+            />
+          </Table.Data>
+          <Table.Data>
+            <Table.TextInput
+              w={150}
+              placeholder="이메일"
+              onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                handleChangeFilter<string>({ name: "email", value: event.target.value });
+              }}
+            />
+          </Table.Data>
+          <Table.Data>
+            <Table.TextInput
+              w={150}
+              placeholder="연락처"
+              onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                handleChangeFilter<string>({ name: "phone", value: event.target.value });
+              }}
+            />
+          </Table.Data>
+          <Table.Data>
+            <DepartmentSelect
+              w={150}
+              placeholder="학과"
+              onChange={(value) => {
+                handleChangeFilter<string | null>({ name: "departmentId", value });
+              }}
+              allowDeselect
+            />
+          </Table.Data>
+        </Table.FilterRow>
+        {students?.map((student, index) => (
+          <Table.Row
+            key={student.id}
+            onClick={() => {
+              push(`students/${student.id}`);
+            }}
+          >
+            <Table.Data>{index + 1 + (pageNumber - 1) * pageSizeNumber}</Table.Data>
+            <Table.Data>{student.loginId}</Table.Data>
+            <Table.Data>{student.name}</Table.Data>
+            <Table.Data>{student.email}</Table.Data>
+            <Table.Data>{student.phone}</Table.Data>
+            <Table.Data>{student.department.name}</Table.Data>
+          </Table.Row>
+        ))}
+      </Table>
       <Center>
         <Pagination
           value={pageNumber}

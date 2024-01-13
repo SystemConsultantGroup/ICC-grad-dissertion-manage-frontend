@@ -124,7 +124,7 @@ function ReviewResultListSection() {
       <ScrollArea type="hover" offsetScrollbars style={{ width: "100%", overflow: "visible" }}>
         <Table headers={REVIEW_RESULT_TABLE_HEADERS}>
           {/* 필터 영역 */}
-          <Table.Row pointer={false}>
+          <Table.FilterRow>
             <Table.Data>필터</Table.Data>
             <Table.Data>
               <Select
@@ -187,7 +187,7 @@ function ReviewResultListSection() {
                 allowDeselect
               />
             </Table.Data>
-          </Table.Row>
+          </Table.FilterRow>
           {reviewResults?.map((reviewResult, index) => (
             <Table.Row
               key={reviewResult.id}
