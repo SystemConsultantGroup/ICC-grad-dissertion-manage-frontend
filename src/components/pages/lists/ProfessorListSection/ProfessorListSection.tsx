@@ -190,25 +190,21 @@ function ProfessorListSection() {
               />
             </Table.Data>
           </Table.Row>
-          {professors?.map((professor, index) => {
-            const { id, loginId, name, email, phone, department } = professor;
-
-            return (
-              <Table.Row
-                key={id}
-                onClick={() => {
-                  push(`professors/${id}`);
-                }}
-              >
-                <Table.Data>{index + 1 + (pageNumber - 1) * pageSizeNumber}</Table.Data>
-                <Table.Data>{loginId}</Table.Data>
-                <Table.Data>{name}</Table.Data>
-                <Table.Data>{email}</Table.Data>
-                <Table.Data>{phone}</Table.Data>
-                <Table.Data>{department.name}</Table.Data>
-              </Table.Row>
-            );
-          })}
+          {professors?.map((professor, index) => (
+            <Table.Row
+              key={professor.id}
+              onClick={() => {
+                push(`professors/${professor.id}`);
+              }}
+            >
+              <Table.Data>{index + 1 + (pageNumber - 1) * pageSizeNumber}</Table.Data>
+              <Table.Data>{professor.loginId}</Table.Data>
+              <Table.Data>{professor.name}</Table.Data>
+              <Table.Data>{professor.email}</Table.Data>
+              <Table.Data>{professor.phone}</Table.Data>
+              <Table.Data>{professor.department.name}</Table.Data>
+            </Table.Row>
+          ))}
         </Table>
       </ScrollArea>
       <Center>

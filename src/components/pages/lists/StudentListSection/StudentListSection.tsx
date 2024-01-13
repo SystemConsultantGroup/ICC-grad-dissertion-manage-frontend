@@ -190,25 +190,21 @@ function StudentListSection() {
               />
             </Table.Data>
           </Table.Row>
-          {students?.map((student, index) => {
-            const { id, loginId, name, email, phone, department } = student;
-
-            return (
-              <Table.Row
-                key={id}
-                onClick={() => {
-                  push(`students/${id}`);
-                }}
-              >
-                <Table.Data>{index + 1 + (pageNumber - 1) * pageSizeNumber}</Table.Data>
-                <Table.Data>{loginId}</Table.Data>
-                <Table.Data>{name}</Table.Data>
-                <Table.Data>{email}</Table.Data>
-                <Table.Data>{phone}</Table.Data>
-                <Table.Data>{department.name}</Table.Data>
-              </Table.Row>
-            );
-          })}
+          {students?.map((student, index) => (
+            <Table.Row
+              key={student.id}
+              onClick={() => {
+                push(`students/${student.id}`);
+              }}
+            >
+              <Table.Data>{index + 1 + (pageNumber - 1) * pageSizeNumber}</Table.Data>
+              <Table.Data>{student.loginId}</Table.Data>
+              <Table.Data>{student.name}</Table.Data>
+              <Table.Data>{student.email}</Table.Data>
+              <Table.Data>{student.phone}</Table.Data>
+              <Table.Data>{student.department.name}</Table.Data>
+            </Table.Row>
+          ))}
         </Table>
       </ScrollArea>
       <Center>
