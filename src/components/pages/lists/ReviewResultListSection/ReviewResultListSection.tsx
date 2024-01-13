@@ -152,7 +152,7 @@ function ReviewResultListSection() {
               />
             </Table.Data>
             <Table.Data>
-            <DepartmentSelect
+              <DepartmentSelect
                 w="100%"
                 miw={150}
                 placeholder="전공"
@@ -188,25 +188,21 @@ function ReviewResultListSection() {
               />
             </Table.Data>
           </Table.Row>
-          {reviewResults?.map((reviewResult, index) => {
-            const { id, stage, student, department, title, summary } = reviewResult;
-
-            return (
-              <Table.Row
-                key={id}
-                onClick={() => {
-                  push(`reviews/${id}`);
-                }}
-              >
-                <Table.Data>{index + 1 + (pageNumber - 1) * pageSizeNumber}</Table.Data>
-                <Table.Data>{stage === "MAIN" ? "본심" : "예심"}</Table.Data>
-                <Table.Data>{student}</Table.Data>
-                <Table.Data>{department}</Table.Data>
-                <Table.Data>{title}</Table.Data>
-                <Table.Data>{summary === "PASS" ? "합격" : "불합격"}</Table.Data>
-              </Table.Row>
-            );
-          })}
+          {reviewResults?.map((reviewResult, index) => (
+            <Table.Row
+              key={reviewResult.id}
+              onClick={() => {
+                push(`reviews/${reviewResult.id}`);
+              }}
+            >
+              <Table.Data>{index + 1 + (pageNumber - 1) * pageSizeNumber}</Table.Data>
+              <Table.Data>{reviewResult.stage === "MAIN" ? "본심" : "예심"}</Table.Data>
+              <Table.Data>{reviewResult.student}</Table.Data>
+              <Table.Data>{reviewResult.department}</Table.Data>
+              <Table.Data>{reviewResult.title}</Table.Data>
+              <Table.Data>{reviewResult.summary === "PASS" ? "합격" : "불합격"}</Table.Data>
+            </Table.Row>
+          ))}
         </Table>
       </ScrollArea>
       <Center>

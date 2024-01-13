@@ -171,7 +171,7 @@ function ProfReviewListSection({ isFinal }: Props) {
               />
             </Table.Data>
             <Table.Data>
-            <DepartmentSelect
+              <DepartmentSelect
                 w="100%"
                 miw={150}
                 placeholder="전공"
@@ -185,7 +185,7 @@ function ProfReviewListSection({ isFinal }: Props) {
               <Table.TextInput
                 w="100%"
                 miw={300}
-                placeholder="논문 제목"     
+                placeholder="논문 제목"
                 onChange={(event: ChangeEvent<HTMLInputElement>) => {
                   handleChangeFilter<string>({ name: "title", value: event.target.value });
                 }}
@@ -209,33 +209,29 @@ function ProfReviewListSection({ isFinal }: Props) {
               />
             </Table.Data>
           </Table.Row>
-          {reviews?.map((review, index) => {
-            const { id, stage, student, department, title, status } = review;
-
-            return (
-              <Table.Row
-                key={id}
-                onClick={() => {
-                  push(isFinal ? `final/${id}` : `review/${id}`);
-                }}
-              >
-                <Table.Data>{index + 1 + (pageNumber - 1) * pageSizeNumber}</Table.Data>
-                <Table.Data>{stage === "MAIN" ? "본심" : "예심"}</Table.Data>
-                <Table.Data>{student}</Table.Data>
-                <Table.Data>{department}</Table.Data>
-                <Table.Data>{title}</Table.Data>
-                <Table.Data>
-                  {status === "UNEXAMINED"
-                    ? "진행중"
-                    : status === "PASS"
-                      ? "합격"
-                      : status === "FAIL"
-                        ? "불합격"
-                        : "보류"}
-                </Table.Data>
-              </Table.Row>
-            );
-          })}
+          {reviews?.map((review, index) => (
+            <Table.Row
+              key={review.id}
+              onClick={() => {
+                push(isFinal ? `final/${review.id}` : `review/${review.id}`);
+              }}
+            >
+              <Table.Data>{index + 1 + (pageNumber - 1) * pageSizeNumber}</Table.Data>
+              <Table.Data>{review.stage === "MAIN" ? "본심" : "예심"}</Table.Data>
+              <Table.Data>{review.student}</Table.Data>
+              <Table.Data>{review.department}</Table.Data>
+              <Table.Data>{review.title}</Table.Data>
+              <Table.Data>
+                {review.status === "UNEXAMINED"
+                  ? "진행중"
+                  : review.status === "PASS"
+                    ? "합격"
+                    : review.status === "FAIL"
+                      ? "불합격"
+                      : "보류"}
+              </Table.Data>
+            </Table.Row>
+          ))}
         </Table>
       </ScrollArea>
       <Center>
