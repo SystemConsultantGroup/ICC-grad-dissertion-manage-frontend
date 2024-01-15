@@ -1,7 +1,7 @@
 import { BasicRow, RowGroup, TitleRow } from "@/components/common/rows";
 import { Button, Stack } from "@mantine/core";
 
-export function ExamineResult() {
+export function ReviewResult() {
   return (
     <Stack gap={0}>
       <TitleRow title="심사 결과" />
@@ -21,7 +21,7 @@ export function ExamineResult() {
   );
 }
 
-export function StudentExamineResult() {
+export function StudentReviewResult() {
   return (
     <Stack gap={0}>
       <TitleRow title="심사 결과" />
@@ -37,7 +37,6 @@ export function StudentExamineResult() {
       </RowGroup>
       <RowGroup>
         <BasicRow field="심사 의견">
-          <BasicRow.Text>월월월월월</BasicRow.Text>
           <Button variant="outline">자세히 보기</Button>
         </BasicRow>
       </RowGroup>
