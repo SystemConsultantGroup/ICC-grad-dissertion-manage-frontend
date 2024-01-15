@@ -111,7 +111,7 @@ function ReviewResultListSection() {
         </SectionHeader.Buttons>
       </SectionHeader>
       {isLoading && <Skeleton />}
-      <Table headers={REVIEW_RESULT_TABLE_HEADERS}>
+      <Table headers={REVIEW_RESULT_TABLE_HEADERS} h={650}>
         {/* 필터 영역 */}
         <Table.FilterRow>
           <Table.Data>필터</Table.Data>
