@@ -129,7 +129,7 @@ function StudentListSection() {
         </SectionHeader.Buttons>
       </SectionHeader>
       {isLoading && <Skeleton />}
-      <Table headers={STUDENTS_TABLE_HEADERS}>
+      <Table headers={STUDENTS_TABLE_HEADERS} h={650}>
         {/* 필터 영역 */}
         <Table.FilterRow>
           <Table.Data>필터</Table.Data>

@@ -48,7 +48,7 @@ function AchievementListSection() {
           </Group>
         </SectionHeader.Buttons>
       </SectionHeader>
-      <Table headers={ACHIEVEMENT_TABLE_HEADERS}>
+      <Table headers={ACHIEVEMENT_TABLE_HEADERS} h={650}>
         {/* 필터 영역 */}
         <Table.FilterRow>
           <Table.Data>필터</Table.Data>

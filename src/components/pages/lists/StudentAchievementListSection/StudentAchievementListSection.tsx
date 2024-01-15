@@ -19,7 +19,7 @@ function StudentAchievementListSection() {
           실적 등록
         </Button>
       </Group>
-      <Table headers={STUDENT_ACHIEVEMENT_TABLE_HEADERS} simple>
+      <Table headers={STUDENT_ACHIEVEMENT_TABLE_HEADERS}>
         <Table.Row
           onClick={() => {
             push(`achievement/1`);
