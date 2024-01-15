@@ -59,7 +59,7 @@ export function FinalReview({ onTemporarySave, onSave }: FinalReviewProps) {
       <RowGroup>
         <FileUploadRow field="심사 의견 파일" />
       </RowGroup>
-      <RowGroup>
+      <RowGroup withBorderBottom={false}>
         <ButtonRow
           buttons={[
             <Button key="temp" color="grape" variant="outline" onClick={onTemporarySave}>
