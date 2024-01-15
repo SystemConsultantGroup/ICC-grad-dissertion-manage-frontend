@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* 심사 현황 API개발 후 수정 필요 */
 
 "use client";
 
@@ -24,7 +25,7 @@ import { REFRESH_DEFAULT_PAGE_NUMBER } from "../../_constants/page";
 import { TChangeQueryArg } from "../../_types/common";
 import { REVIEW_RESULT_TABLE_HEADERS } from "../../_constants/table";
 
-function ReviewResultListSection() {
+function ReviewListSection() {
   const { push } = useRouter();
   const [pageSize, setPageSize] = useState<string | null>(String(PAGE_SIZES[0]));
   const [pageNumber, setPageNumber] = useState(1);
@@ -53,10 +54,7 @@ function ReviewResultListSection() {
     : 0;
   const endIndex = reviewResults ? startIndex + reviewResults.length - 1 : 0;
 
-  // Todo: 심사보고서 출력 방식 논의
-  const handleDownloadReports = (option: "all" | "filtered") => {};
-
-  const handleDownloadReviewResults = (option: "all" | "filtered") => {
+  const handleDownloadReviews = (option: "all" | "filtered") => {
     const dateString = dayjs().format(DATE_TIME_FORMAT_HYPHEN);
     const queryString = objectToQueryString({ ...query });
 
@@ -70,7 +68,6 @@ function ReviewResultListSection() {
       fileName: `심사 목록 일괄 다운로드 파일_${dateString}.xlsx`,
     });
   };
-
   const handleChangeFilter = <T,>({ name, value }: TChangeQueryArg<T>) => {
     // useDebuncedState 에서 update 함수 타입이 정의되어 있지 않아 타입에러 발생
     setQuery(((prev: any) => ({
@@ -107,7 +104,7 @@ function ReviewResultListSection() {
                 <Stack>
                   <Button
                     onClick={() => {
-                      handleDownloadReviewResults("all");
+                      handleDownloadReviews("all");
                     }}
                   >
                     심사 목록 전체 출력
@@ -115,25 +112,10 @@ function ReviewResultListSection() {
                   <Button
                     variant="outline"
                     onClick={() => {
-                      handleDownloadReviewResults("filtered");
+                      handleDownloadReviews("filtered");
                     }}
                   >
                     심사 목록 필터 출력
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      handleDownloadReports("all");
-                    }}
-                  >
-                    심사보고서 전체 출력
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      handleDownloadReports("filtered");
-                    }}
-                  >
-                    심사보고서 필터 출력
                   </Button>
                 </Stack>
               </Popover.Dropdown>
@@ -235,4 +217,4 @@ function ReviewResultListSection() {
   );
 }
 
-export default ReviewResultListSection;
+export default ReviewListSection;

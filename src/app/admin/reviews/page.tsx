@@ -1,16 +1,16 @@
 import { AuthSSR } from "@/api/AuthSSR";
 import PageHeader from "@/components/common/PageHeader";
 import Section from "@/components/common/Section/Section";
-import { ReviewResultListSection } from "@/components/pages/lists/admin/ReviewResultListSection";
+import { ReviewListSection } from "@/components/pages/lists/admin/ReviewListSection";
 
-export default async function ReviewResultsPage() {
+export default async function ReviewsPage() {
   await AuthSSR({ userType: "ADMIN" });
 
   return (
     <>
-      <PageHeader title="심사 결과" description="각 행을 클릭하면 상세보기 페이지로 이동합니다." />
+      <PageHeader title="심사 현황" description="각 행을 클릭하면 상세보기 페이지로 이동합니다." />
       <Section>
-        <ReviewResultListSection />
+        <ReviewListSection />
       </Section>
     </>
   );
