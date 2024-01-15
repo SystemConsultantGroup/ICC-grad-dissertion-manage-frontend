@@ -1,11 +1,13 @@
 import { Button, ButtonProps } from "@mantine/core";
+import { MouseEventHandler } from "react";
 
 interface Props extends ButtonProps {
   disabled?: boolean;
   link: string;
+  onClick?: MouseEventHandler<HTMLAnchorElement>;
 }
 
-export function DownloadButton({ disabled, link, ...props }: Props) {
+export function DownloadButton({ disabled, link, onClick, ...props }: Props) {
   return (
     <Button
       component="a"
@@ -13,7 +15,7 @@ export function DownloadButton({ disabled, link, ...props }: Props) {
       href={link}
       download
       data-disabled={!!disabled}
-      onClick={disabled ? (event) => event.preventDefault() : undefined}
+      onClick={disabled ? (event) => event.preventDefault() : onClick}
       disabled={!!disabled}
       {...props}
     >
