@@ -26,7 +26,7 @@ export function RevisionCheck() {
           </Button>
         </BasicRow>
       </RowGroup>
-      <RowGroup>
+      <RowGroup withBorderBottom={false}>
         <ButtonRow
           buttons={[
             <Button key="final" color="blue">
