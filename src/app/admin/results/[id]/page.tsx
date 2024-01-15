@@ -4,13 +4,14 @@ import { ArticleInfo } from "@/components/pages/review/ArticleInfo/ArticleInfo";
 import { ReviewCard, ReviewList } from "@/components/pages/review/Review";
 import { ReviewReportAdmin } from "@/components/pages/review/Review/ReviewReport";
 
-export default function AdminReviewPage({ params: { id } }: { params: { id: string } }) {
+export default function AdminReviewResultPage({ params: { id } }: { params: { id: string } }) {
   return (
     <>
-      <PageHeader title="심사 현황" />
+      <PageHeader title="심사 결과" />
       <ReviewCard>
-        <ArticleInfo stage="MAIN" />
-        <ReviewList title="심사 현황" stage="MAIN" />
+        <ArticleInfo stage="MAIN" revision />
+        <ReviewList title="심사 결과" stage="MAIN" />
+        <ReviewReportAdmin />
       </ReviewCard>
     </>
   );
