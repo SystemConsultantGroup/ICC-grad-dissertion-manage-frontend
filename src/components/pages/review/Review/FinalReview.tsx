@@ -11,9 +11,15 @@ import {
 } from "@/components/common/rows";
 import { useState } from "react";
 import { IconCheck } from "@tabler/icons-react";
+import Link from "next/link";
 import { Status } from "./ProfessorReview";
 
-export function FinalReview() {
+export interface FinalReviewProps {
+  onTemporarySave: () => void;
+  onSave: () => void;
+}
+
+export function FinalReview({ onTemporarySave, onSave }: FinalReviewProps) {
   const [status, setStatus] = useState<Status>();
 
   return (
@@ -56,13 +62,13 @@ export function FinalReview() {
       <RowGroup>
         <ButtonRow
           buttons={[
-            <Button key="temp" color="grape" variant="outline">
+            <Button key="temp" color="grape" variant="outline" onClick={onTemporarySave}>
               임시저장
             </Button>,
-            <Button key="final" color="blue">
+            <Button key="final" color="blue" onClick={onSave}>
               최종저장
             </Button>,
-            <Button key="back" variant="outline" onClick={() => {}}>
+            <Button key="back" variant="outline" component={Link} href="../final">
               목록으로
             </Button>,
           ]}

@@ -11,6 +11,7 @@ import {
 } from "@/components/common/rows";
 import { useState } from "react";
 import { IconCheck } from "@tabler/icons-react";
+import Link from "next/link";
 import { Stage } from "../ArticleInfo/ArticleInfo";
 
 export interface ProfessorReviewProps {
@@ -103,7 +104,7 @@ export function ProfessorReview({ onTemporarySave, onSave, stage }: ProfessorRev
             <Button key="final" color="blue" onClick={onSave}>
               최종저장
             </Button>,
-            <Button key="back" variant="outline" onClick={() => {}}>
+            <Button key="back" variant="outline" component={Link} href="../review">
               목록으로
             </Button>,
           ]}
