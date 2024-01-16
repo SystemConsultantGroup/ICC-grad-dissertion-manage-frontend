@@ -7,8 +7,21 @@ import { IconCalendar } from "@tabler/icons-react";
 import {
   ACHIEVEMENT_AUTHOR_TYPE_LOOKUP_TABLE,
   ACHIEVEMENT_TYPE_LOOKUP_TABLE,
+  AchievementAuthorType,
+  AchievementType,
 } from "@/api/_types/achievement";
 import { UseFormReturnType } from "@mantine/form";
+
+export interface AchievementFormInput {
+  performance: AchievementType;
+  journalName: string;
+  paperTitle: string;
+  ISSN1: string;
+  ISSN2: string;
+  publicationDate: Date;
+  authorType: AchievementAuthorType;
+  authorNumbers: number;
+}
 
 interface Props<T> {
   form: UseFormReturnType<T>;
@@ -19,10 +32,10 @@ interface Props<T> {
 function AchievementForm<T>({ form, handleSubmit, isEdit }: Props<T>) {
   const { onSubmit, getInputProps } = form;
 
-  const transfromedAchievementTypeList = Object.entries(ACHIEVEMENT_TYPE_LOOKUP_TABLE).map(
+  const transformedAchievementTypeList = Object.entries(ACHIEVEMENT_TYPE_LOOKUP_TABLE).map(
     ([key, value]) => ({ value: key, label: value })
   );
-  const transfromedAuthorTypeList = Object.entries(ACHIEVEMENT_AUTHOR_TYPE_LOOKUP_TABLE).map(
+  const transformedAuthorTypeList = Object.entries(ACHIEVEMENT_AUTHOR_TYPE_LOOKUP_TABLE).map(
     ([key, value]) => ({ value: key, label: value })
   );
 
@@ -34,7 +47,7 @@ function AchievementForm<T>({ form, handleSubmit, isEdit }: Props<T>) {
             <Select
               w={400}
               allowDeselect={false}
-              data={transfromedAchievementTypeList}
+              data={transformedAchievementTypeList}
               {...getInputProps("performance")}
             />
           </BasicRow>
@@ -70,7 +83,7 @@ function AchievementForm<T>({ form, handleSubmit, isEdit }: Props<T>) {
         </RowGroup>
         <RowGroup>
           <BasicRow field="주저자 여부">
-            <Select w={300} data={transfromedAuthorTypeList} {...getInputProps("authorType")} />
+            <Select w={300} data={transformedAuthorTypeList} {...getInputProps("authorType")} />
           </BasicRow>
         </RowGroup>
         <RowGroup>

@@ -1,31 +1,11 @@
 "use client";
 
-import { Button, Group, InputBase, NumberInput, Select, Stack } from "@mantine/core";
-import TitleRow from "@/components/common/rows/TitleRow/TitleRow";
-import { BasicRow, RowGroup } from "@/components/common/rows";
-import { DateInput } from "@mantine/dates";
-import {
-  ACHIEVEMENT_AUTHOR_TYPE_LOOKUP_TABLE,
-  ACHIEVEMENT_TYPE_LOOKUP_TABLE,
-  AchievementAuthorType,
-  AchievementType,
-} from "@/api/_types/achievement";
-import { IMaskInput } from "react-imask";
-import { IconCalendar } from "@tabler/icons-react";
-import { DATE_FORMAT } from "@/constants/date";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { MOCKUP_ACHIEVEMENT } from "@/mockups/achievement";
-
-interface AchievementEditFormInput {
-  performance: AchievementType;
-  journalName: string;
-  paperTitle: string;
-  ISSN1: string;
-  ISSN2: string;
-  publicationDate: Date;
-  authorType: AchievementAuthorType;
-  authorNumbers: number;
-}
+import AchievementForm, {
+  AchievementFormInput,
+} from "@/components/pages/achievement/AchievementForm";
+import { TitleRow } from "@/components/common/rows";
 
 function AchievementEditSection() {
   const data = MOCKUP_ACHIEVEMENT;
@@ -37,14 +17,7 @@ function AchievementEditSection() {
     ISSN2: data.ISSN.slice(-4),
   };
 
-  const transfromedAchievementTypeList = Object.entries(ACHIEVEMENT_TYPE_LOOKUP_TABLE).map(
-    ([key, value]) => ({ value: key, label: value })
-  );
-  const transfromedAuthorTypeList = Object.entries(ACHIEVEMENT_AUTHOR_TYPE_LOOKUP_TABLE).map(
-    ([key, value]) => ({ value: key, label: value })
-  );
-
-  const { getInputProps, onSubmit } = useForm<AchievementEditFormInput>({
+  const form = useForm<AchievementFormInput>({
     initialValues: transformedAchievement,
     validate: {
       performance: isNotEmpty("논문 실적 구분을 입력하세요."),
@@ -56,76 +29,14 @@ function AchievementEditSection() {
     },
   });
 
-  const handleSubmit = (input: AchievementEditFormInput) => {
+  const handleSubmit = (input: AchievementFormInput) => {
     console.log(input);
   };
 
   return (
     <>
       <TitleRow title="연구실적 상세보기" />
-      <form onSubmit={onSubmit(handleSubmit)}>
-        <Stack gap={0}>
-          <RowGroup>
-            <BasicRow field="논문 실적 구분">
-              <Select
-                w={400}
-                allowDeselect={false}
-                data={transfromedAchievementTypeList}
-                {...getInputProps("performance")}
-              />
-            </BasicRow>
-          </RowGroup>
-          <RowGroup>
-            <BasicRow field="논문/특허 제목">
-              <InputBase w={400} {...getInputProps("paperTitle")} />
-            </BasicRow>
-          </RowGroup>
-          <RowGroup>
-            <BasicRow field="학술지명/학술대회명">
-              <InputBase w={400} {...getInputProps("journalName")} />
-            </BasicRow>
-          </RowGroup>
-          <RowGroup>
-            <BasicRow field="ISSN">
-              <Group justify="space-between">
-                <InputBase w={100} component={IMaskInput} mask="0000" {...getInputProps("ISSN1")} />
-                {" - "}
-                <InputBase w={100} component={IMaskInput} mask="0000" {...getInputProps("ISSN2")} />
-              </Group>
-            </BasicRow>
-          </RowGroup>
-          <RowGroup>
-            <BasicRow field="게재년월">
-              <DateInput
-                leftSection={<IconCalendar size={20} />}
-                valueFormat={DATE_FORMAT}
-                locale="ko"
-                {...getInputProps("publicationDate")}
-              />
-            </BasicRow>
-          </RowGroup>
-          <RowGroup>
-            <BasicRow field="주저자 여부">
-              <Select w={300} data={transfromedAuthorTypeList} {...getInputProps("authorType")} />
-            </BasicRow>
-          </RowGroup>
-          <RowGroup>
-            <BasicRow field="저자 수">
-              <Group wrap="nowrap">
-                <NumberInput allowNegative={false} {...getInputProps("authorNumbers")} /> 명
-              </Group>
-            </BasicRow>
-          </RowGroup>
-          <RowGroup justify="center" withBorderBottom={false}>
-            <Button type="submit" ml="auto">
-              저장하기
-            </Button>
-            <Button component="a" href="/student/achievement" variant="subtle" ml="auto">
-              목록으로
-            </Button>
-          </RowGroup>
-        </Stack>
-      </form>
+      <AchievementForm form={form} handleSubmit={handleSubmit} isEdit />
     </>
   );
 }
