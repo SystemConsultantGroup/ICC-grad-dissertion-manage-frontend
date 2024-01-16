@@ -8,7 +8,7 @@ import { ArticleInfo } from "@/components/pages/review/ArticleInfo/ArticleInfo";
 import { ReviewReportAdmin } from "@/components/pages/review/ReviewResult/ReviewReport";
 import { ReviewResultList } from "@/components/pages/review/ReviewResult/ReviewResultList";
 
-export default function AdminExamine({ params: { id } }: { params: { id: string } }) {
+function AdminResultPage({ params: { id } }: { params: { id: string } }) {
   // 예시 코드
   return (
     <>
@@ -21,3 +21,5 @@ export default function AdminExamine({ params: { id } }: { params: { id: string 
     </>
   );
 }
+
+export default AdminResultPage;

@@ -36,6 +36,6 @@ export default function RootLayout({ children }: Props) {
 }
 
 export const metadata: Metadata = {
-  title: "정보통신대학원 졸업논문시스템",
+  title: "정보통신/소프트웨어융합대학 일반대학원 학위논문심사시스템",
   // description: "졸업논문을 으으으으음",
 };
