@@ -7,7 +7,7 @@ echo '🏗️👷 Before commit, Checking format, linting and typing your projec
 yarn check-format ||
 (
     echo '🤣🤣🤣🤣 Prettier Check Failed.🤣🤣🤣🤣
-                Run npm run format, add changes and try commit again.';
+                Run yarn run format, add changes and try commit again.';
     false;
 )
 
