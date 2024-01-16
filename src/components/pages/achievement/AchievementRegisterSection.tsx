@@ -22,7 +22,8 @@ function AchievementRegisterSection() {
     /**
      * @TODO: POST API 연결
      */
-    console.log(input);
+    const body = { ...input, ISSN: input.ISSN1 + input.ISSN2 };
+    console.log(body);
   };
 
   return (
