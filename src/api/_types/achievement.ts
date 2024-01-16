@@ -49,3 +49,16 @@ export const ACHIEVEMENT_AUTHOR_TYPE_LOOKUP_TABLE: AchievementAuthorTypeLookupTa
   FIRST_CORRESPONDING_AUTHOR: "제1교신저자(1st Corresponding Author)",
   CO_AUTHOR: "공저자(Co-Author)",
 };
+
+export interface Achievement {
+  performance: AchievementType;
+  journalName: string;
+  authorNumbers: number;
+  authorType: AchievementAuthorType;
+  ISSN: string;
+  name: string;
+  id: number;
+  department: string;
+  publicationDate: string;
+  paperTitle: string;
+}
