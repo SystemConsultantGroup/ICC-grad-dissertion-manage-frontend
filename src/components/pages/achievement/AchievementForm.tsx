@@ -39,6 +39,13 @@ function AchievementForm<T>({ form, handleSubmit, isEdit }: Props<T>) {
     ([key, value]) => ({ value: key, label: value })
   );
 
+  const handleDelete = () => {
+    /**
+     * @TODO: DELETE API 연결
+     */
+    console.log("deleted");
+  };
+
   return (
     <form onSubmit={onSubmit(handleSubmit)}>
       <Stack gap={0}>
@@ -94,9 +101,14 @@ function AchievementForm<T>({ form, handleSubmit, isEdit }: Props<T>) {
           </BasicRow>
         </RowGroup>
         <RowGroup justify="center" withBorderBottom={false}>
-          <Button type="submit" ml="auto">
-            {isEdit ? "저장하기" : "실적 등록"}
-          </Button>
+          <Group ml="auto">
+            <Button type="submit">{isEdit ? "수정하기" : "실적 등록"}</Button>
+            {isEdit && (
+              <Button color="red" onClick={handleDelete}>
+                삭제하기
+              </Button>
+            )}
+          </Group>
           <Button component="a" href="/student/achievement" variant="subtle" ml="auto">
             목록으로
           </Button>
