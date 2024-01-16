@@ -9,7 +9,7 @@ export default interface AdminStudentFormInputs {
   deptId: string;
   sysId: string;
 
-  chairman: SelectProfessorFormValues;
+  chairman: SelectProfessorFormValues | null;
   professors: SelectProfessorFormValues[];
 
   paperTitle: string;

@@ -9,7 +9,22 @@ import PaperInfoSection from "./PaperInfoSection";
 import AdminStudentFormInputs from "./_types/AdminStudentFormInputs";
 
 function AdminStudentForm() {
-  const form = useForm<AdminStudentFormInputs>({});
+  const form = useForm<AdminStudentFormInputs>({
+    initialValues: {
+      loginId: "",
+      password: "",
+      name: "",
+      email: "",
+      phone: "",
+      deptId: "",
+      sysId: "",
+
+      chairman: null,
+      professors: [],
+
+      paperTitle: "",
+    },
+  });
 
   return (
     <form>
