@@ -9,6 +9,9 @@ import { TitleRow } from "@/components/common/rows";
 
 function AchievementEditSection() {
   const data = MOCKUP_ACHIEVEMENT;
+  /**
+   * @TODO: GET API 연결
+   */
 
   const transformedAchievement = {
     ...data,
@@ -30,6 +33,9 @@ function AchievementEditSection() {
   });
 
   const handleSubmit = (input: AchievementFormInput) => {
+    /**
+     * @TODO: PUT/PATCH API 연결
+     */
     console.log(input);
   };
 
