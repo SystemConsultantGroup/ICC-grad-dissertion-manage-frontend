@@ -19,6 +19,9 @@ function AchievementRegisterSection() {
   });
 
   const handleSubmit = (input: AchievementFormInput) => {
+    /**
+     * @TODO: POST API 연결
+     */
     console.log(input);
   };
 
