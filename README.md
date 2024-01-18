@@ -49,6 +49,7 @@
     대체하게 할 수는 있습니다.
   
 - **organism**은 
+(작성중...)
 
 ---
 ## local 에서 백엔드 연결하는 법
@@ -67,8 +68,17 @@ NEXT_PUBLIC_API_ENDPOINT = http://localhost:4000/v1/
 yarn install
 ```
 
-ctrl(command) + shift + p => typescript 버전선택 => 작업 영역 버전 사용 선택
+- ctrl(command) + shift + p -> typescript 버전선택 -> 작업 영역 버전 사용 선택
 
 ```bash
 yarn dev
 ```
+
+---
+## husky 적용
+
+```bash
+yarn husky install
+```
+
+- 커밋 및 푸시 전 허스키를 적용해주세요.
