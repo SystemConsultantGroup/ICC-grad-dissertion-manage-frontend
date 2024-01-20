@@ -5,12 +5,10 @@ export interface Phase {
   title: string;
   start: string;
   end: string;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export interface PhasesResponse extends CommonApiResponse {
-  phases: Omit<Phase, "createdAt" | "updatedAt">[];
+  phases: Phase[];
 }
 
 export interface UpdatePhaseRequestBody {

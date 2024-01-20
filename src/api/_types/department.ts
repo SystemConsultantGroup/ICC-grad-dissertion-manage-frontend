@@ -1,6 +1,7 @@
 export interface Department {
   id: number;
   name: string;
+  modificationFlag: boolean;
   userCount: number;
 }
 

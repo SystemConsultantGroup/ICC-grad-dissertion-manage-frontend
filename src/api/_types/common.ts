@@ -21,3 +21,13 @@ export interface PagedQueryRequest {
   pageNumber: number;
   pageSize: number;
 }
+
+export type Stage = "PRELIMINARY" | "MAIN";
+export type Status = "UNEXAMINED" | "PASS" | "FAIL" | "PENDING";
+
+export interface Thesis {
+  title: string;
+  abstract: string;
+  stage: Stage;
+  summary: Status;
+}

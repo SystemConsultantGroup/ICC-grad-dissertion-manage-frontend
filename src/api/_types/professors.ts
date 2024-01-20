@@ -1,5 +1,5 @@
 import { CommonApiResponse, PagedApiResponse, PagedQueryRequest } from "./common";
-import { Department } from "./department";
+import { User } from "./user";
 
 export interface PagedProfessorsRequestQuery extends PagedQueryRequest {
   loginId?: string;
@@ -17,16 +17,7 @@ export interface ProfessorsExcelRequestQuery {
   deptId?: number;
 }
 
-export interface Professor {
-  id: number;
-  loginId: string;
-  name: string;
-  email: string;
-  phone: string;
-  department: Department;
-}
-
-export interface ProfessorResponse extends Professor, CommonApiResponse {
+export interface ProfessorResponse extends User, CommonApiResponse {
   createdAt: string;
   updatedAt: string;
 }
@@ -34,12 +25,12 @@ export interface ProfessorResponse extends Professor, CommonApiResponse {
 export interface PagedProfessorsResponse
   extends PagedApiResponse<Omit<ProfessorResponse, "message">> {}
 
-export interface CreateProfessorRequestBody extends Omit<Professor, "id" | "department"> {
+export interface CreateProfessorRequestBody extends Omit<User, "id" | "department"> {
   password: string;
   deptId: number;
 }
 
 export interface SelectProfessorFormValues {
-  departmentId: Professor["department"]["id"];
+  departmentId: User["department"]["id"];
   professorId: number;
 }
