@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* 심사 현황 API개발 후 수정 필요 */
 
 "use client";
 
@@ -12,15 +11,26 @@ import { PAGE_SIZES } from "@/constants/pageSize";
 import { useDebouncedState } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
-import { ActionIcon, Button, Center, Group, Popover, Select, Skeleton, Stack } from "@mantine/core";
+import {
+  ActionIcon,
+  Button,
+  Center,
+  Group,
+  Popover,
+  Select,
+  Skeleton,
+  Stack,
+  Text,
+} from "@mantine/core";
 import { SectionHeader } from "@/components/common/SectionHeader";
 import { IconDownload } from "@tabler/icons-react";
 import { Table } from "@/components/common/Table";
 import Pagination from "@/components/common/Pagination";
-import useReviewResults from "@/api/SWR/useReviewResults";
-import { PagedReviewResultsRequestQuery } from "@/api/_types/reviews";
 import { DepartmentSelect } from "@/components/common/selects/DepartmentSelect";
 import { DATE_TIME_FORMAT_HYPHEN } from "@/constants/date";
+import { PagedReviewsRequestQuery } from "@/api/_types/reviews";
+import { useAdminReviewStatus } from "@/api/SWR";
+import { PAGE_NUMBER_GET_ALL, PAGE_SIZE_GET_ALL } from "@/constants/pagination";
 import { REFRESH_DEFAULT_PAGE_NUMBER } from "../../_constants/page";
 import { TChangeQueryArg } from "../../_types/common";
 import { REVIEW_RESULT_TABLE_HEADERS } from "../../_constants/table";
@@ -30,7 +40,7 @@ function ReviewListSection() {
   const [pageSize, setPageSize] = useState<string | null>(String(PAGE_SIZES[0]));
   const [pageNumber, setPageNumber] = useState(1);
   const pageSizeNumber = Number(pageSize);
-  const [query, setQuery] = useDebouncedState<PagedReviewResultsRequestQuery>(
+  const [query, setQuery] = useDebouncedState<PagedReviewsRequestQuery>(
     {
       pageNumber,
       pageSize: pageSizeNumber,
@@ -38,31 +48,35 @@ function ReviewListSection() {
     500
   );
   const {
-    data: reviewResults,
+    data: reviewStatus,
     isLoading,
     pageData,
-  } = useReviewResults({ ...query, pageNumber, pageSize: pageSizeNumber });
+  } = useAdminReviewStatus({ ...query, pageNumber, pageSize: pageSizeNumber });
 
   const { startNumber } = getPageSizeStartEndNumber({
     pageNumber,
     pageSize: Number(pageSize ?? 0),
-    arrayLength: reviewResults?.length ?? 0,
+    arrayLength: reviewStatus?.length ?? 0,
   });
 
   const startIndex = pageData?.pageNumber
     ? (pageData.pageNumber - 1) * Number(pageData.pageSize) + 1
     : 0;
-  const endIndex = reviewResults ? startIndex + reviewResults.length - 1 : 0;
+  const endIndex = reviewStatus ? startIndex + reviewStatus.length - 1 : 0;
 
   const handleDownloadReviews = (option: "all" | "filtered") => {
     const dateString = dayjs().format(DATE_TIME_FORMAT_HYPHEN);
-    const queryString = objectToQueryString({ ...query });
+    const sizeAll = `?pageNumber=${PAGE_NUMBER_GET_ALL}&pageSize=${PAGE_SIZE_GET_ALL}`;
+    const queryString = objectToQueryString({
+      ...query,
+      pageSize: PAGE_SIZE_GET_ALL,
+      pageNumber: PAGE_NUMBER_GET_ALL,
+    });
 
     const isAll = option === "all";
-    const urlSuffix = isAll ? "" : queryString;
+    const urlSuffix = isAll ? sizeAll : queryString;
 
-    const fileLink = API_ROUTES.review.result.excel() + urlSuffix;
-
+    const fileLink = API_ROUTES.review.current.excel() + urlSuffix;
     handleDownloadFile({
       fileLink,
       fileName: `심사 목록 일괄 다운로드 파일_${dateString}.xlsx`,
@@ -174,35 +188,30 @@ function ReviewListSection() {
               }}
             />
           </Table.Data>
-          <Table.Data>
-            <Select
-              w="100%"
-              miw={80}
-              placeholder="결과"
-              onChange={(value) => {
-                handleChangeFilter<string | null>({ name: "summary", value });
-              }}
-              data={[
-                { label: "합격", value: "PASS" },
-                { label: "불합격", value: "FAIL" },
-              ]}
-              allowDeselect
-            />
-          </Table.Data>
+          <Table.Data>-</Table.Data>
         </Table.FilterRow>
-        {reviewResults?.map((reviewResult, index) => (
+        {reviewStatus?.map((review, index) => (
           <Table.Row
-            key={reviewResult.id}
+            key={review.id}
             onClick={() => {
-              push(`reviews/${reviewResult.id}`);
+              push(`reviews/${review.id}`);
             }}
           >
             <Table.Data>{index + 1 + (pageNumber - 1) * pageSizeNumber}</Table.Data>
-            <Table.Data>{reviewResult.stage === "MAIN" ? "본심" : "예심"}</Table.Data>
-            <Table.Data>{reviewResult.student}</Table.Data>
-            <Table.Data>{reviewResult.department}</Table.Data>
-            <Table.Data>{reviewResult.title}</Table.Data>
-            <Table.Data>{reviewResult.summary === "PASS" ? "합격" : "불합격"}</Table.Data>
+            <Table.Data>{review.stage === "MAIN" ? "본심" : "예심"}</Table.Data>
+            <Table.Data>{review.student}</Table.Data>
+            <Table.Data>{review.department}</Table.Data>
+            <Table.Data>{review.title}</Table.Data>
+            <Table.Data>
+              <Stack gap={0}>
+                {review.reviews.map((reviewInfo, i) => (
+                  <Text key={i} fw={600} style={{ whiteSpace: "nowrap" }}>
+                    {reviewInfo.reviewer.name} /{" "}
+                    {reviewInfo.contentStatus === "UNEXAMINED" ? "진행중" : "심사 완료"}
+                  </Text>
+                ))}
+              </Stack>
+            </Table.Data>
           </Table.Row>
         ))}
       </Table>
