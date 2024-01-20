@@ -20,6 +20,7 @@ import { PagedReviewsRequestQuery } from "@/api/_types/reviews";
 import useReviews from "@/api/SWR/useReviews";
 import { DATE_TIME_FORMAT_HYPHEN } from "@/constants/date";
 import { DepartmentSelect } from "@/components/common/selects/DepartmentSelect";
+import { PAGE_NUMBER_GET_ALL, PAGE_SIZE_GET_ALL } from "@/constants/pagination";
 import { REFRESH_DEFAULT_PAGE_NUMBER } from "../_constants/page";
 import { TChangeQueryArg } from "../_types/common";
 import { PROF_REVIEW_TABLE_HEADERS } from "../_constants/table";
@@ -60,10 +61,15 @@ function ProfReviewListSection({ isFinal }: Props) {
   // Todo: 파일명 및 필터 저장 방식 논의
   const handleDownloadReviewExcel = (option: "all" | "filtered") => {
     const dateString = dayjs().format(DATE_TIME_FORMAT_HYPHEN);
-    const queryString = objectToQueryString({ ...query });
+    const sizeAll = `?pageNumber=${PAGE_NUMBER_GET_ALL}&pageSize=${PAGE_SIZE_GET_ALL}`;
+    const queryString = objectToQueryString({
+      ...query,
+      pageSize: PAGE_SIZE_GET_ALL,
+      pageNumber: PAGE_NUMBER_GET_ALL,
+    });
 
     const isAll = option === "all";
-    const urlSuffix = isAll ? "" : queryString;
+    const urlSuffix = isAll ? sizeAll : queryString;
 
     const fileLink = isFinal
       ? API_ROUTES.review.final.excel() + urlSuffix
@@ -189,10 +195,8 @@ function ProfReviewListSection({ isFinal }: Props) {
                 handleChangeFilter<string | null>({ name: "status", value });
               }}
               data={[
-                { label: "진행중", value: "UNEXAMINED" },
-                { label: "합격", value: "PASS" },
-                { label: "불합격", value: "FAIL" },
-                { label: "보류", value: "PENDING" },
+                { label: "진행중", value: "PENDING" },
+                { label: "심사 완료", value: "COMPLETE" },
               ]}
               allowDeselect
             />
@@ -210,15 +214,7 @@ function ProfReviewListSection({ isFinal }: Props) {
             <Table.Data>{review.student}</Table.Data>
             <Table.Data>{review.department}</Table.Data>
             <Table.Data>{review.title}</Table.Data>
-            <Table.Data>
-              {review.status === "UNEXAMINED"
-                ? "진행중"
-                : review.status === "PASS"
-                  ? "합격"
-                  : review.status === "FAIL"
-                    ? "불합격"
-                    : "보류"}
-            </Table.Data>
+            <Table.Data>{review.status === "PENDING" ? "진행중" : "심사 완료"}</Table.Data>
           </Table.Row>
         ))}
       </Table>

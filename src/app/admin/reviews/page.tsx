@@ -3,7 +3,7 @@ import PageHeader from "@/components/common/PageHeader";
 import Section from "@/components/common/Section/Section";
 import { ReviewListSection } from "@/components/pages/lists/admin/ReviewListSection";
 
-export default async function ReviewsPage() {
+export default async function AdminReviewsPage() {
   await AuthSSR({ userType: "ADMIN" });
 
   return (

@@ -3,7 +3,7 @@ import PageHeader from "@/components/common/PageHeader";
 import Section from "@/components/common/Section/Section";
 import { StudentListSection } from "@/components/pages/lists/admin/StudentListSection";
 
-export default async function StudentsPage() {
+export default async function AdminStudentsPage() {
   await AuthSSR({ userType: "ADMIN" });
 
   return (

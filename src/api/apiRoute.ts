@@ -65,11 +65,12 @@ export const API_ROUTES = {
     },
     current: {
       get: (reviewId?: ApiId) => `/reviews/current/${reviewId ?? ""}`, // GET: 심사 현황 목록 조회 및 상세 조회
-      excel: () => "/reviews/result/excel", // GET: 심사 결과 엑셀 다운로드
+      excel: () => "/reviews/current/excel", // GET: 심사 결과 엑셀 다운로드
     },
     result: {
       get: (reviewId?: ApiId) => `/reviews/result/${reviewId ?? ""}`, // GET: 심사 결과 목록 조회 및 상세 조회
       excel: () => "/reviews/result/excel", // GET: 심사 결과 엑셀 다운로드
+      report: () => "/reviews/result/reports", // GET: 심사 결과보고서 일괄 다운로드
     },
   },
 };

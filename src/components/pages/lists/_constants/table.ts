@@ -31,9 +31,9 @@ export const REVIEW_RESULT_TABLE_HEADERS: TableHeaderProps[] = [
   { label: "순번", widthPercentage: 5 },
   { label: "구분", widthPercentage: 7 },
   { label: "저자", widthPercentage: 7 },
-  { label: "전공", widthPercentage: 15 },
+  { label: "전공", widthPercentage: 10 },
   { label: "논문 제목", widthPercentage: 35 },
-  { label: "심사 현황", widthPercentage: 7 },
+  { label: "심사 현황", widthPercentage: 15 },
 ];
 
 export const STUDENT_ACHIEVEMENT_TABLE_HEADERS: TableHeaderProps[] = [

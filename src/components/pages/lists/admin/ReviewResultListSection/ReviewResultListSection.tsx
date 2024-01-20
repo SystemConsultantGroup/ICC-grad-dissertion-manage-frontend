@@ -16,10 +16,11 @@ import { SectionHeader } from "@/components/common/SectionHeader";
 import { IconDownload } from "@tabler/icons-react";
 import { Table } from "@/components/common/Table";
 import Pagination from "@/components/common/Pagination";
-import useReviewResults from "@/api/SWR/useReviewResults";
-import { PagedReviewResultsRequestQuery } from "@/api/_types/reviews";
 import { DepartmentSelect } from "@/components/common/selects/DepartmentSelect";
 import { DATE_TIME_FORMAT_HYPHEN } from "@/constants/date";
+import { PagedReviewsRequestQuery } from "@/api/_types/reviews";
+import { useAdminReviewResult } from "@/api/SWR";
+import { PAGE_NUMBER_GET_ALL, PAGE_SIZE_GET_ALL } from "@/constants/pagination";
 import { REFRESH_DEFAULT_PAGE_NUMBER } from "../../_constants/page";
 import { TChangeQueryArg } from "../../_types/common";
 import { REVIEW_RESULT_TABLE_HEADERS } from "../../_constants/table";
@@ -29,7 +30,7 @@ function ReviewResultListSection() {
   const [pageSize, setPageSize] = useState<string | null>(String(PAGE_SIZES[0]));
   const [pageNumber, setPageNumber] = useState(1);
   const pageSizeNumber = Number(pageSize);
-  const [query, setQuery] = useDebouncedState<PagedReviewResultsRequestQuery>(
+  const [query, setQuery] = useDebouncedState<PagedReviewsRequestQuery>(
     {
       pageNumber,
       pageSize: pageSizeNumber,
@@ -40,7 +41,7 @@ function ReviewResultListSection() {
     data: reviewResults,
     isLoading,
     pageData,
-  } = useReviewResults({ ...query, pageNumber, pageSize: pageSizeNumber });
+  } = useAdminReviewResult({ ...query, pageNumber, pageSize: pageSizeNumber }, true);
 
   const { startNumber } = getPageSizeStartEndNumber({
     pageNumber,
@@ -54,15 +55,36 @@ function ReviewResultListSection() {
   const endIndex = reviewResults ? startIndex + reviewResults.length - 1 : 0;
 
   // Todo: 심사보고서 출력 방식 논의
-  const handleDownloadReports = (option: "all" | "filtered") => {};
+  const handleDownloadReports = (option: "all" | "filtered") => {
+    const dateString = dayjs().format(DATE_TIME_FORMAT_HYPHEN);
+    const sizeAll = `?pageNumber=${PAGE_NUMBER_GET_ALL}&pageSize=${PAGE_SIZE_GET_ALL}`;
+    const queryString = objectToQueryString({
+      ...query,
+      pageSize: PAGE_SIZE_GET_ALL,
+      pageNumber: PAGE_NUMBER_GET_ALL,
+    });
+
+    const isAll = option === "all";
+    const urlSuffix = isAll ? sizeAll : queryString;
+    const fileLink = API_ROUTES.review.result.report() + urlSuffix;
+
+    handleDownloadFile({
+      fileLink,
+      fileName: `결과보고서 일괄 다운로드 파일_${dateString}.zip`,
+    });
+  };
 
   const handleDownloadReviewResults = (option: "all" | "filtered") => {
     const dateString = dayjs().format(DATE_TIME_FORMAT_HYPHEN);
-    const queryString = objectToQueryString({ ...query });
+    const sizeAll = `?pageNumber=${PAGE_NUMBER_GET_ALL}&pageSize=${PAGE_SIZE_GET_ALL}`;
+    const queryString = objectToQueryString({
+      ...query,
+      pageSize: PAGE_SIZE_GET_ALL,
+      pageNumber: PAGE_NUMBER_GET_ALL,
+    });
 
     const isAll = option === "all";
-    const urlSuffix = isAll ? "" : queryString;
-
+    const urlSuffix = isAll ? sizeAll : queryString;
     const fileLink = API_ROUTES.review.result.excel() + urlSuffix;
 
     handleDownloadFile({
@@ -212,7 +234,7 @@ function ReviewResultListSection() {
           <Table.Row
             key={reviewResult.id}
             onClick={() => {
-              push(`reviews/${reviewResult.id}`);
+              push(`results/${reviewResult.id}`);
             }}
           >
             <Table.Data>{index + 1 + (pageNumber - 1) * pageSizeNumber}</Table.Data>
