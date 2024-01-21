@@ -5,7 +5,7 @@ import { DepartmentTable, DepartmentTableRow } from "@/components/pages/departme
 import { Section } from "@/components/common/Section";
 import { Stack } from "@mantine/core";
 import { RowGroup, TitleRow } from "@/components/common/rows";
-import DeptCreateRow from "./DeptCreateRow";
+import DepartmentCreateRow from "./DepartmentCreateRow";
 
 function DepartmentManageSection() {
   const { data, isLoading, mutate } = useDepartments();
@@ -31,7 +31,7 @@ function DepartmentManageSection() {
         <Stack gap={0}>
           <TitleRow title="학과 추가" />
           <RowGroup>
-            <DeptCreateRow mutate={mutate} />
+            <DepartmentCreateRow mutate={mutate} />
           </RowGroup>
         </Stack>
       </Stack>
