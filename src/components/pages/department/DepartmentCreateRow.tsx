@@ -14,8 +14,11 @@ interface Props {
   mutate: KeyedMutator<DepartmentsResponse>;
 }
 
-function DeptCreateRow({ mutate }: Props) {
+function DepartmentCreateRow({ mutate }: Props) {
   const { onSubmit, getInputProps } = useForm<DeptCreateFormInputs>({
+    initialValues: {
+      name: "",
+    },
     validate: {
       name: isNotEmpty("학과명을 입력해주세요."),
     },
@@ -25,7 +28,7 @@ function DeptCreateRow({ mutate }: Props) {
       await ClientAxios.post(API_ROUTES.department.post(), { name: values.name });
       mutate();
     } catch (error) {
-      console.error(error);
+      /* empty */
     }
   };
 
@@ -43,4 +46,4 @@ function DeptCreateRow({ mutate }: Props) {
   );
 }
 
-export default DeptCreateRow;
+export default DepartmentCreateRow;
