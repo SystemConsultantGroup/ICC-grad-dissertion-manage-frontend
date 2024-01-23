@@ -1,10 +1,11 @@
 .wrapper {
-  padding: 12px 8px 12px 8px;
+  padding: 14px;
   border-bottom: 1px solid var(--mantine-color-gray-2);
-  height: 71;
+  height: 71px;
 }
 
 .deptNameText {
+  font-size: var(--mantine-font-size-lg);
   font-weight: 500;
 }
 
