@@ -8,16 +8,22 @@ import AssignProfSection from "./AssignProfSection";
 import PaperInfoSection from "./PaperInfoSection";
 import AdminStudentFormInputs from "./_types/AdminStudentFormInputs";
 
-function AdminStudentForm() {
+interface Props {
+  studentId?: string | number;
+}
+
+function AdminStudentForm({ studentId }: Props) {
   const form = useForm<AdminStudentFormInputs>({
     initialValues: {
-      loginId: "",
-      password: "",
-      name: "",
-      email: "",
-      phone: "",
-      deptId: "",
-      sysId: "",
+      basicInfo: {
+        loginId: "",
+        password: "",
+        name: "",
+        email: "",
+        phone: "",
+        deptId: "",
+        sysId: "",
+      },
 
       chairman: null,
       professors: [],
@@ -33,13 +39,23 @@ function AdminStudentForm() {
         <AssignProfSection form={form} />
         <PaperInfoSection form={form} />
         <RowGroup>
-          <ButtonRow
-            buttons={[
-              <Button key="register" type="submit">
-                등록하기
-              </Button>,
-            ]}
-          />
+          {studentId ? (
+            <ButtonRow
+              buttons={[
+                <Button key="edit" type="submit">
+                  수정하기
+                </Button>,
+              ]}
+            />
+          ) : (
+            <ButtonRow
+              buttons={[
+                <Button key="register" type="submit">
+                  등록하기
+                </Button>,
+              ]}
+            />
+          )}
         </RowGroup>
       </Stack>
     </form>

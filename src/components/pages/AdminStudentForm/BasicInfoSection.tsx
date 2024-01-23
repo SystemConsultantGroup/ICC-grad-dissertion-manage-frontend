@@ -1,29 +1,42 @@
 "use client";
 
+import { useEffect } from "react";
 import { Stack, TextInput, PasswordInput, Select } from "@mantine/core";
 import { RowGroup, BasicRow, TitleRow } from "@/components/common/rows";
 import { UseFormReturnType } from "@mantine/form";
+import { ClientAxios } from "@/api/ClientAxios";
+import { API_ROUTES } from "@/api/apiRoute";
 import AdminStudentFormInputs from "./_types/AdminStudentFormInputs";
 
-function BasicInfoSection({ form }: { form: UseFormReturnType<AdminStudentFormInputs> }) {
-  /* const { onSubmit, getInputProps, setValues } = useForm<BasicInfoInputs>({
-    initialValues: {
-      loginId: "",
-      password: "",
-      name: "",
-      email: "",
-      phone: "",
-      deptId: "",
-    },
-    validate: {
-      loginId: isNotEmpty(),
-      password: isNotEmpty(),
-      name: isNotEmpty(),
-      email: isEmail("형식이 올바르지 않습니다."),
-      phone: isNotEmpty(),
-      deptId: isNotEmpty(),
-    },
-  }); */
+interface Props {
+  form: UseFormReturnType<AdminStudentFormInputs>;
+  studentId?: string | number;
+}
+
+function BasicInfoSection({ form, studentId }: Props) {
+  useEffect(() => {
+    const fetchStudentDetails = async () => {
+      try {
+        if (studentId) {
+          const response = await ClientAxios.get(API_ROUTES.student.get(studentId));
+          const studentDetails = response.data;
+
+          form.setFieldValue("basicInfo", {
+            loginId: studentDetails.loginId,
+            password: studentDetails.password,
+            name: studentDetails.name,
+            email: studentDetails.email,
+            phone: studentDetails.phone,
+            deptId: String(studentDetails.deptId.id),
+            sysId: String(studentDetails.sysId),
+          });
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchStudentDetails();
+  }, [studentId, form.setFieldValue]);
 
   return (
     <Stack gap={0}>
@@ -32,27 +45,27 @@ function BasicInfoSection({ form }: { form: UseFormReturnType<AdminStudentFormIn
         <Stack gap={0}>
           <RowGroup>
             <BasicRow field="아이디">
-              <TextInput id="input-id" {...form.getInputProps("loginId")} />
+              <TextInput id="input-id" {...form.getInputProps("basicInfo.loginId")} />
             </BasicRow>
           </RowGroup>
           <RowGroup>
             <BasicRow field="비밀번호">
-              <PasswordInput id="input-password" {...form.getInputProps("password")} />
+              <PasswordInput id="input-password" {...form.getInputProps("basicInfo.password")} />
             </BasicRow>
           </RowGroup>
           <RowGroup>
             <BasicRow field="이름">
-              <TextInput id="input-name" {...form.getInputProps("name")} />
+              <TextInput id="input-name" {...form.getInputProps("basicInfo.name")} />
             </BasicRow>
           </RowGroup>
           <RowGroup>
             <BasicRow field="이메일">
-              <TextInput id="input-email" {...form.getInputProps("email")} />
+              <TextInput id="input-email" {...form.getInputProps("basicInfo.email")} />
             </BasicRow>
           </RowGroup>
           <RowGroup>
             <BasicRow field="연락처">
-              <TextInput id="input-phone" {...form.getInputProps("phone")} />
+              <TextInput id="input-phone" {...form.getInputProps("basicInfo.phone")} />
             </BasicRow>
           </RowGroup>
           <RowGroup>
@@ -65,7 +78,7 @@ function BasicInfoSection({ form }: { form: UseFormReturnType<AdminStudentFormIn
                     width: 300,
                   },
                 }}
-                {...form.getInputProps("deptId")}
+                {...form.getInputProps("basicInfo.deptId")}
               />
             </BasicRow>
           </RowGroup>
@@ -79,7 +92,7 @@ function BasicInfoSection({ form }: { form: UseFormReturnType<AdminStudentFormIn
                     width: 300,
                   },
                 }}
-                {...form.getInputProps("sysId")}
+                {...form.getInputProps("basicInfo.sysId")}
               />
             </BasicRow>
           </RowGroup>

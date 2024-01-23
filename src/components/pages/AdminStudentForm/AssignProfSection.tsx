@@ -10,6 +10,7 @@ const deptList = [
   { deptId: 0, name: "전자전기공학과" },
   { deptId: 1, name: "전자전기공학과" },
 ];
+
 const profList = [
   { professorId: 0, name: "김교수" },
   { professorId: 1, name: "이교수" },
@@ -18,12 +19,17 @@ const profList = [
   { professorId: 4, name: "한교수" },
 ];
 
+interface Props {
+  form: UseFormReturnType<AdminStudentFormInputs>;
+  studentId?: string | number;
+}
+
 interface SelectAssignedProfessor {
   value: string;
   label: string;
 }
 
-function AssignProfSection({ form }: { form: UseFormReturnType<AdminStudentFormInputs> }) {
+function AssignProfSection({ form, studentId }: Props) {
   const [cancleProf, setCancleProf] = useState<string | null>(null);
   const [deptChairman, setDeptChairman] = useState<string | null>(null); // 교수(심사위원장)의 department id
   const [chairman, setChairman] = useState<string | null>(null); // 교수(심사위원장) id
