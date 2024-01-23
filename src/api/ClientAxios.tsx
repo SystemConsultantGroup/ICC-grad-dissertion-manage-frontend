@@ -8,15 +8,14 @@ export const ClientAxios = axios.create({
 });
 
 ClientAxios.interceptors.response.use(
-  (response) => {
+  (response) =>
     //TODO: 200 등 응답에 따른 메세지 알맞게 추가
-    if (response.status === 201) {
-      showNotificationSuccess({
-        message: response?.data.message,
-      });
-    }
-    return Promise.resolve(response);
-  },
+    // if (response.status === 201) {
+    //   showNotificationSuccess({
+    //     message: response?.data.message,
+    //   });
+    // }
+    Promise.resolve(response),
   (error) => {
     // 4xx, 5xx status code (오류 코드 발생) 시 할 일.
 

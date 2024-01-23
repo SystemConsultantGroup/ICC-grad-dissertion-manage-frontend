@@ -1,10 +1,9 @@
-import { Box, Button, Group, Modal, Stack, Text, lighten } from "@mantine/core";
+import { Box, Button, Group, Modal, Stack, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { RowGroup, TitleRow } from "@/components/common/rows";
-import { IconAlertCircle, IconAlertTriangle } from "@tabler/icons-react";
+import { IconAlertTriangle } from "@tabler/icons-react";
 import { ClientAxios } from "@/api/ClientAxios";
 import { API_ROUTES } from "@/api/apiRoute";
-import { showNotificationError, showNotificationSuccess } from "@/components/common/Notifications";
+import { showNotificationSuccess } from "@/components/common/Notifications";
 import { KeyedMutator } from "swr";
 import { DepartmentsResponse } from "@/api/_types/department";
 import classes from "./DepartmentTableRow.module.css";
@@ -26,7 +25,7 @@ function DepartmentTableRow({ id, name, userCount, mutate }: Props) {
       mutate();
       close();
     } catch (error) {
-      console.log(error);
+      /* empty */
     }
   };
 
