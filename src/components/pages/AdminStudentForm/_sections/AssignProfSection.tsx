@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Stack, Select, Button } from "@mantine/core";
 import { RowGroup, BasicRow, TitleRow } from "@/components/common/rows";
 import { UseFormReturnType } from "@mantine/form";
-import AdminStudentFormInputs from "./_types/AdminStudentFormInputs";
+import AdminStudentFormInputs from "../_types/AdminStudentFormInputs";
 
 const deptList = [
   { deptId: 0, name: "전자전기공학과" },
