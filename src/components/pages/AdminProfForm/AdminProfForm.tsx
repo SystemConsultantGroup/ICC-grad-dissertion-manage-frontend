@@ -7,9 +7,9 @@ import { useRouter } from "next/navigation";
 import { ClientAxios } from "@/api/ClientAxios";
 import { CommonApiResponse } from "@/api/_types/common";
 import { RowGroup, BasicRow, TitleRow, ButtonRow } from "@/components/common/rows";
-import useDepartments from "@/api/SWR/useDepartments";
 import { useEffect } from "react";
 import { useAuth } from "@/components/common/AuthProvider/AuthProvider";
+import { showNotificationSuccess } from "@/components/common/Notifications";
 
 interface Props {
   professorId?: number | string;
@@ -33,7 +33,7 @@ function AdminProfForm({ professorId }: Props) {
   const router = useRouter();
   const { login } = useAuth();
 
-  const { onSubmit, getInputProps, setValues } = useForm<AdminProfFormInputs>({
+  const { onSubmit, getInputProps, setValues, values } = useForm<AdminProfFormInputs>({
     initialValues: {
       loginId: "",
       password: "",
@@ -75,29 +75,28 @@ function AdminProfForm({ professorId }: Props) {
     fetchProfessorDetails();
   }, [professorId, setValues]);
 
-  const handleSubmit = async (values: AdminProfFormInputs) => {
+  const handleSubmit = async () => {
     try {
       const realValues = { ...values, deptId: parseInt(values.deptId, 10) };
       if (!professorId) {
         await ClientAxios.post(API_ROUTES.professor.post(), realValues);
+        showNotificationSuccess({ message: "교수 등록이 완료되었습니다." });
         router.push("/admin/prof");
-        // TODO: 등록 완료 알림
       } else {
         await ClientAxios.post(API_ROUTES.professor.put(professorId), realValues);
+        showNotificationSuccess({ message: "교수 정보 수정이 완료되었습니다." });
         router.push(`/admin/prof/${professorId}`);
-        // TODO: 수정 완료 알림
       }
     } catch (err) {
       console.error(err);
-      // TODO: 등록/수정 실패 알림
     }
   };
 
-  const handleLogin = async (values: loginInputs) => {
+  const handleLogin = async (loginValues: loginInputs) => {
     try {
       const {
         data: { accessToken },
-      } = await ClientAxios.post<CommonApiResponse & { accessToken: string }>("/auth", values);
+      } = await ClientAxios.post<CommonApiResponse & { accessToken: string }>("/auth", loginValues);
       login(accessToken);
       router.push("/");
     } catch (err) {
@@ -119,8 +118,8 @@ function AdminProfForm({ professorId }: Props) {
                 key="login"
                 onClick={() =>
                   handleLogin({
-                    loginId: getInputProps("loginId").value,
-                    password: getInputProps("password").value,
+                    loginId: values.loginId,
+                    password: values.password,
                   })
                 }
               >
