@@ -24,8 +24,8 @@ interface AdminProfFormInputs {
   loginId: string;
   password: string;
   name: string;
-  email: string;
-  phone: string;
+  email: string | null;
+  phone: string | null;
   deptId: string;
 }
 
@@ -38,16 +38,17 @@ function AdminProfForm({ professorId }: Props) {
       loginId: "",
       password: "",
       name: "",
-      email: "",
-      phone: "",
+      email: null,
+      phone: null,
       deptId: "",
     },
     validate: {
       loginId: isNotEmpty("아이디를 입력해주세요."),
       password: isNotEmpty("비밀번호를 입력해주세요."),
       name: isNotEmpty("이름을 입력해주세요."),
-      email: isEmail("이메일 형식이 올바르지 않습니다."),
-      phone: isNotEmpty("연락처를 입력해주세요."),
+      email: (value) =>
+        value ? (/^\S+@\S+$/.test(value) ? null : "이메일 형식이 올바르지 않습니다.") : null,
+      phone: undefined,
       deptId: isNotEmpty("소속된 학과를 선택해주세요."),
     },
   });
