@@ -81,6 +81,7 @@ function AchievementForm<T>({ form, handleSubmit, isEdit }: Props<T>) {
         <RowGroup>
           <BasicRow field="게재년월">
             <DateInput
+              leftSectionPointerEvents="none"
               leftSection={<IconCalendar size={20} />}
               valueFormat={DATE_FORMAT}
               locale="ko"
