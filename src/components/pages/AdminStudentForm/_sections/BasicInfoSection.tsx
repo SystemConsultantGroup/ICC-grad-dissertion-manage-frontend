@@ -6,7 +6,7 @@ import { RowGroup, BasicRow, TitleRow } from "@/components/common/rows";
 import { UseFormReturnType } from "@mantine/form";
 import { ClientAxios } from "@/api/ClientAxios";
 import { API_ROUTES } from "@/api/apiRoute";
-import AdminStudentFormInputs from "./_types/AdminStudentFormInputs";
+import AdminStudentFormInputs from "../_types/AdminStudentFormInputs";
 
 interface Props {
   form: UseFormReturnType<AdminStudentFormInputs>;
