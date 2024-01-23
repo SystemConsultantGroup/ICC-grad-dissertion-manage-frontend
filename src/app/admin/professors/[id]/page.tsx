@@ -9,10 +9,8 @@ interface Props {
   };
 }
 
-export default async function ProfEditPage({ params }: Props) {
+export default async function ProfEditPage({ params: { id } }: Props) {
   await AuthSSR({ userType: "ADMIN" });
-
-  const { id } = params;
 
   return (
     <>
