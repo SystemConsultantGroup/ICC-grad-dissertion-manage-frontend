@@ -3,14 +3,20 @@ import AdminStudentForm from "@/components/pages/AdminStudentForm/AdminStudentFo
 import PageHeader from "@/components/common/PageHeader";
 import Section from "@/components/common/Section/Section";
 
-export default async function StudentRegisterPage({ params }: { params: { id: string } }) {
-  await AuthSSR({ userType: "ADMIN" });
+interface Props {
+  params: {
+    id: string;
+  };
+}
+
+export default async function StudentRegisterPage({ params }: Props) {
+  //await AuthSSR({ userType: "ADMIN" });
 
   return (
     <>
       <PageHeader title="학생 현황 및 수정" />
       <Section>
-        <AdminStudentForm />
+        <AdminStudentForm studentId={params.id} />
       </Section>
     </>
   );
