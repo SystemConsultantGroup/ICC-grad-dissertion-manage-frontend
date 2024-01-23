@@ -43,12 +43,12 @@ function AdminProfForm({ professorId }: Props) {
       deptId: "",
     },
     validate: {
-      loginId: isNotEmpty(),
-      password: isNotEmpty(),
-      name: isNotEmpty(),
-      email: isEmail("형식이 올바르지 않습니다."),
-      phone: isNotEmpty(),
-      deptId: isNotEmpty(),
+      loginId: isNotEmpty("아이디를 입력해주세요."),
+      password: isNotEmpty("비밀번호를 입력해주세요."),
+      name: isNotEmpty("이름을 입력해주세요."),
+      email: isEmail("이메일 형식이 올바르지 않습니다."),
+      phone: isNotEmpty("연락처를 입력해주세요."),
+      deptId: isNotEmpty("소속된 학과를 선택해주세요."),
     },
   });
 
