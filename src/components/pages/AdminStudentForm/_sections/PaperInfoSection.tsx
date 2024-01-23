@@ -32,7 +32,7 @@ function PaperInfoSection({ form, studentId }: Props) {
       <TitleRow title="논문 정보" />
       <RowGroup>
         <BasicRow field="논문 제목">
-          <TextInput placeholder="논문 제목 입력" {...form.getInputProps("paperTitle")} />
+          <TextInput placeholder="논문 제목 입력" {...form.getInputProps("thesisTitle")} />
         </BasicRow>
       </RowGroup>
     </Stack>

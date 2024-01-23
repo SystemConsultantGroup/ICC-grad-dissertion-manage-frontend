@@ -28,7 +28,7 @@ function BasicInfoSection({ form, studentId }: Props) {
             email: studentDetails.email,
             phone: studentDetails.phone,
             deptId: String(studentDetails.deptId.id),
-            sysId: String(studentDetails.sysId),
+            phaseId: String(studentDetails.phaseId),
           });
         }
       } catch (error) {
@@ -92,7 +92,7 @@ function BasicInfoSection({ form, studentId }: Props) {
                     width: 300,
                   },
                 }}
-                {...form.getInputProps("basicInfo.sysId")}
+                {...form.getInputProps("basicInfo.phaseId")}
               />
             </BasicRow>
           </RowGroup>
