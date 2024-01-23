@@ -1,6 +1,7 @@
 import { ClientAxios } from "@/api/ClientAxios";
 import { DepartmentsResponse } from "@/api/_types/department";
 import { API_ROUTES } from "@/api/apiRoute";
+import { showNotificationSuccess } from "@/components/common/Notifications";
 import BasicRow from "@/components/common/rows/BasicRow/BasicRow";
 import { Button, Group, TextInput } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
@@ -26,6 +27,9 @@ function DepartmentCreateRow({ mutate }: Props) {
   const handleSubmit = async (values: DeptCreateFormInputs) => {
     try {
       await ClientAxios.post(API_ROUTES.department.post(), { name: values.name });
+      showNotificationSuccess({
+        message: `${values.name}를 추가하였습니다.`,
+      });
       mutate();
     } catch (error) {
       /* empty */
