@@ -8,11 +8,11 @@ export default interface AdminStudentFormInputs {
     email: string;
     phone: string;
     deptId: string;
-    sysId: string;
+    phaseId: string;
   };
 
   chairman: SelectProfessorFormValues | null;
   professors: SelectProfessorFormValues[];
 
-  paperTitle: string;
+  thesisTitle: string;
 }
