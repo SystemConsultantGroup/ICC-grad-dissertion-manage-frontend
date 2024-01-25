@@ -30,11 +30,6 @@ export interface CreateStudentRequestBody extends Omit<User, "id" | "department"
   thesisTitle?: string;
 }
 
-export interface SelectStudentFormValues {
-  departmentId: User["department"]["id"];
-  studentId: number;
-}
-
 export interface StudentPhaseResponse extends CommonApiResponse {
   phase: Phase;
   isLock: boolean;

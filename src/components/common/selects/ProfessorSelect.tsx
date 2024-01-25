@@ -5,7 +5,12 @@ import { UseFormReturnType } from "@mantine/form";
 import { Select, SelectProps } from "@mantine/core";
 import { PAGE_NUMBER_GET_ALL, PAGE_SIZE_GET_ALL } from "@/constants/pagination";
 import useProfessors from "@/api/SWR/useProfessors";
-import { SelectProfessorFormValues } from "@/api/_types/professors";
+import { User } from "@/api/_types/user";
+
+export interface SelectProfessorFormValues {
+  departmentId: User["department"]["id"];
+  professorId: number;
+}
 
 interface Props extends Omit<SelectProps, "data" | "form"> {
   departmentId?: number;
