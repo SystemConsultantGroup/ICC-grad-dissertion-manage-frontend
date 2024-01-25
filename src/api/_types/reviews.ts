@@ -4,6 +4,13 @@ import { User } from "./user";
 
 export type ReviewerRole = "COMMITTEE_CHAIR" | "COMMITTEE_MEMBER" | "ADVISOR";
 
+export type ReviewerRoleLookupTable = Record<ReviewerRole, string>;
+export const REVIEWER_ROLE_LOOKUP_TABLE: ReviewerRoleLookupTable = {
+  COMMITTEE_CHAIR: "심사위원장",
+  COMMITTEE_MEMBER: "심사위원",
+  ADVISOR: "지도교수",
+};
+
 export interface Reviewer {
   id: number;
   role: ReviewerRole;
@@ -60,14 +67,15 @@ export interface DetailedRevisionResponse extends CommonApiResponse, DetailedRev
 
 export interface PagedReviewsResponse extends PagedApiResponse<Review> {}
 
-export interface PagedReviewsRequestQuery extends PagedQueryRequest {
-  author?: string;
-  department?: string;
-  stage?: Stage;
-  title?: string;
-  status?: Status;
-  summary?: Status;
-}
+export type PagedReviewsRequestQuery = PagedQueryRequest &
+  Partial<{
+    author: string;
+    department: string;
+    stage: Stage;
+    title: string;
+    status: Status;
+    summary: Status;
+  }>;
 
 export interface ThesisReview {
   id: number;

@@ -1,21 +1,16 @@
 import { CommonApiResponse, PagedApiResponse, PagedQueryRequest } from "./common";
 import { User } from "./user";
 
-export interface PagedProfessorsRequestQuery extends PagedQueryRequest {
-  loginId?: string;
-  name?: string;
-  email?: string;
-  phone?: string;
-  deptId?: number;
+export interface ProfessorQueryBrief {
+  loginId: string;
+  name: string;
+  email: string;
+  phone: string;
+  deptId: number;
 }
 
-export interface ProfessorsExcelRequestQuery {
-  loginId?: string;
-  name?: string;
-  email?: string;
-  phone?: string;
-  deptId?: number;
-}
+export type PagedProfessorsRequestQuery = PagedQueryRequest & Partial<ProfessorQueryBrief>;
+export type ProfessorsExcelRequestQuery = Partial<ProfessorQueryBrief>;
 
 export interface ProfessorResponse extends User, CommonApiResponse {
   createdAt: string;
