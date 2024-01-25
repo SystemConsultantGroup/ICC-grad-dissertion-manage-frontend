@@ -3,23 +3,18 @@ import { File } from "./file";
 import { Phase } from "./phase";
 import { User } from "./user";
 
-export interface PagedStudentsRequestQuery extends PagedQueryRequest {
-  studentNumber?: string;
-  name?: string;
-  email?: string;
-  phone?: string;
-  departmentId?: number;
-  phaseId?: number;
-  isLock?: boolean;
+export interface StudentQueryBrief {
+  studentNumber: string;
+  name: string;
+  email: string;
+  phone: number;
+  departmentId: number;
+  phaseId: number;
+  isLock: boolean;
 }
 
-export interface StudentsExcelRequestQuery {
-  studentNumber?: string;
-  name?: string;
-  email?: string;
-  phone?: number;
-  departmentId?: number;
-}
+export type PagedStudentsRequestQuery = PagedQueryRequest & Partial<StudentQueryBrief>;
+export type StudentsExcelRequestQuery = Partial<Omit<StudentQueryBrief, "phaseId" | "isLock">>;
 
 export interface StudentResponse extends User, CommonApiResponse {}
 
