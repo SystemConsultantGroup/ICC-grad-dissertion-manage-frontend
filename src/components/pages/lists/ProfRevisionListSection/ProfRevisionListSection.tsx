@@ -51,7 +51,7 @@ function ProfRevisionListSection() {
         <Table.FilterRow>
           <Table.Data>필터</Table.Data>
           <Table.Data>
-            <DepartmentSelect w="100%" miw={150} placeholder="전공" allowDeselect />
+            <DepartmentSelect w="100%" miw={150} placeholder="학과" allowDeselect />
           </Table.Data>
           <Table.Data>
             <Table.TextInput w="100%" miw={80} placeholder="저자" />

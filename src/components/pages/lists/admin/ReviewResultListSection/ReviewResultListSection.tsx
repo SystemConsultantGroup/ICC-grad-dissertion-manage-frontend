@@ -197,7 +197,7 @@ function ReviewResultListSection() {
             <DepartmentSelect
               w="100%"
               miw={150}
-              placeholder="전공"
+              placeholder="학과"
               onChange={(value) => {
                 handleChangeFilter<string | null>({ name: "department", value });
               }}
