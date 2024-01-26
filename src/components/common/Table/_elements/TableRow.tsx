@@ -3,7 +3,6 @@ import { Table } from "@mantine/core";
 import classes from "./TableRow.module.css";
 
 interface Props {
-  pointer?: boolean;
   children: ReactNode;
   onClick?: () => void;
 }
