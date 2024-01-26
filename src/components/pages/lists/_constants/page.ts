@@ -1,1 +1,0 @@
-export const REFRESH_DEFAULT_PAGE_NUMBER = 1;

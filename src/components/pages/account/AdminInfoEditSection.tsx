@@ -3,7 +3,7 @@
 import { Button, Group, PasswordInput, Stack } from "@mantine/core";
 import BasicRow from "@/components/common/rows/BasicRow/BasicRow";
 import ButtonRow from "@/components/common/rows/ButtonRow/ButtonRow";
-import { RowGroup, TitleRow } from "@/components/common/rows";
+import { RowGroup } from "@/components/common/rows";
 import { useAuth } from "@/components/common/AuthProvider";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { Department } from "@/api/_types/department";
@@ -47,7 +47,6 @@ function AdminInfoEditSection() {
   return (
     <form onSubmit={onSubmit(handleSubmit)}>
       <Stack gap={0}>
-        <TitleRow title="정보 수정" />
         <RowGroup>
           <BasicRow field="아이디">{user?.loginId}</BasicRow>
         </RowGroup>

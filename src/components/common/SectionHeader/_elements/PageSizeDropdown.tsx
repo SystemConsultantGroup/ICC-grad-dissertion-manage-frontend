@@ -17,7 +17,6 @@ function PageSizeDropdown({ pageSize, setPageSize }: PaginationDataProps) {
       data={PAGE_SIZES.map((pageSize) => ({ label: String(pageSize), value: String(pageSize) }))}
       defaultValue={String(pageSize)}
       onChange={setPageSize}
-      allowDeselect={false}
     />
   );
 }

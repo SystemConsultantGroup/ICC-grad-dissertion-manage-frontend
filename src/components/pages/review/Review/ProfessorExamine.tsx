@@ -26,7 +26,9 @@ export function ProfessorExamine({ onTemporarySave, onSave }: ProfessorExaminePr
           </Group>
         </BasicRow>
       </RowGroup>
-      <TextAreaRow field="심사 의견" />
+      <RowGroup>
+        <TextAreaRow field="심사 의견" />
+      </RowGroup>
       <RowGroup>
         <FileUploadRow field="심사 의견 파일" />
       </RowGroup>
@@ -36,7 +38,7 @@ export function ProfessorExamine({ onTemporarySave, onSave }: ProfessorExaminePr
             <Button key="temp" color="grape" variant="outline" onClick={onTemporarySave}>
               임시저장
             </Button>,
-            <Button key="final" color="blue" onClick={onSave}>
+            <Button key="temp" color="blue" onClick={onSave}>
               최종저장
             </Button>,
           ]}
