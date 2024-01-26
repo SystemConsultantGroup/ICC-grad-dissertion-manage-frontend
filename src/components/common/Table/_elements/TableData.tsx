@@ -1,4 +1,4 @@
-import { Table } from "@mantine/core";
+import { Table, Text } from "@mantine/core";
 import React, { ReactNode } from "react";
 
 interface Props {
@@ -6,7 +6,11 @@ interface Props {
 }
 
 function TableData({ children }: Props) {
-  return <Table.Td fz={16}>{children}</Table.Td>;
+  return (
+    <Table.Td>
+      <Text fz="md">{children}</Text>
+    </Table.Td>
+  );
 }
 
 export default TableData;

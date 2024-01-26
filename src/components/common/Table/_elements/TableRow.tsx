@@ -8,11 +8,11 @@ interface Props {
   onClick?: () => void;
 }
 
-function TableRow({ children, onClick, pointer = true }: Props) {
+function TableRow({ children, onClick }: Props) {
   return (
     <Table.Tr
       onClick={onClick}
-      className={pointer ? classes.tableRow : classes.tableRowNoPointer}
+      className={classes.tableRow}
       style={{
         height: 56,
       }}

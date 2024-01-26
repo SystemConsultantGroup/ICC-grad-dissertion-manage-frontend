@@ -5,14 +5,13 @@ import { Phase } from "./phase";
 export interface PagedStudentsRequestQuery extends PagedQueryRequest {
   studentNumber?: string;
   name?: string;
-  email?: string;
-  phone?: string;
+  phone?: number;
   departmentId?: number;
   phaseId?: number;
   isLock?: boolean;
 }
 
-export interface StudentsExcelRequestQuery {
+export interface StudentExcelRequestQuery {
   studentNumber?: string;
   name?: string;
   phone?: number;
@@ -22,7 +21,7 @@ export interface StudentsExcelRequestQuery {
 }
 
 export interface Student {
-  id: number;
+  id: string;
   loginId: string;
   name: string;
   email: string;
@@ -36,7 +35,7 @@ export interface StudentResponse extends Student, CommonApiResponse {
   updatedAt: string;
 }
 
-export interface PagedStudentsResponse extends PagedApiResponse<Omit<StudentResponse, "message">> {}
+export interface PagedStudentResponse extends PagedApiResponse<Omit<StudentResponse, "message">> {}
 
 export interface CreateStudentRequestBody extends Omit<Student, "id" | "department" | "phase"> {
   password: string;
@@ -47,9 +46,4 @@ export interface CreateStudentRequestBody extends Omit<Student, "id" | "departme
   reviewerIds: number[];
   preThesisTitle?: string;
   mainThesisTitle?: string;
-}
-
-export interface SelectStudentFormValues {
-  departmentId: Student["department"]["id"];
-  studentId: number;
 }

@@ -14,7 +14,7 @@ export function ExamineResult() {
       </RowGroup>
       <RowGroup>
         <BasicRow field="심사 의견">
-          <BasicRow.Text>-</BasicRow.Text>
+          <BasicRow.Text>월월월월월</BasicRow.Text>
         </BasicRow>
       </RowGroup>
     </Stack>
@@ -37,6 +37,7 @@ export function StudentExamineResult() {
       </RowGroup>
       <RowGroup>
         <BasicRow field="심사 의견">
+          <BasicRow.Text>월월월월월</BasicRow.Text>
           <Button variant="outline">자세히 보기</Button>
         </BasicRow>
       </RowGroup>

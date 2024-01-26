@@ -14,7 +14,7 @@ export interface PagedApiResponse<T> extends CommonApiResponse {
   pageSize: number;
   totalCount: number;
   totalPages: number;
-  content: T[];
+  contents: T[];
 }
 
 export interface PagedQueryRequest {
