@@ -3,12 +3,12 @@
 import { BasicRow, FileUploadRow, RowGroup, TextAreaRow, TitleRow } from "@/components/common/rows";
 import { Button, Stack, TextInput } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
-import classes from "@/components/pages/PaperSubmissionForm/PaperSubmissionForm.module.css";
 import { useAuth } from "@/components/common/AuthProvider";
 import { uploadFile } from "@/api/_utils/uploadFile";
 import { ClientAxios } from "@/api/ClientAxios";
 import { API_ROUTES } from "@/api/apiRoute";
 import { useState } from "react";
+import classes from "@/components/pages/write/PaperSubmissionForm/PaperSubmissionForm.module.css";
 
 interface PaperSubmissionFormInputs {
   title: string;
@@ -62,7 +62,7 @@ function PaperSubmissionForm() {
         <TitleRow title="논문 투고" />
         <RowGroup>
           <BasicRow field="저자">
-            {user ? <TextInput disabled value={user.name} /> : <TextInput disabled value="" />}
+            <BasicRow.Text>{user!.name}</BasicRow.Text>
           </BasicRow>
         </RowGroup>
         <RowGroup>

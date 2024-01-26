@@ -13,9 +13,17 @@ interface Props {
   /* eslint-disable @typescript-eslint/no-explicit-any */
   form?: UseFormReturnType<any>;
   formKey?: string;
+  fieldSize?: "sm" | "md" | "lg" | number;
 }
 
-function FileUploadRow({ field, onChange, defaultFile, form, formKey = "file" }: Props) {
+function FileUploadRow({
+  field,
+  onChange,
+  defaultFile,
+  form,
+  formKey = "file",
+  fieldSize = "md",
+}: Props) {
   const [file, setFile] = useState<File | null>(null);
   const resetRef = useRef<() => void>(null);
   const clearFile = () => {
@@ -35,7 +43,7 @@ function FileUploadRow({ field, onChange, defaultFile, form, formKey = "file" }:
   }, [defaultFile]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <Row field={field}>
+    <Row field={field} fieldSize={fieldSize}>
       <Group gap={16}>
         {/* form API와 함께 사용시 예기치 못한 동작이 발생하여 주석처리 */}
         {/* <FileButton onChange={handleFileChange} resetRef={resetRef}>
