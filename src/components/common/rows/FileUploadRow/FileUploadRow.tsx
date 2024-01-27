@@ -54,6 +54,7 @@ function FileUploadRow({
           value={form ? undefined : file}
           onChange={handleFileChange}
           defaultValue={defaultFile}
+          placeholder="파일 업로드..."
           {...form?.getInputProps(formKey)}
         >
           {file?.name}
