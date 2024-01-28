@@ -67,6 +67,15 @@ export interface DetailedRevisionResponse extends CommonApiResponse, DetailedRev
 
 export interface PagedReviewsResponse extends PagedApiResponse<Review> {}
 
+export interface PagedRevisionResponse
+  extends PagedApiResponse<{
+    id: number;
+    student: string;
+    department: string;
+    title: string;
+    contentStatus: Status;
+  }> {}
+
 export type PagedReviewsRequestQuery = PagedQueryRequest &
   Partial<{
     author: string;
@@ -76,6 +85,9 @@ export type PagedReviewsRequestQuery = PagedQueryRequest &
     status: Status;
     summary: Status;
   }>;
+
+export type PagedRevisionRequestQuery = PagedQueryRequest &
+  Partial<{ author: string; department: string; title: string; contentStatus: Status }>;
 
 export interface ThesisReview {
   id: number;
