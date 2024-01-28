@@ -72,5 +72,9 @@ export const API_ROUTES = {
       excel: () => "/reviews/result/excel", // GET: 심사 결과 엑셀 다운로드
       report: () => "/reviews/result/reports", // GET: 심사 결과보고서 일괄 다운로드
     },
+    revision: {
+      get: (revisionId?: ApiId) => `/reviews/revision/${revisionId ?? ""}`,
+      put: (revisionId: ApiId) => `/reviews/revision/${revisionId}`,
+    },
   },
 };
