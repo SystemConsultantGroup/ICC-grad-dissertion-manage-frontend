@@ -1,5 +1,3 @@
-"use client";
-
 import { Button, Group, Stack } from "@mantine/core";
 import {
   BasicRow,
@@ -9,7 +7,7 @@ import {
   TextAreaRow,
   TitleRow,
 } from "@/components/common/rows";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { IconCheck } from "@tabler/icons-react";
 import Link from "next/link";
 import { Stage } from "../ArticleInfo/ArticleInfo";
@@ -18,14 +16,23 @@ export interface ProfessorReviewProps {
   onTemporarySave: () => void;
   onSave: () => void;
   stage: Stage;
+  thesis?: Status;
+  presentation?: Status;
+  setThesis: Dispatch<SetStateAction<Status | undefined>>;
+  setPresentation: Dispatch<SetStateAction<Status | undefined>>;
 }
 
 export type Status = "UNEXAMINED" | "PASS" | "FAIL" | "PENDING";
 
-export function ProfessorReview({ onTemporarySave, onSave, stage }: ProfessorReviewProps) {
-  const [thesis, setThesis] = useState<Status>();
-  const [presentation, setPresentation] = useState<Status>();
-
+export function ProfessorReview({
+  onTemporarySave,
+  onSave,
+  stage,
+  thesis,
+  presentation,
+  setThesis,
+  setPresentation,
+}: ProfessorReviewProps) {
   return (
     <Stack gap={0}>
       <TitleRow title="심사하기" />
