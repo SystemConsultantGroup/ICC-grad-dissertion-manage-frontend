@@ -6,7 +6,16 @@ interface Props {
 }
 
 function TableData({ children }: Props) {
-  return <Table.Td fz={16}>{children}</Table.Td>;
+  return (
+    <Table.Td
+      fz={16}
+      style={{
+        whiteSpace: "nowrap",
+      }}
+    >
+      {children}
+    </Table.Td>
+  );
 }
 
 export default TableData;

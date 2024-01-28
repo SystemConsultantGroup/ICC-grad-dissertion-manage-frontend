@@ -12,6 +12,7 @@ function TableHeader({ label, widthPercentage }: TableHeaderProps) {
     <Table.Th
       style={{
         width: widthPercentage ? `${widthPercentage}%` : "auto",
+        whiteSpace: "nowrap",
       }}
     >
       {label}
