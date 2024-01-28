@@ -1,5 +1,3 @@
-"use client";
-
 import { Group, Stack } from "@mantine/core";
 import { Table } from "@/components/common/Table";
 import TableRow from "@/components/common/Table/_elements/TableRow";

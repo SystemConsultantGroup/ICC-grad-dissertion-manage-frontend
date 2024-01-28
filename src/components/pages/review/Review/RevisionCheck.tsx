@@ -1,13 +1,14 @@
-"use client";
-
 import { BasicRow, ButtonRow, FileUploadRow, RowGroup, TitleRow } from "@/components/common/rows";
 import { Button, Stack } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
-import { useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 
-export function RevisionCheck() {
-  const [checked, setChecked] = useState<boolean>();
+export interface RevisionCheckProps {
+  checked?: boolean;
+  setChecked: Dispatch<SetStateAction<boolean | undefined>>;
+}
 
+export function RevisionCheck({ checked, setChecked }: RevisionCheckProps) {
   return (
     <Stack gap={0}>
       <TitleRow title="수정 지시사항 확인" />

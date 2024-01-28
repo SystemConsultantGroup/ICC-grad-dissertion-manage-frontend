@@ -8,10 +8,11 @@ import { ReviewCard } from "@/components/pages/review/Review/ReviewCard";
 import { FinalReview, ReviewList, ReviewResult } from "@/components/pages/review/Review";
 import { useState } from "react";
 import { ReviewConfirmModal } from "@/components/pages/review/ReviewConfirmModal";
+import { Status } from "@/components/pages/review/Review/ProfessorReview";
 
 export default function ProfessorFinalPage() {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-
+  const [status, setStatus] = useState<Status>(); // api로부터 default값을 지정해 주기
   return (
     <>
       <PageHeader title="최종 판정" />
@@ -23,6 +24,8 @@ export default function ProfessorFinalPage() {
           onSave={() => {
             setShowConfirmDialog(true);
           }}
+          status={status}
+          setStatus={setStatus}
         />
       </ReviewCard>
       <ReviewConfirmModal

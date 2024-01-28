@@ -1,5 +1,3 @@
-"use client";
-
 import { Button, Group, Stack } from "@mantine/core";
 import {
   BasicRow,
@@ -9,19 +7,19 @@ import {
   TextAreaRow,
   TitleRow,
 } from "@/components/common/rows";
-import { useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { IconCheck } from "@tabler/icons-react";
 import Link from "next/link";
 import { Status } from "./ProfessorReview";
 
 export interface FinalReviewProps {
+  status?: Status;
+  setStatus: Dispatch<SetStateAction<Status | undefined>>;
   onTemporarySave: () => void;
   onSave: () => void;
 }
 
-export function FinalReview({ onTemporarySave, onSave }: FinalReviewProps) {
-  const [status, setStatus] = useState<Status>();
-
+export function FinalReview({ status, setStatus, onTemporarySave, onSave }: FinalReviewProps) {
   return (
     <Stack gap={0}>
       <TitleRow title="최종 심사하기" />
