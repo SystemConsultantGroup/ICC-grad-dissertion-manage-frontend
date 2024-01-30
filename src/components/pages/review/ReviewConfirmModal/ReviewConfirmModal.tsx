@@ -34,7 +34,7 @@ export function ReviewConfirmModal({ opened, onClose, children }: ReviewConfirmM
         <Stack style={{ overflowY: "auto", flex: "1 0 0" }}>{children}</Stack>
         <Stack style={{ flexShrink: 0 }} gap={0}>
           <Group justify="center" mt={36}>
-            <Button key="cancel" variant="outline">
+            <Button key="cancel" variant="outline" onClick={onClose}>
               취소
             </Button>
             <Button key="save" color="orange">

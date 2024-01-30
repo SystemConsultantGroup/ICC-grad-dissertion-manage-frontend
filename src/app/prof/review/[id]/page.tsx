@@ -5,27 +5,31 @@
 import PageHeader from "@/components/common/PageHeader";
 import { ArticleInfo } from "@/components/pages/review/ArticleInfo";
 import { ReviewCard } from "@/components/pages/review/Review/ReviewCard";
-import { FinalReview, ReviewList, ReviewResult } from "@/components/pages/review/Review";
+import { ReviewResult, ProfessorReview } from "@/components/pages/review/Review";
+import { ReviewConfirmModal } from "@/components/pages/review/ReviewConfirmModal/ReviewConfirmModal";
 import { useState } from "react";
-import { ReviewConfirmModal } from "@/components/pages/review/ReviewConfirmModal";
 import { Status } from "@/components/pages/review/Review/ProfessorReview";
 
-export default function ProfessorFinalPage() {
+export default function ProfessorReviewPage() {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-  const [status, setStatus] = useState<Status>(); // api로부터 default값을 지정해 주기
+  const [thesis, setThesis] = useState<Status>();
+  const [presentation, setPresentation] = useState<Status>();
+
   return (
     <>
-      <PageHeader title="최종 판정" />
+      <PageHeader title="논문 심사" />
       <ReviewCard>
-        <ArticleInfo stage="PRELIMINARY" isAdvisor />
-        <ReviewList title="심사 결과" stage="PRELIMINARY" />
-        <FinalReview
+        <ArticleInfo stage="MAIN" isAdvisor />
+        <ProfessorReview
           onTemporarySave={() => {}}
           onSave={() => {
             setShowConfirmDialog(true);
           }}
-          status={status}
-          setStatus={setStatus}
+          stage="MAIN"
+          thesis={thesis}
+          setThesis={setThesis}
+          presentation={presentation}
+          setPresentation={setPresentation}
         />
       </ReviewCard>
       <ReviewConfirmModal
@@ -34,8 +38,8 @@ export default function ProfessorFinalPage() {
           setShowConfirmDialog(false);
         }}
       >
-        <ArticleInfo simple stage="PRELIMINARY" isAdvisor />
-        <ReviewResult stage="PRELIMINARY" />
+        <ArticleInfo simple stage="MAIN" />
+        <ReviewResult stage="MAIN" />
       </ReviewConfirmModal>
     </>
   );
