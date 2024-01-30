@@ -1,3 +1,4 @@
+import { FileResponse } from "@/api/_types/file";
 import { CommonApiResponse } from "./common";
 import { Department } from "./department";
 
@@ -11,6 +12,7 @@ export interface User {
   phone: string;
   type: Role;
   department: Omit<Department, "userCount">;
+  signFile?: FileResponse;
 }
 
 export interface UserResponse extends CommonApiResponse, User {

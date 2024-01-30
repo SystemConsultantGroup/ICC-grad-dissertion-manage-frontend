@@ -5,11 +5,12 @@ import BasicRow from "@/components/common/rows/BasicRow/BasicRow";
 import ButtonRow from "@/components/common/rows/ButtonRow/ButtonRow";
 import { FileUploadRow, RowGroup } from "@/components/common/rows";
 import { useAuth } from "@/components/common/AuthProvider";
-import { isEmail, isNotEmpty, useForm } from "@mantine/form";
-import { useState } from "react";
+import { useForm } from "@mantine/form";
+import { useEffect, useState } from "react";
 import { ClientAxios } from "@/api/ClientAxios";
 import { API_ROUTES } from "@/api/apiRoute";
 import { showNotificationSuccess } from "@/components/common/Notifications";
+import { uploadFile } from "@/api/uploadFile";
 
 interface UserInfoEditFormInputs {
   password: string;
@@ -20,8 +21,16 @@ interface UserInfoEditFormInputs {
 function UserInfoEditSection() {
   const { user } = useAuth();
   const [isPwEditing, setIsPwEditing] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
+  const [isFileUpdated, setIsFileUpdated] = useState(false);
 
-  const { onSubmit, getInputProps, setFieldValue, isDirty } = useForm<UserInfoEditFormInputs>({
+  const {
+    values: formValues,
+    onSubmit,
+    getInputProps,
+    setFieldValue,
+    isDirty,
+  } = useForm<UserInfoEditFormInputs>({
     initialValues: {
       password: "",
       email: user?.email,
@@ -30,17 +39,38 @@ function UserInfoEditSection() {
     validate: {
       password: (value, values) =>
         isPwEditing && !values.password ? "비밀번호를 입력하거나 수정을 취소해주세요." : null,
-      email: isEmail("이메일 형식이 맞지 않습니다."),
-      phone: isNotEmpty("전화번호를 입력해주세요."),
     },
   });
 
+  useEffect(() => {
+    formValues.phone = user?.phone;
+    formValues.email = user?.email;
+  }, [user]);
+
+  /**
+   * @todo add default file get
+   */
+  // useEffect(() => {
+  //   const fileResponse = await fetch(user?.signFile);
+  //   setFile(null);
+  // });
+
+  const handleFileChange = (newFile: File | null) => {
+    setIsFileUpdated(true);
+    setFile(newFile);
+  };
+
   const handleSubmit = async (values: UserInfoEditFormInputs) => {
     try {
+      let fileResponse;
+      if (isFileUpdated && file) {
+        fileResponse = await uploadFile({ file, sizeLimit: 10000000 });
+      }
       const body = {
         password: isPwEditing ? values.password : undefined,
         email: isDirty("email") ? values.email : undefined,
         phone: isDirty("phone") ? values.phone : undefined,
+        signId: fileResponse ? fileResponse.uuid : undefined,
       };
       await ClientAxios.put(API_ROUTES.user.put(), body);
       showNotificationSuccess({ message: "회원 정보가 수정되었습니다." });
@@ -101,7 +131,11 @@ function UserInfoEditSection() {
         )}
         {user?.type === "PROFESSOR" && (
           <RowGroup>
-            <FileUploadRow field="서명 이미지" />
+            <FileUploadRow
+              field="서명 이미지"
+              onChange={handleFileChange}
+              defaultFile={file || undefined}
+            />
           </RowGroup>
         )}
         <RowGroup withBorderBottom={false}>
