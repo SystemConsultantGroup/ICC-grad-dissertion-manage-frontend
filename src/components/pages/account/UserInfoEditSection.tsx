@@ -97,10 +97,12 @@ function UserInfoEditSection() {
             <RowGroup>
               <BasicRow field="소속">{user?.department.name}</BasicRow>
             </RowGroup>
-            <RowGroup>
-              <FileUploadRow field="서명 이미지" />
-            </RowGroup>
           </>
+        )}
+        {user?.type === "PROFESSOR" && (
+          <RowGroup>
+            <FileUploadRow field="서명 이미지" />
+          </RowGroup>
         )}
         <RowGroup withBorderBottom={false}>
           <ButtonRow
