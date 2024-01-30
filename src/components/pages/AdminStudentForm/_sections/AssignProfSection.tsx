@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Stack, Select, Button } from "@mantine/core";
 import { RowGroup, BasicRow, TitleRow } from "@/components/common/rows";
 import { UseFormReturnType } from "@mantine/form";
+import { showNotificationError } from "@/components/common/Notifications";
 import AdminStudentFormInputs from "../_types/AdminStudentFormInputs";
 
 const deptList = [
@@ -39,6 +40,13 @@ function AssignProfSection({ form, studentId }: Props) {
   const [assginedProfList, setAssignedProfList] = useState<SelectAssignedProfessor[]>([]);
 
   useEffect(() => {
+    // 학생 심사위원 정보 조회
+  });
+
+  useEffect(() => {
+    // form의 내용을 assignedProfList에 반영
+
+    // 심사위원장(chairman)이 변경되었을 경우
     if (form.values.chairman) {
       setAssignedProfList((list) => [
         ...list,
@@ -53,6 +61,7 @@ function AssignProfSection({ form, studentId }: Props) {
       ]);
     }
 
+    // 심사위원(professors)이 변경되었을 경우
     if (form.values.professors) {
       setAssignedProfList((assignedProfList) => [
         ...assignedProfList,
@@ -63,15 +72,14 @@ function AssignProfSection({ form, studentId }: Props) {
       ]);
     }
   }, [form.values.chairman, form.values.professors]);
+
   const handleCancle = () => {
+    // 교수 배정 취소
     if (cancleProf == null) return;
-    if (form.values.chairman && form.values.chairman.professorId === Number(cancleProf)) {
-      form.setFieldValue("chairman", null);
-    } else {
-      const professors = [...form.values.professors];
-      professors.filter((professor) => cancleProf !== String(professor.professorId));
-      form.setFieldValue("professors", professors);
-    }
+
+    const professors = [...form.values.professors];
+    professors.filter((professor) => cancleProf !== String(professor.professorId));
+    form.setFieldValue("professors", professors);
   };
 
   const handleProfessorSelect = () => {
