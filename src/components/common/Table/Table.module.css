@@ -1,0 +1,10 @@
+.container {
+  width: 100%;
+  overflow: visible;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  background-color: var(--mantine-color-white);
+}
