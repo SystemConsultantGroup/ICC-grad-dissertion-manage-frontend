@@ -13,7 +13,8 @@
     "check-lint": "eslint . --ext ts --ext tsx",
     "format": "prettier --write .",
     "test-all": "yarn check-format && yarn check-lint && yarn check-types && yarn build",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "postinstall": "husky install"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -22,7 +23,6 @@
     "@mantine/dropzone": "^7.3.2",
     "@mantine/form": "^7.3.2",
     "@mantine/hooks": "^7.3.2",
-    "@mantine/modals": "^7.3.2",
     "@mantine/notifications": "^7.3.2",
     "@mantine/tiptap": "^7.3.2",
     "@tabler/icons-react": "^2.44.0",
@@ -41,8 +41,10 @@
     "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
     "next": "^14.0.3",
+    "postcss": "^8.4.32",
     "react": "^18",
     "react-dom": "^18",
+    "react-imask": "^7.3.0",
     "swr": "^2.2.4"
   },
   "devDependencies": {
@@ -65,6 +67,7 @@
     "eslint-plugin-react-hooks": "4.6.0",
     "husky": "^8.0.3",
     "lint-staged": "^15.1.0",
+    "postcss-preset-mantine": "^1.12.2",
     "prettier": "^3.1.0",
     "typescript": "5.1.6"
   },
