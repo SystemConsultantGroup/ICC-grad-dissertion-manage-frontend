@@ -31,7 +31,7 @@ function FileUploadRow({ field, onChange, defaultFile }: Props) {
   }, [defaultFile]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <Row field={field} fieldSize="sm">
+    <Row field={field}>
       <Group gap={16}>
         <FileButton onChange={handleFileChange} resetRef={resetRef}>
           {(props) => <Button {...props}>파일 선택</Button>}

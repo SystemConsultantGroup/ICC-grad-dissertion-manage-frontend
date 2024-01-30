@@ -3,7 +3,7 @@
 import { Button, Group, PasswordInput, Stack, TextInput } from "@mantine/core";
 import BasicRow from "@/components/common/rows/BasicRow/BasicRow";
 import ButtonRow from "@/components/common/rows/ButtonRow/ButtonRow";
-import { RowGroup } from "@/components/common/rows";
+import { FileUploadRow, RowGroup } from "@/components/common/rows";
 import { useAuth } from "@/components/common/AuthProvider";
 import { isEmail, isNotEmpty, useForm } from "@mantine/form";
 import { useState } from "react";
@@ -97,9 +97,12 @@ function UserInfoEditSection() {
             <RowGroup>
               <BasicRow field="소속">{user?.department.name}</BasicRow>
             </RowGroup>
+            <RowGroup>
+              <FileUploadRow field="서명 이미지" />
+            </RowGroup>
           </>
         )}
-        <RowGroup>
+        <RowGroup withBorderBottom={false}>
           <ButtonRow
             buttons={[
               <Button key="save" type="submit">
