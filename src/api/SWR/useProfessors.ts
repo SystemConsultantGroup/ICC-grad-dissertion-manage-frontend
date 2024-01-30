@@ -7,7 +7,7 @@ import { PagedProfessorsRequestQuery, PagedProfessorsResponse } from "../_types/
 
 /**
  * @description 교수 목록 조회
- * @param queryParams {pageSize, pageNumber, studentNumber, name, phone, departmentId, phaseId, isLock}
+ * @param queryParams {pageSize, pageNumber, loginId, name, phone, deptId}
  * @param shouldFetch true면 fetch, false면 fetch하지 않음
  * @default shouldFetch = true
  */

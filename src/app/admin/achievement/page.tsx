@@ -3,7 +3,7 @@ import PageHeader from "@/components/common/PageHeader";
 import { Section } from "@/components/common/Section";
 import AchievementListSection from "@/components/pages/lists/admin/AchievementListSection/AchievementListSection";
 
-async function AdminAchievementPage() {
+async function AdminAchievementListPage() {
   await AuthSSR({ userType: "ADMIN" });
   return (
     <>
@@ -18,4 +18,4 @@ async function AdminAchievementPage() {
   );
 }
 
-export default AdminAchievementPage;
+export default AdminAchievementListPage;
