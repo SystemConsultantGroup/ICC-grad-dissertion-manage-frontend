@@ -14,7 +14,7 @@ function PageHeader({ title, description }: Props) {
     <Group justify="space-between" align="flex-start" style={{ marginBottom: 40 }}>
       <Stack gap={16}>
         <SectionTitle>{title}</SectionTitle>
-        <Text fz={16}>{description ?? ""}</Text>
+        {description && <Text fz={16}>{description ?? ""}</Text>}
       </Stack>
     </Group>
   );

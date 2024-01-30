@@ -11,10 +11,7 @@ function TableRow({ children, onClick }: Props) {
   return (
     <Table.Tr
       onClick={onClick}
-      className={classes.tableRow}
-      style={{
-        height: 56,
-      }}
+      className={onClick ? classes.container : classes.containerNoPointer}
     >
       {children}
     </Table.Tr>

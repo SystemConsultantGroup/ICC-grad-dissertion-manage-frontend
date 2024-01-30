@@ -8,6 +8,9 @@ import {
   IconUsers,
   IconSchool,
   IconChecklist,
+  IconFileCheck,
+  IconMicroscope,
+  IconCircleCheck,
 } from "@tabler/icons-react";
 import { ReactNode } from "react";
 
@@ -21,9 +24,6 @@ interface Props {
   children?: Props[];
 }
 
-/**
- * @todo href 수정
- */
 export const ADMIN_NAVBAR_LIST: Props[] = [
   { label: "메인", href: "/", icon: <IconHome size="24" stroke={1} /> },
   {
@@ -36,8 +36,8 @@ export const ADMIN_NAVBAR_LIST: Props[] = [
     icon: <IconUser size="24" stroke={1} />,
     children: [
       { label: "교수 현황", href: "/admin/professors" },
-      { label: "교수 등록 및 수정", href: "/admin/prof-register" },
-      { label: "교수 일괄 등록", href: "/admin/prof-excel-register" },
+      { label: "교수 등록 및 수정", href: "/admin/prof_register" },
+      { label: "교수 일괄 등록", href: "/admin/prof_excel_register" },
     ],
   },
   {
@@ -45,19 +45,29 @@ export const ADMIN_NAVBAR_LIST: Props[] = [
     icon: <IconUsers size="24" stroke={1} />,
     children: [
       { label: "학생 현황", href: "/admin/students" },
-      { label: "학생 등록 및 수정", href: "/admin/student-register" },
-      { label: "학생 일괄 등록", href: "/admin/student-excel-register" },
+      { label: "학생 등록 및 수정", href: "/admin/student_register" },
+      { label: "학생 일괄 등록", href: "/admin/student_excel_register" },
     ],
   },
   {
-    label: "심사 결과",
-    href: "/admin/examine",
+    label: "심사 현황",
+    href: "/admin/reviews",
     icon: <IconProgressCheck size="24" stroke={1} />,
+  },
+  {
+    label: "심사 결과",
+    href: "/admin/results",
+    icon: <IconCircleCheck size="24" stroke={1} />,
   },
   {
     label: "학과 관리",
     href: "/admin/department",
     icon: <IconSchool size="24" stroke={1} />,
+  },
+  {
+    label: "연구실적 조회",
+    href: "/admin/achievement",
+    icon: <IconMicroscope size="24" stroke={1} />,
   },
   {
     label: "관리자정보 수정",
@@ -73,12 +83,23 @@ export const STUDENT_NAVBAR_LIST: Props[] = [
     href: "/student/result",
     icon: <IconProgressCheck size="24" stroke={1} />,
   },
+  {
+    label: "수정사항 제출/확인",
+    href: "/student/revision",
+    icon: <IconFileCheck size="24" stroke={1} />,
+  },
+  {
+    label: "연구실적 등록",
+    href: "/student/achievement",
+    icon: <IconMicroscope size="24" stroke={1} />,
+  },
   { label: "회원정보 수정", href: "/student/account", icon: <IconSettings size="24" stroke={1} /> },
 ];
 export const PROF_NAVBAR_LIST: Props[] = [
   { label: "메인", href: "/", icon: <IconHome size="24" stroke={1} /> },
-  { label: "논문 심사", href: "/prof/examine", icon: <IconChecklist size="24" stroke={1} /> },
+  { label: "논문 심사", href: "/prof/review", icon: <IconChecklist size="24" stroke={1} /> },
   { label: "최종 판정", href: "/prof/final", icon: <IconProgressCheck size="24" stroke={1} /> },
+  { label: "수정사항 확인", href: "/prof/revision", icon: <IconFileCheck size="24" stroke={1} /> },
   { label: "회원정보 수정", href: "/prof/account", icon: <IconSettings size="24" stroke={1} /> },
 ];
 

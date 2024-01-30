@@ -16,7 +16,7 @@ function RowGroup({
 }: Props) {
   const style = useRowGroupStyles({ backgroundColor, withBorderBottom });
   return (
-    <Group {...props} gap={0} style={style}>
+    <Group gap={0} style={style} {...props}>
       {children}
     </Group>
   );
