@@ -10,23 +10,9 @@ import AdminStudentFormInputs from "../_types/AdminStudentFormInputs";
 
 interface Props {
   form: UseFormReturnType<AdminStudentFormInputs>;
-  studentId?: string | number;
 }
 
-function PaperInfoSection({ form, studentId }: Props) {
-  useEffect(() => {
-    const fetchPaperInfo = async () => {
-      try {
-        if (studentId) {
-          const response = await ClientAxios.get(API_ROUTES.student.getThesis(studentId));
-          const paperInfo = response.data;
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchPaperInfo();
-  }, [studentId, form.setFieldValue]);
+function ThesisTitleSection({ form }: Props) {
   return (
     <Stack gap={0}>
       <TitleRow title="논문 정보" />
@@ -39,4 +25,4 @@ function PaperInfoSection({ form, studentId }: Props) {
   );
 }
 
-export default PaperInfoSection;
+export default ThesisTitleSection;

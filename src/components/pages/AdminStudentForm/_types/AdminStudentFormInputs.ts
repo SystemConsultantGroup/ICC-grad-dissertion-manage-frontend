@@ -5,8 +5,8 @@ export default interface AdminStudentFormInputs {
     loginId: string;
     password: string;
     name: string;
-    email: string;
-    phone: string;
+    email: string | null;
+    phone: string | null;
     deptId: string;
     phaseId: string;
   };

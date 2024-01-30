@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { Stack, TextInput, PasswordInput, Select } from "@mantine/core";
-import { RowGroup, BasicRow, TitleRow } from "@/components/common/rows";
+import { RowGroup, BasicRow, TitleRow, NoticeRow } from "@/components/common/rows";
 import { UseFormReturnType } from "@mantine/form";
 import { ClientAxios } from "@/api/ClientAxios";
 import { API_ROUTES } from "@/api/apiRoute";
@@ -15,6 +15,7 @@ interface Props {
 
 function BasicInfoSection({ form, studentId }: Props) {
   useEffect(() => {
+    // 학생 기본 정보 가져오기
     const fetchStudentDetails = async () => {
       try {
         if (studentId) {
@@ -27,8 +28,8 @@ function BasicInfoSection({ form, studentId }: Props) {
             name: studentDetails.name,
             email: studentDetails.email,
             phone: studentDetails.phone,
-            deptId: String(studentDetails.deptId.id),
-            phaseId: String(studentDetails.phaseId),
+            deptId: String(studentDetails.department.id),
+            phaseId: String(studentDetails.phase.id),
           });
         }
       } catch (error) {
@@ -40,6 +41,9 @@ function BasicInfoSection({ form, studentId }: Props) {
 
   return (
     <Stack gap={0}>
+      {!studentId && (
+        <NoticeRow text="기존에 이미 등록된 학생의 경우, 학생 현황 및 관리 페이지를 이용해주세요." />
+      )}
       <TitleRow title="학생 기본 정보" />
       <form>
         <Stack gap={0}>
@@ -86,7 +90,10 @@ function BasicInfoSection({ form, studentId }: Props) {
             <BasicRow field="시스템 단계">
               <Select
                 placeholder="예심/본심 여부 선택"
-                data={["예심", "본심"]}
+                data={[
+                  { value: "1", label: "예심" },
+                  { value: "4", label: "본심" },
+                ]}
                 styles={{
                   wrapper: {
                     width: 300,
