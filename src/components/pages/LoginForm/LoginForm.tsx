@@ -18,6 +18,7 @@ import skkuLogo from "@/images/skku-logo.svg";
 import { CommonApiResponse } from "@/api/_types/common";
 import { ClientAxios } from "@/api/ClientAxios";
 import { useAuth } from "@/components/common/AuthProvider/AuthProvider";
+import { showNotificationSuccess } from "@/components/common/Notifications";
 import { useState } from "react";
 
 interface LoginFormInputs {
@@ -49,10 +50,10 @@ function LoginForm() {
       } = await ClientAxios.post<CommonApiResponse & { accessToken: string }>("/auth", values);
 
       login(accessToken);
+      showNotificationSuccess({ message: "로그인 성공" });
       router.push("/");
     } catch (error) {
-      console.error(error);
-      // TODO: Notification & 에러 처리
+      /* empty */
     }
   };
 
