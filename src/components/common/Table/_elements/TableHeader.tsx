@@ -1,4 +1,4 @@
-import { Table } from "@mantine/core";
+import { TableTh } from "@mantine/core";
 import React, { Key, ReactNode } from "react";
 
 export interface TableHeaderProps {
@@ -9,14 +9,14 @@ export interface TableHeaderProps {
 
 function TableHeader({ label, widthPercentage }: TableHeaderProps) {
   return (
-    <Table.Th
+    <TableTh
       style={{
         width: widthPercentage ? `${widthPercentage}%` : "auto",
         whiteSpace: "nowrap",
       }}
     >
       {label}
-    </Table.Th>
+    </TableTh>
   );
 }
 
