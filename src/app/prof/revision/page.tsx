@@ -3,7 +3,7 @@ import PageHeader from "@/components/common/PageHeader";
 import { Section } from "@/components/common/Section";
 import ProfRevisionListSection from "@/components/pages/lists/ProfRevisionListSection/ProfRevisionListSection";
 
-export default async function ProfRevisionPage() {
+export default async function ProfRevisionListPage() {
   await AuthSSR({ userType: "PROFESSOR" });
 
   return (
