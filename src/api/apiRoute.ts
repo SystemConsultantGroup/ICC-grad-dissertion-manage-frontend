@@ -68,4 +68,9 @@ export const API_ROUTES = {
       excel: () => "/reviews/result/excel", // GET: 심사 결과 엑셀 다운로드
     },
   },
+  achievement: {
+    get: (achievementId?: ApiId) => `/achievements/${achievementId ?? ""}`,
+    put: (achievementId: ApiId) => `/achievements/${achievementId}`,
+    post: () => "/achievements",
+  },
 };
