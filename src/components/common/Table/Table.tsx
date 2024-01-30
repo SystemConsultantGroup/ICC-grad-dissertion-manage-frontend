@@ -1,5 +1,12 @@
 import React, { ReactNode } from "react";
-import { Table as MantineTable, ScrollArea, ScrollAreaProps } from "@mantine/core";
+import {
+  Table as MantineTable,
+  ScrollArea,
+  ScrollAreaProps,
+  TableTbody,
+  TableThead,
+  TableTr,
+} from "@mantine/core";
 import TableRow from "@/components/common/Table/_elements/TableRow";
 import TableData from "@/components/common/Table/_elements/TableData";
 import TableHeader, { TableHeaderProps } from "@/components/common/Table/_elements/TableHeader";
@@ -16,8 +23,8 @@ function Table({ headers, children, ...props }: Props) {
   return (
     <ScrollArea type="hover" offsetScrollbars className={classes.container} {...props}>
       <MantineTable>
-        <MantineTable.Thead className={classes.header}>
-          <MantineTable.Tr>
+        <TableThead className={classes.header}>
+          <TableTr>
             {headers.map((header, index) => (
               <TableHeader
                 key={index}
@@ -25,9 +32,9 @@ function Table({ headers, children, ...props }: Props) {
                 widthPercentage={header.widthPercentage}
               />
             ))}
-          </MantineTable.Tr>
-        </MantineTable.Thead>
-        <MantineTable.Tbody>{children}</MantineTable.Tbody>
+          </TableTr>
+        </TableThead>
+        <TableTbody>{children}</TableTbody>
       </MantineTable>
     </ScrollArea>
   );

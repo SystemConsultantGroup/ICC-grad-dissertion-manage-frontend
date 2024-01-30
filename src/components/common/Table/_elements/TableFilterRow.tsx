@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { Table } from "@mantine/core";
+import { TableTr } from "@mantine/core";
 import classes from "./TableFilterRow.module.css";
 
 interface Props {
@@ -8,7 +8,7 @@ interface Props {
 }
 
 function TableFilterRow({ children }: Props) {
-  return <Table.Tr className={classes.container}>{children}</Table.Tr>;
+  return <TableTr className={classes.container}>{children}</TableTr>;
 }
 
 export default TableFilterRow;
