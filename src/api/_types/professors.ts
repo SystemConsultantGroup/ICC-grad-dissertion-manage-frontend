@@ -1,32 +1,18 @@
 import { CommonApiResponse, PagedApiResponse, PagedQueryRequest } from "./common";
-import { Department } from "./department";
+import { User } from "./user";
 
-export interface PagedProfessorsRequestQuery extends PagedQueryRequest {
-  loginId?: string;
-  name?: string;
-  email?: string;
-  phone?: string;
-  deptId?: number;
-}
-
-export interface ProfessorsExcelRequestQuery {
-  loginId?: string;
-  name?: string;
-  email?: string;
-  phone?: string;
-  deptId?: number;
-}
-
-export interface Professor {
-  id: number;
+export interface ProfessorQueryBrief {
   loginId: string;
   name: string;
   email: string;
   phone: string;
-  department: Department;
+  deptId: number;
 }
 
-export interface ProfessorResponse extends Professor, CommonApiResponse {
+export type PagedProfessorsRequestQuery = PagedQueryRequest & Partial<ProfessorQueryBrief>;
+export type ProfessorsExcelRequestQuery = Partial<ProfessorQueryBrief>;
+
+export interface ProfessorResponse extends User, CommonApiResponse {
   createdAt: string;
   updatedAt: string;
 }
@@ -34,12 +20,7 @@ export interface ProfessorResponse extends Professor, CommonApiResponse {
 export interface PagedProfessorsResponse
   extends PagedApiResponse<Omit<ProfessorResponse, "message">> {}
 
-export interface CreateProfessorRequestBody extends Omit<Professor, "id" | "department"> {
+export interface CreateProfessorRequestBody extends Omit<User, "id" | "department"> {
   password: string;
   deptId: number;
-}
-
-export interface SelectProfessorFormValues {
-  departmentId: Professor["department"]["id"];
-  professorId: number;
 }

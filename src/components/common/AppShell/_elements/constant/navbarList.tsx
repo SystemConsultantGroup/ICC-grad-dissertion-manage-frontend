@@ -24,9 +24,6 @@ interface Props {
   children?: Props[];
 }
 
-/**
- * @todo href 수정
- */
 export const ADMIN_NAVBAR_LIST: Props[] = [
   { label: "메인", href: "/", icon: <IconHome size="24" stroke={1} /> },
   {
