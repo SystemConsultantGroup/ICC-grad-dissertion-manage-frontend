@@ -203,7 +203,7 @@ function AchievementListSection() {
           <Table.Row
             key={achievement.id}
             onClick={() => {
-              push(`professors/${achievement.id}`);
+              push(`achievement/${achievement.id}`);
             }}
           >
             <Table.Data>{index + 1 + (pageNumber - 1) * pageSizeNumber}</Table.Data>
