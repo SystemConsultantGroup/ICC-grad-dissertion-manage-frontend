@@ -1,9 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
 import { Stack, TextInput } from "@mantine/core";
-import { API_ROUTES } from "@/api/apiRoute";
-import { ClientAxios } from "@/api/ClientAxios";
 import { UseFormReturnType } from "@mantine/form";
 import { RowGroup, BasicRow, TitleRow } from "@/components/common/rows";
 import AdminStudentFormInputs from "../_types/AdminStudentFormInputs";

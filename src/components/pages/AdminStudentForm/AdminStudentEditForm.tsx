@@ -87,7 +87,7 @@ function AdminStudentEditForm({ studentId }: Props) {
         deptId: parseInt(form.values.basicInfo.deptId, 10),
         phaseId: parseInt(form.values.basicInfo.phaseId, 10),
       };
-      const registerInputs = {
+      /* const registerInputs = {
         ...basicInputs,
 
         headReviewerId: form.values.chairman?.professorId,
@@ -96,16 +96,13 @@ function AdminStudentEditForm({ studentId }: Props) {
           form.values.chairman?.professorId,
         ],
         thesisTitle: form.values.thesisTitle,
-      };
+      }; */
 
-      if (!studentId) {
-        // 학생 등록
-        await ClientAxios.post(API_ROUTES.student.post(), registerInputs);
-        showNotificationSuccess({ message: "학생 등록이 완료되었습니다." });
-        router.push("/admin/students");
-      } else {
+      if (studentId) {
         // 학생 회원 정보 수정
         await ClientAxios.post(API_ROUTES.student.put(studentId), basicInputs);
+
+        // 학생 시스템 단계 수정
 
         // 교수 배정 정보 수정
         showNotificationSuccess({ message: "학생 정보 수정이 완료되었습니다." });
@@ -121,7 +118,7 @@ function AdminStudentEditForm({ studentId }: Props) {
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack gap="xl">
         {studentId && (
-          <RowGroup>
+          <RowGroup withBorderBottom={false}>
             <ButtonRow
               buttons={[
                 <Button
@@ -150,23 +147,13 @@ function AdminStudentEditForm({ studentId }: Props) {
           <ThesisTitleSection form={form} />
         )}
         <RowGroup>
-          {studentId ? (
-            <ButtonRow
-              buttons={[
-                <Button key="edit" type="submit">
-                  수정하기
-                </Button>,
-              ]}
-            />
-          ) : (
-            <ButtonRow
-              buttons={[
-                <Button key="register" type="submit">
-                  등록하기
-                </Button>,
-              ]}
-            />
-          )}
+          <ButtonRow
+            buttons={[
+              <Button key="edit" type="submit">
+                수정하기
+              </Button>,
+            ]}
+          />
         </RowGroup>
       </Stack>
     </form>

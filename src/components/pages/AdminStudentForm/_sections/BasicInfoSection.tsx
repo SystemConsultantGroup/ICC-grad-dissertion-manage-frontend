@@ -1,11 +1,16 @@
 "use client";
 
 import { useEffect } from "react";
-import { Stack, TextInput, PasswordInput, Select } from "@mantine/core";
-import { RowGroup, BasicRow, TitleRow, NoticeRow } from "@/components/common/rows";
-import { UseFormReturnType } from "@mantine/form";
+import { useDisclosure } from "@mantine/hooks";
+import { IconEditCircle } from "@tabler/icons-react";
+import { Stack, TextInput, PasswordInput, Select, Text, Button } from "@mantine/core";
+import { RowGroup, BasicRow, TitleRow, NoticeRow, ButtonRow } from "@/components/common/rows";
+import { useForm, isNotEmpty, UseFormReturnType } from "@mantine/form";
 import { ClientAxios } from "@/api/ClientAxios";
 import { API_ROUTES } from "@/api/apiRoute";
+import Modal from "@/components/common/Modal";
+import AssignProfSection from "./AssignProfSection";
+import ThesisTitleSection from "./ThesisTitleSection";
 import AdminStudentFormInputs from "../_types/AdminStudentFormInputs";
 
 interface Props {
@@ -14,6 +19,10 @@ interface Props {
 }
 
 function BasicInfoSection({ form, studentId }: Props) {
+  const [opened, { open, close }] = useDisclosure(false);
+
+  const sysMainForm = useForm<AdminStudentFormInputs>({});
+
   useEffect(() => {
     // 학생 기본 정보 가져오기
     const fetchStudentDetails = async () => {
@@ -39,55 +48,98 @@ function BasicInfoSection({ form, studentId }: Props) {
     fetchStudentDetails();
   }, [studentId, form.setFieldValue]);
 
+  // 본심 정보 등록하기
+  const handleSubmit = async () => {
+    try {
+      if (studentId) {
+        const { basicInfo, ...sysMainValues } = sysMainForm.values;
+        await ClientAxios.post(API_ROUTES.student.putSystem(studentId), sysMainValues);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <Stack gap={0}>
-      {!studentId && (
+      {studentId ? (
+        <NoticeRow text="정보를 수정한 후, 하단의 수정하기 버튼을 눌러야 모든 수정사항이 반영됩니다." />
+      ) : (
         <NoticeRow text="기존에 이미 등록된 학생의 경우, 학생 현황 및 관리 페이지를 이용해주세요." />
       )}
       <TitleRow title="학생 기본 정보" />
-      <form>
-        <Stack gap={0}>
-          <RowGroup>
-            <BasicRow field="아이디">
-              <TextInput id="input-id" {...form.getInputProps("basicInfo.loginId")} />
-            </BasicRow>
-          </RowGroup>
-          <RowGroup>
-            <BasicRow field="비밀번호">
-              <PasswordInput id="input-password" {...form.getInputProps("basicInfo.password")} />
-            </BasicRow>
-          </RowGroup>
-          <RowGroup>
-            <BasicRow field="이름">
-              <TextInput id="input-name" {...form.getInputProps("basicInfo.name")} />
-            </BasicRow>
-          </RowGroup>
-          <RowGroup>
-            <BasicRow field="이메일">
-              <TextInput id="input-email" {...form.getInputProps("basicInfo.email")} />
-            </BasicRow>
-          </RowGroup>
-          <RowGroup>
-            <BasicRow field="연락처">
-              <TextInput id="input-phone" {...form.getInputProps("basicInfo.phone")} />
-            </BasicRow>
-          </RowGroup>
-          <RowGroup>
-            <BasicRow field="학과">
-              {/* TODO: DepartmentsSelect 컴포넌트로 대체 */}
-              <Select
-                placeholder="학과 선택"
-                styles={{
-                  wrapper: {
-                    width: 300,
-                  },
-                }}
-                {...form.getInputProps("basicInfo.deptId")}
-              />
-            </BasicRow>
-          </RowGroup>
-          <RowGroup>
-            <BasicRow field="시스템 단계">
+      <Stack gap={0}>
+        <RowGroup>
+          <BasicRow field="아이디">
+            <TextInput id="input-id" {...form.getInputProps("basicInfo.loginId")} />
+          </BasicRow>
+        </RowGroup>
+        <RowGroup>
+          <BasicRow field="비밀번호">
+            <PasswordInput id="input-password" {...form.getInputProps("basicInfo.password")} />
+          </BasicRow>
+        </RowGroup>
+        <RowGroup>
+          <BasicRow field="이름">
+            <TextInput id="input-name" {...form.getInputProps("basicInfo.name")} />
+          </BasicRow>
+        </RowGroup>
+        <RowGroup>
+          <BasicRow field="이메일">
+            <TextInput id="input-email" {...form.getInputProps("basicInfo.email")} />
+          </BasicRow>
+        </RowGroup>
+        <RowGroup>
+          <BasicRow field="연락처">
+            <TextInput id="input-phone" {...form.getInputProps("basicInfo.phone")} />
+          </BasicRow>
+        </RowGroup>
+        <RowGroup>
+          <BasicRow field="학과">
+            {/* TODO: DepartmentsSelect 컴포넌트로 대체 */}
+            <Select
+              placeholder="학과 선택"
+              styles={{
+                wrapper: {
+                  width: 300,
+                },
+              }}
+              {...form.getInputProps("basicInfo.deptId")}
+            />
+          </BasicRow>
+        </RowGroup>
+        <RowGroup>
+          <BasicRow field="시스템 단계">
+            {studentId ? (
+              <>
+                <Text style={{ width: 310 }}>예심 통과</Text>
+                <ButtonRow
+                  buttons={[
+                    <Button key="switch" onClick={open}>
+                      본심 전환
+                    </Button>,
+                  ]}
+                />
+                <Modal
+                  opened={opened}
+                  onClose={close}
+                  title="본심 정보 등록"
+                  icon={<IconEditCircle />}
+                  withCloseButton
+                  size="xl"
+                >
+                  <form onSubmit={sysMainForm.onSubmit(handleSubmit)}>
+                    <Stack gap={10}>
+                      <AssignProfSection form={sysMainForm} />
+                      <ThesisTitleSection form={sysMainForm} />
+                      <RowGroup>
+                        <ButtonRow buttons={[<Button key="mainRegister">등록하기</Button>]} />
+                      </RowGroup>
+                    </Stack>
+                  </form>
+                </Modal>
+              </>
+            ) : (
               <Select
                 placeholder="예심/본심 여부 선택"
                 data={[
@@ -101,10 +153,10 @@ function BasicInfoSection({ form, studentId }: Props) {
                 }}
                 {...form.getInputProps("basicInfo.phaseId")}
               />
-            </BasicRow>
-          </RowGroup>
-        </Stack>
-      </form>
+            )}
+          </BasicRow>
+        </RowGroup>
+      </Stack>
     </Stack>
   );
 }
