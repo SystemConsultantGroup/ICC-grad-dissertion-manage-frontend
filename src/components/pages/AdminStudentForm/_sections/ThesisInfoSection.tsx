@@ -48,7 +48,7 @@ function ThesisInfoSection({ studentId }: Props) {
       <RowGroup>
         <BasicRow field="논문 파일">
           <Group gap={10}>
-            <TextInput value={thesisFile.name} disabled />
+            <TextInput value={thesisFile.name} disabled color="" />
             <DownloadButton link={thesisFile.link} />
           </Group>
         </BasicRow>
