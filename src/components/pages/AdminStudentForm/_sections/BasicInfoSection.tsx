@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
 import { IconEditCircle } from "@tabler/icons-react";
 import { Stack, TextInput, PasswordInput, Select, Text, Button } from "@mantine/core";
@@ -19,7 +19,8 @@ interface Props {
 }
 
 function BasicInfoSection({ form, studentId }: Props) {
-  const [opened, { open, close }] = useDisclosure(false);
+  const [opened, { open, close }] = useDisclosure();
+  const [phaseTitle, setPhaseTitle] = useState<string>("");
 
   const sysMainForm = useForm<AdminStudentFormInputs>({});
 
@@ -28,8 +29,14 @@ function BasicInfoSection({ form, studentId }: Props) {
     const fetchStudentDetails = async () => {
       try {
         if (studentId) {
+          // 기본 정보 조회
           const response = await ClientAxios.get(API_ROUTES.student.get(studentId));
           const studentDetails = response.data;
+
+          // 시스템 정보 조회
+          const sysResponse = await ClientAxios.get(API_ROUTES.student.getSystem(studentId));
+          const sysDetails = sysResponse.data;
+          setPhaseTitle(sysDetails.phase.title);
 
           form.setFieldValue("basicInfo", {
             loginId: studentDetails.loginId,
@@ -38,7 +45,7 @@ function BasicInfoSection({ form, studentId }: Props) {
             email: studentDetails.email,
             phone: studentDetails.phone,
             deptId: String(studentDetails.department.id),
-            phaseId: String(studentDetails.phase.id),
+            phaseId: String(sysDetails.phase.id),
           });
         }
       } catch (error) {
@@ -112,7 +119,7 @@ function BasicInfoSection({ form, studentId }: Props) {
           <BasicRow field="시스템 단계">
             {studentId ? (
               <>
-                <Text style={{ width: 310 }}>예심 통과</Text>
+                <Text style={{ width: 310 }}>{phaseTitle}</Text>
                 <ButtonRow
                   buttons={[
                     <Button key="switch" onClick={open}>
