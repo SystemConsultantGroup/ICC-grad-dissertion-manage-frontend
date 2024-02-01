@@ -10,10 +10,11 @@ import { CommonApiResponse } from "@/api/_types/common";
 import { showNotificationSuccess } from "@/components/common/Notifications";
 import { useAuth } from "@/components/common/AuthProvider/AuthProvider";
 import BasicInfoSection from "./_sections/BasicInfoSection";
-import AssignProfSection from "./_sections/AssignProfSection";
+import AssignReviewerSection from "./_sections/AssignReviewerSection";
 import ThesisTitleSection from "./_sections/ThesisTitleSection";
 import ThesisInfoSection from "./_sections/ThesisInfoSection";
-import AdminStudentFormInputs from "./_types/AdminStudentFormInputs";
+import { AdminStudentFormInputs } from "./_types/AdminStudentFormInputs";
+import useReviewersAssign from "./_hooks/useReviewersAssign";
 
 interface Props {
   studentId?: string | number;
@@ -24,9 +25,18 @@ interface loginInputs {
   password: string;
 }
 
-function AdminStudentEditForm({ studentId }: Props) {
+function AdminStudentForm({ studentId }: Props) {
   const router = useRouter();
   const { login } = useAuth();
+
+  const {
+    headReviewer,
+    advisors,
+    committees,
+    handleReviewerCancel,
+    handleReviewerAdd,
+    handleReviewersSet,
+  } = useReviewersAssign();
 
   const form = useForm<AdminStudentFormInputs>({
     initialValues: {
@@ -34,14 +44,11 @@ function AdminStudentEditForm({ studentId }: Props) {
         loginId: "",
         password: "",
         name: "",
-        email: null,
-        phone: null,
+        email: undefined,
+        phone: undefined,
         deptId: "",
         phaseId: "",
       },
-
-      chairman: null,
-      professors: [],
 
       thesisTitle: "",
     },
@@ -56,9 +63,6 @@ function AdminStudentEditForm({ studentId }: Props) {
         deptId: isNotEmpty("소속 학과를 선택해주세요."),
         phaseId: isNotEmpty("시스템 단계를 설정해주세요."),
       },
-
-      chairman: isNotEmpty("심사위원장을 설정해주세요."),
-      professors: (profList) => (profList.length < 1 ? "심사위원을 설정해주세요." : null),
 
       thesisTitle: isNotEmpty("논문 제목을 입력해주세요."),
     },
@@ -90,10 +94,10 @@ function AdminStudentEditForm({ studentId }: Props) {
       /* const registerInputs = {
         ...basicInputs,
 
-        headReviewerId: form.values.chairman?.professorId,
+        headReviewerId: form.values.headReviewer?.professorId,
         reviewerIds: [
           ...form.values.professors.map((professor) => professor.professorId),
-          form.values.chairman?.professorId,
+          form.values.headReviewer?.professorId,
         ],
         thesisTitle: form.values.thesisTitle,
       }; */
@@ -140,24 +144,42 @@ function AdminStudentEditForm({ studentId }: Props) {
           </RowGroup>
         )}
         <BasicInfoSection form={form} studentId={studentId} />
-        <AssignProfSection form={form} studentId={studentId} />
+        <AssignReviewerSection
+          studentId={studentId}
+          headReviewer={headReviewer}
+          advisors={advisors}
+          committees={committees}
+          onChangeReviewerAdd={handleReviewerAdd}
+          onChangeReviewerCancle={handleReviewerCancel}
+          onChangeReviewersSet={handleReviewersSet}
+        />
         {studentId ? (
           <ThesisInfoSection studentId={studentId} />
         ) : (
           <ThesisTitleSection form={form} />
         )}
         <RowGroup>
-          <ButtonRow
-            buttons={[
-              <Button key="edit" type="submit">
-                수정하기
-              </Button>,
-            ]}
-          />
+          {studentId ? (
+            <ButtonRow
+              buttons={[
+                <Button key="edit" type="submit">
+                  수정하기
+                </Button>,
+              ]}
+            />
+          ) : (
+            <ButtonRow
+              buttons={[
+                <Button key="register" type="submit">
+                  등록하기
+                </Button>,
+              ]}
+            />
+          )}
         </RowGroup>
       </Stack>
     </form>
   );
 }
 
-export default AdminStudentEditForm;
+export default AdminStudentForm;
