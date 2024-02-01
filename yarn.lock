@@ -56,6 +56,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/runtime-corejs3@npm:^7.23.6":
+  version: 7.23.8
+  resolution: "@babel/runtime-corejs3@npm:7.23.8"
+  dependencies:
+    core-js-pure: "npm:^3.30.2"
+    regenerator-runtime: "npm:^0.14.0"
+  checksum: 2ccc006308dc0afb88dab5b91380be3a644a7616b9e33b6039eeceb11080541d566e8c29d1e81495c3983990c6843cb872bb150dd6c0f23f85fa9eb8d1fe20c5
+  languageName: node
+  linkType: hard
+
 "@babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.20.13, @babel/runtime@npm:^7.20.7, @babel/runtime@npm:^7.23.2, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
   version: 7.23.6
   resolution: "@babel/runtime@npm:7.23.6"
@@ -897,6 +907,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/intl@npm:^1.2.2":
+  version: 1.2.2
+  resolution: "@types/intl@npm:1.2.2"
+  checksum: f465c320139c01dfc9ae1382406259fd23f6a455aad31517f61b7fd79bdde493e854d6666c2198ae644d8cf6e147e78831ea810f83a787f65b765bc56834f259
+  languageName: node
+  linkType: hard
+
 "@types/js-cookie@npm:^3.0.6":
   version: 3.0.6
   resolution: "@types/js-cookie@npm:3.0.6"
@@ -1679,6 +1696,13 @@ __metadata:
   version: 1.9.0
   resolution: "convert-source-map@npm:1.9.0"
   checksum: 281da55454bf8126cbc6625385928c43479f2060984180c42f3a86c8b8c12720a24eac260624a7d1e090004028d2dee78602330578ceec1a08e27cb8bb0a8a5b
+  languageName: node
+  linkType: hard
+
+"core-js-pure@npm:^3.30.2":
+  version: 3.35.0
+  resolution: "core-js-pure@npm:3.35.0"
+  checksum: 4e58b6b2b3759ffbfe3f904beafd547751aaefa87b94245136aced963120bc2cefc8787c7a980cd397c2c408eca141e0993fcda7ed2383c93ce53bc421acfec4
   languageName: node
   linkType: hard
 
@@ -2883,6 +2907,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"imask@npm:^7.3.0":
+  version: 7.3.0
+  resolution: "imask@npm:7.3.0"
+  dependencies:
+    "@babel/runtime-corejs3": "npm:^7.23.6"
+  checksum: 79e7847cb089acb926087b2b5f58938c9576de4cdc15b8738706e7269a8621eceb08f829a832e829ab8131dfd718d659dcd59b45a8b61fc8b7fe56dace309aa5
+  languageName: node
+  linkType: hard
+
 "import-fresh@npm:^3.2.1":
   version: 3.3.0
   resolution: "import-fresh@npm:3.3.0"
@@ -2925,6 +2958,13 @@ __metadata:
     hasown: "npm:^2.0.0"
     side-channel: "npm:^1.0.4"
   checksum: aa37cafc8ffbf513a340de58f40d5017b4949d99722d7e4f0e24b182455bdd258000d4bb1d7b4adcf9f8979b97049b99fe9defa9db8e18a78071d2637ac143fb
+  languageName: node
+  linkType: hard
+
+"intl@npm:^1.2.5":
+  version: 1.2.5
+  resolution: "intl@npm:1.2.5"
+  checksum: ee6b0ab274ab730b4947604eb9b155dfb32caf8f1d7826da2b3480fca42bf19092f6a723028f6a6751d90c0a709ec80a5149780acc24ebf6f1eb8a7a27cc54c8
   languageName: node
   linkType: hard
 
@@ -4312,6 +4352,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-imask@npm:^7.3.0":
+  version: 7.3.0
+  resolution: "react-imask@npm:7.3.0"
+  dependencies:
+    imask: "npm:^7.3.0"
+    prop-types: "npm:^15.8.1"
+  peerDependencies:
+    react: ">=0.14.0"
+  checksum: 2a6a5bec7d25fedd0a3b3a54a8109ed464c64e84f1de4fd59abe9650e48e8a6a3f7656f04c62a3ade8cd81c519c104827ccb6fcddc3fc721a4b2d5ff7d249354
+  languageName: node
+  linkType: hard
+
 "react-is@npm:^16.13.1, react-is@npm:^16.7.0":
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
@@ -4439,6 +4491,7 @@ __metadata:
     "@tiptap/react": "npm:^2.1.13"
     "@tiptap/starter-kit": "npm:^2.1.13"
     "@types/file-saver": "npm:^2.0.7"
+    "@types/intl": "npm:^1.2.2"
     "@types/js-cookie": "npm:^3.0.6"
     "@types/node": "npm:^20"
     "@types/react": "npm:^18"
@@ -4461,6 +4514,7 @@ __metadata:
     eslint-plugin-react-hooks: "npm:4.6.0"
     file-saver: "npm:^2.0.5"
     husky: "npm:^8.0.3"
+    intl: "npm:^1.2.5"
     js-cookie: "npm:^3.0.5"
     jwt-decode: "npm:^4.0.0"
     lint-staged: "npm:^15.1.0"
@@ -4470,6 +4524,7 @@ __metadata:
     prettier: "npm:^3.1.0"
     react: "npm:^18"
     react-dom: "npm:^18"
+    react-imask: "npm:^7.3.0"
     swr: "npm:^2.2.4"
     typescript: "npm:5.1.6"
   languageName: unknown

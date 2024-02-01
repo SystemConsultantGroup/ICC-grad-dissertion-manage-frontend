@@ -4,14 +4,18 @@ import classes from "./TitleRow.module.css";
 
 interface Props {
   title: ReactNode;
+  badge?: ReactNode;
   subString?: ReactNode;
   style?: MantineStyleProp;
 }
 
-function TitleRow({ title, subString, style }: Props) {
+function TitleRow({ title, badge, subString, style }: Props) {
   return (
     <Group gap={0} className={classes.wrapper} justify="space-between" style={style}>
-      <Text className={classes.title}>{title}</Text>
+      <Group>
+        <Text className={classes.title}>{title}</Text>
+        {badge}
+      </Group>
       <Text c="dimmed">{subString}</Text>
     </Group>
   );
