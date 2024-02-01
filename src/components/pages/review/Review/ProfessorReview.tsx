@@ -10,7 +10,7 @@ import {
 import { Dispatch, SetStateAction, useState } from "react";
 import { IconCheck } from "@tabler/icons-react";
 import Link from "next/link";
-import { Stage } from "../ArticleInfo/ArticleInfo";
+import { Stage } from "../ThesisInfo/ThesisInfo";
 
 export interface ProfessorReviewProps {
   onTemporarySave: () => void;

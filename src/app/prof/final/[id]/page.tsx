@@ -3,7 +3,7 @@
 "use client";
 
 import PageHeader from "@/components/common/PageHeader";
-import { ArticleInfo } from "@/components/pages/review/ArticleInfo";
+import { ThesisInfo } from "@/components/pages/review/ThesisInfo";
 import { ReviewCard } from "@/components/pages/review/Review/ReviewCard";
 import { FinalReview, ReviewList, ReviewResult } from "@/components/pages/review/Review";
 import { useState } from "react";
@@ -17,7 +17,7 @@ export default function ProfessorFinalPage() {
     <>
       <PageHeader title="최종 판정" />
       <ReviewCard>
-        <ArticleInfo stage="PRELIMINARY" isAdvisor />
+        <ThesisInfo stage="PRELIMINARY" isAdvisor />
         <ReviewList title="심사 결과" stage="PRELIMINARY" />
         <FinalReview
           onTemporarySave={() => {}}
@@ -34,7 +34,7 @@ export default function ProfessorFinalPage() {
           setShowConfirmDialog(false);
         }}
       >
-        <ArticleInfo simple stage="PRELIMINARY" isAdvisor />
+        <ThesisInfo simple stage="PRELIMINARY" isAdvisor />
         <ReviewResult stage="PRELIMINARY" />
       </ReviewConfirmModal>
     </>

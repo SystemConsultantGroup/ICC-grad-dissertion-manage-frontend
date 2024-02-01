@@ -1,7 +1,7 @@
 /* api 연결 필요 */
 import PageHeader from "@/components/common/PageHeader";
 import { ButtonRow, RowGroup } from "@/components/common/rows";
-import { ArticleInfo } from "@/components/pages/review/ArticleInfo/ArticleInfo";
+import { ThesisInfo } from "@/components/pages/review/ThesisInfo/ThesisInfo";
 import { ReviewCard, ReviewList } from "@/components/pages/review/Review";
 import { ReviewReportAdmin } from "@/components/pages/review/Review/ReviewReport";
 import { Button } from "@mantine/core";
@@ -12,7 +12,7 @@ export default function AdminReviewResultPage({ params: { id } }: { params: { id
     <>
       <PageHeader title="심사 결과" />
       <ReviewCard>
-        <ArticleInfo stage="MAIN" revision />
+        <ThesisInfo stage="MAIN" revision />
         <ReviewList title="심사 결과" stage="MAIN" />
         <ReviewReportAdmin />
         <RowGroup withBorderBottom={false}>
