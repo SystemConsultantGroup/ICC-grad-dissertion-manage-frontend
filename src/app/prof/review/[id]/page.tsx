@@ -3,7 +3,7 @@
 "use client";
 
 import PageHeader from "@/components/common/PageHeader";
-import { ArticleInfo } from "@/components/pages/review/ArticleInfo";
+import { ThesisInfo } from "@/components/pages/review/ThesisInfo";
 import { ReviewCard } from "@/components/pages/review/Review/ReviewCard";
 import { ReviewResult, ProfessorReview } from "@/components/pages/review/Review";
 import { ReviewConfirmModal } from "@/components/pages/review/ReviewConfirmModal/ReviewConfirmModal";
@@ -19,7 +19,7 @@ export default function ProfessorReviewPage() {
     <>
       <PageHeader title="논문 심사" />
       <ReviewCard>
-        <ArticleInfo stage="MAIN" isAdvisor />
+        <ThesisInfo stage="MAIN" isAdvisor />
         <ProfessorReview
           onTemporarySave={() => {}}
           onSave={() => {
@@ -38,7 +38,7 @@ export default function ProfessorReviewPage() {
           setShowConfirmDialog(false);
         }}
       >
-        <ArticleInfo simple stage="MAIN" />
+        <ThesisInfo simple stage="MAIN" />
         <ReviewResult stage="MAIN" />
       </ReviewConfirmModal>
     </>

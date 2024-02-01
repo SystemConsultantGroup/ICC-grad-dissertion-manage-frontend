@@ -1,1 +1,0 @@
-export { ArticleInfo } from "./ArticleInfo";

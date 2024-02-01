@@ -4,7 +4,7 @@ import TableRow from "@/components/common/Table/_elements/TableRow";
 import TableData from "@/components/common/Table/_elements/TableData";
 import { DownloadButton } from "@/components/common/Buttons";
 import { TitleRow } from "@/components/common/rows";
-import { Stage } from "../ArticleInfo/ArticleInfo";
+import { Stage } from "../ThesisInfo/ThesisInfo";
 
 export interface ReviewListProps {
   title: string;

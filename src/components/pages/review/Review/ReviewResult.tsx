@@ -2,7 +2,7 @@ import { BasicRow, RowGroup, TitleRow } from "@/components/common/rows";
 import { Stack } from "@mantine/core";
 
 import { Status } from "./ProfessorReview";
-import { Stage } from "../ArticleInfo/ArticleInfo";
+import { Stage } from "../ThesisInfo/ThesisInfo";
 
 export interface ReviewResultProps {
   stage: Stage;

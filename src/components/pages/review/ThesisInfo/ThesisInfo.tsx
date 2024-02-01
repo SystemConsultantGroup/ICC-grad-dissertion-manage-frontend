@@ -3,14 +3,14 @@ import { BasicRow, FileRow, RowGroup, TitleRow } from "@/components/common/rows"
 
 export type Stage = "PRELIMINARY" | "MAIN";
 
-interface ArticleInfoProps {
+interface ThesisInfoProps {
   stage?: Stage;
   isAdvisor?: boolean;
   revision?: boolean;
   simple?: boolean;
 }
 
-export function ArticleInfo({ stage, isAdvisor, revision, simple = false }: ArticleInfoProps) {
+export function ThesisInfo({ stage, isAdvisor, revision, simple = false }: ThesisInfoProps) {
   return (
     <Stack gap={0}>
       <TitleRow

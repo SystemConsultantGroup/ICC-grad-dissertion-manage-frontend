@@ -3,7 +3,7 @@
 "use client";
 
 import PageHeader from "@/components/common/PageHeader";
-import { ArticleInfo } from "@/components/pages/review/ArticleInfo";
+import { ThesisInfo } from "@/components/pages/review/ThesisInfo";
 import { ReviewList, StudentReviewResult } from "@/components/pages/review/Review";
 import { ReviewCard } from "@/components/pages/review/Review/ReviewCard";
 
@@ -12,7 +12,7 @@ export default function StudentResultPage() {
     <>
       <PageHeader title="심사 결과" />
       <ReviewCard>
-        <ArticleInfo stage="MAIN" />
+        <ThesisInfo stage="MAIN" />
         <StudentReviewResult stage="MAIN" />
         <ReviewList title="심사 의견" stage="MAIN" />
       </ReviewCard>
