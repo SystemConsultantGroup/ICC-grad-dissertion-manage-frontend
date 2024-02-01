@@ -7,11 +7,12 @@ import Row from "@/components/common/rows/_elements/Row/Row";
 
 interface Props {
   field: string;
+  fieldSize?: "sm" | "md" | "lg" | "xl";
   onChange?: (file: File | null) => void;
   defaultFile?: File;
 }
 
-function FileUploadRow({ field, onChange, defaultFile }: Props) {
+function FileUploadRow({ field, fieldSize, onChange, defaultFile }: Props) {
   const [file, setFile] = useState<File | null>(null);
   const resetRef = useRef<() => void>(null);
   const clearFile = () => {
@@ -31,7 +32,7 @@ function FileUploadRow({ field, onChange, defaultFile }: Props) {
   }, [defaultFile]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <Row field={field} fieldSize="sm">
+    <Row field={field} fieldSize={fieldSize}>
       <Group gap={16}>
         <FileButton onChange={handleFileChange} resetRef={resetRef}>
           {(props) => <Button {...props}>파일 선택</Button>}
