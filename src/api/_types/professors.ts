@@ -43,3 +43,5 @@ export interface SelectProfessorFormValues {
   departmentId: Professor["department"]["id"];
   professorId: number;
 }
+
+export type ReviewerRole = "HEAD" | "ADVISOR" | "COMMITTEE";

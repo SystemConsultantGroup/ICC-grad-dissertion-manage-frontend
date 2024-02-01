@@ -5,13 +5,15 @@ import { useDisclosure } from "@mantine/hooks";
 import { IconEditCircle } from "@tabler/icons-react";
 import { Stack, TextInput, PasswordInput, Select, Text, Button } from "@mantine/core";
 import { RowGroup, BasicRow, TitleRow, NoticeRow, ButtonRow } from "@/components/common/rows";
-import { useForm, isNotEmpty, UseFormReturnType } from "@mantine/form";
+import { useForm, UseFormReturnType } from "@mantine/form";
 import { ClientAxios } from "@/api/ClientAxios";
 import { API_ROUTES } from "@/api/apiRoute";
+import { Phase } from "@/api/_types/phase";
 import Modal from "@/components/common/Modal";
-import AssignProfSection from "./AssignProfSection";
 import ThesisTitleSection from "./ThesisTitleSection";
-import AdminStudentFormInputs from "../_types/AdminStudentFormInputs";
+import { AdminStudentFormInputs } from "../_types/AdminStudentFormInputs";
+import AssignReviewerSection from "./AssignReviewerSection";
+import useReviewersAssign from "../_hooks/useReviewersAssign";
 
 interface Props {
   form: UseFormReturnType<AdminStudentFormInputs>;
@@ -20,9 +22,12 @@ interface Props {
 
 function BasicInfoSection({ form, studentId }: Props) {
   const [opened, { open, close }] = useDisclosure();
-  const [phaseTitle, setPhaseTitle] = useState<string>("");
+  const [phase, setPhase] = useState<Phase>();
 
   const sysMainForm = useForm<AdminStudentFormInputs>({});
+  /** 본심 심사위원장 / 심사위원 설정*/
+  const { headReviewer, advisors, committees, handleReviewerCancel, handleReviewerAdd } =
+    useReviewersAssign();
 
   useEffect(() => {
     // 학생 기본 정보 가져오기
@@ -36,7 +41,7 @@ function BasicInfoSection({ form, studentId }: Props) {
           // 시스템 정보 조회
           const sysResponse = await ClientAxios.get(API_ROUTES.student.getSystem(studentId));
           const sysDetails = sysResponse.data;
-          setPhaseTitle(sysDetails.phase.title);
+          setPhase(sysDetails.phase);
 
           form.setFieldValue("basicInfo", {
             loginId: studentDetails.loginId,
@@ -119,14 +124,16 @@ function BasicInfoSection({ form, studentId }: Props) {
           <BasicRow field="시스템 단계">
             {studentId ? (
               <>
-                <Text style={{ width: 310 }}>{phaseTitle}</Text>
-                <ButtonRow
-                  buttons={[
-                    <Button key="switch" onClick={open}>
-                      본심 전환
-                    </Button>,
-                  ]}
-                />
+                <Text style={{ width: 310 }}>{phase?.title}</Text>
+                {phase?.id === 3 && (
+                  <ButtonRow
+                    buttons={[
+                      <Button key="switch" onClick={open}>
+                        본심 전환
+                      </Button>,
+                    ]}
+                  />
+                )}
                 <Modal
                   opened={opened}
                   onClose={close}
@@ -137,7 +144,13 @@ function BasicInfoSection({ form, studentId }: Props) {
                 >
                   <form onSubmit={sysMainForm.onSubmit(handleSubmit)}>
                     <Stack gap={10}>
-                      <AssignProfSection form={sysMainForm} />
+                      <AssignReviewerSection
+                        headReviewer={headReviewer}
+                        advisors={advisors}
+                        committees={committees}
+                        onChangeReviewerAdd={handleReviewerAdd}
+                        onChangeReviewerCancle={handleReviewerCancel}
+                      />
                       <ThesisTitleSection form={sysMainForm} />
                       <RowGroup>
                         <ButtonRow buttons={[<Button key="mainRegister">등록하기</Button>]} />
