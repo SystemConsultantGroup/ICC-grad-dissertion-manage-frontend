@@ -1,25 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Stack, Select, Button } from "@mantine/core";
 import { RowGroup, BasicRow, TitleRow } from "@/components/common/rows";
 import { ClientAxios } from "@/api/ClientAxios";
 import { API_ROUTES } from "@/api/apiRoute";
-import { Professor, ReviewerRole } from "@/api/_types/professors";
-import { SelectedProfessor } from "../_types/AdminStudentFormInputs";
-
-const deptList = [
-  { deptId: 0, name: "전자전기공학과" },
-  { deptId: 1, name: "전자전기공학과" },
-];
-
-const profList = [
-  { professorId: 0, name: "김교수" },
-  { professorId: 1, name: "이교수" },
-  { professorId: 2, name: "박교수" },
-  { professorId: 3, name: "최교수" },
-  { professorId: 4, name: "한교수" },
-];
+import { PAGE_NUMBER_GET_ALL, PAGE_SIZE_GET_ALL } from "@/constants/pagination";
+import { Professor, ReviewerRole, ProfessorResponse } from "@/api/_types/professors";
+import { ProfessorSelect } from "@/components/common/selects/ProfessorSelect";
+import { DepartmentSelect } from "@/components/common/selects/DepartmentSelect";
+import { useProfessors, useDepartments } from "@/api/SWR";
+import { SelectedProfessor } from "../_types/AdminStudentForm";
 
 interface Props {
   onChangeReviewerCancle: (role: ReviewerRole, cancleReviewerId: string) => void;
@@ -31,6 +22,11 @@ interface Props {
   studentId?: string | number;
 }
 
+interface SelectedReviewer {
+  value: string;
+  label: string;
+}
+
 function AssignReviewerSection({
   onChangeReviewerCancle,
   onChangeReviewerAdd,
@@ -40,6 +36,14 @@ function AssignReviewerSection({
   committees,
   studentId,
 }: Props) {
+  /** 교수 목록, 학과 목록 조회 */
+  const {
+    data: professors,
+    isLoading: isLoadingProf,
+    error: errorProf,
+  } = useProfessors({ pageNumber: PAGE_NUMBER_GET_ALL, pageSize: PAGE_SIZE_GET_ALL });
+  const { data: deptData, isLoading: isLoadingDept, error: errorDept } = useDepartments();
+
   /** Select 컴포넌트에서 선택된 심사위원  */
   const [cancleReviewerId, setCancleReviewerId] = useState<string | null>();
   const [selectedAdvisor, setSelectedAdvisor] = useState<SelectedProfessor>({
@@ -54,12 +58,13 @@ function AssignReviewerSection({
     profId: null,
     deptId: null,
   });
+  const [selectedReviewers, setSelectedReviwers] = useState<SelectedReviewer[]>([]);
 
   /** 배정 취소 Select 에러 상태 */
   const [cancleError, setCancleError] = useState<boolean>(false);
 
   /** 심사위원 정보 조회 */
-  /* useEffect(() => {
+  useEffect(() => {
     const fetchReviewer = async () => {
       if (studentId && onChangeReviewersSet) {
         const response = await ClientAxios.get(API_ROUTES.student.getReviewer(Number(studentId)));
@@ -75,28 +80,59 @@ function AssignReviewerSection({
     };
 
     fetchReviewer();
-  }); */
+  });
 
   /** 배정된 교수 목록 조회시 label 설정하는 함수 */
-  const assignedReviewerLabel = (role: ReviewerRole, professorId?: number, deptId?: number) => {
-    const professorName = professorId
-      ? profList.find((professor) => professor.professorId === professorId)?.name
-      : "";
-    const deptName = deptId ? deptList.find((dept) => dept.deptId === deptId)?.name : "";
-    const name = `${professorName} (${deptName})`;
-    console.log(`교수 아이디: ${professorId} (${deptId})`);
+  const assignedReviewerLabel = useMemo(
+    () => (role: ReviewerRole, professorId: number, deptId: number) => {
+      const professorName =
+        professors?.find((professor) => professor.id === professorId)?.name || "";
+      const deptName = deptData?.departments?.find((dept) => dept.id === deptId)?.name || "";
+      const name = `${professorName} (${deptName})`;
 
-    switch (role) {
-      case "HEAD":
-        return `[심사위원장] ${name}`;
-      case "ADVISOR":
-        return `[지도교수] ${name}`;
-      case "COMMITTEE":
-        return `[심사위원] ${name}`;
-      default:
-        return "";
-    }
-  };
+      switch (role) {
+        case "HEAD":
+          return `[심사위원장] ${name}`;
+        case "ADVISOR":
+          return `[지도교수] ${name}`;
+        case "COMMITTEE":
+          return `[심사위원] ${name}`;
+        default:
+          return "";
+      }
+    },
+    [professors, deptData]
+  );
+
+  /** 배정된 교수 목록 업데이트 */
+  useEffect(() => {
+    setSelectedReviwers([
+      ...(headReviewer
+        ? [
+            {
+              value: headReviewer.profId ?? "",
+              label: assignedReviewerLabel(
+                "HEAD",
+                Number(headReviewer.profId),
+                Number(headReviewer.deptId)
+              ),
+            },
+          ]
+        : []),
+      ...advisors.map((advisor) => ({
+        value: advisor.profId ?? "",
+        label: assignedReviewerLabel("ADVISOR", Number(advisor.profId), Number(advisor.deptId)),
+      })),
+      ...committees.map((committee) => ({
+        value: committee.profId ?? "",
+        label: assignedReviewerLabel(
+          "COMMITTEE",
+          Number(committee.profId),
+          Number(committee.deptId)
+        ),
+      })),
+    ]);
+  }, [headReviewer, advisors, committees, assignedReviewerLabel]);
 
   /** 배정 취소 */
   const handleCancle = () => {
@@ -148,36 +184,7 @@ function AssignReviewerSection({
               },
             }}
             error={cancleError}
-            data={[
-              ...(headReviewer
-                ? [
-                    {
-                      value: headReviewer.profId ?? "",
-                      label: assignedReviewerLabel(
-                        "HEAD",
-                        Number(headReviewer.profId),
-                        Number(headReviewer.deptId)
-                      ),
-                    },
-                  ]
-                : []),
-              ...advisors.map((advisor) => ({
-                value: advisor.profId ?? "",
-                label: assignedReviewerLabel(
-                  "ADVISOR",
-                  Number(advisor.profId),
-                  Number(advisor.deptId)
-                ),
-              })),
-              ...committees.map((committee) => ({
-                value: committee.profId ?? "",
-                label: assignedReviewerLabel(
-                  "COMMITTEE",
-                  Number(committee.profId),
-                  Number(committee.deptId)
-                ),
-              })),
-            ]}
+            data={selectedReviewers}
           />
           <Button color="red" style={{ marginLeft: "20px" }} onClick={handleCancle}>
             배정 취소
@@ -186,20 +193,16 @@ function AssignReviewerSection({
       </RowGroup>
       <RowGroup>
         <BasicRow field="지도교수 배정">
-          {/* TODO: DepartmentsSelect 컴포넌트로 대체 */}
-          <Select
-            placeholder="소속 선택"
+          <DepartmentSelect
             onChange={(value) => {
               setSelectedAdvisor((prev) => ({
                 ...prev,
                 deptId: value,
               }));
             }}
-            data={deptList.map((dept) => ({ value: String(dept.deptId), label: dept.name }))}
           />
-          {/* TODO: ProfessorsSelect 컴포넌트로 대체 */}
-          <Select
-            placeholder="교수 선택"
+          <ProfessorSelect
+            departmentId={Number(selectedAdvisor.deptId)}
             onChange={(value) => {
               setSelectedAdvisor((prev) => ({
                 ...prev,
@@ -207,10 +210,6 @@ function AssignReviewerSection({
               }));
             }}
             style={{ marginLeft: "10px" }}
-            data={profList.map((professor) => ({
-              value: String(professor.professorId),
-              label: professor.name,
-            }))}
           />
           <Button style={{ marginLeft: "20px" }} onClick={handleAdvisorSelect}>
             배정하기
@@ -219,20 +218,16 @@ function AssignReviewerSection({
       </RowGroup>
       <RowGroup>
         <BasicRow field="심사위원 배정">
-          {/* TODO: DepartmentsSelect 컴포넌트로 대체 */}
-          <Select
-            placeholder="소속 선택"
+          <DepartmentSelect
             onChange={(value) => {
               setSelectedCommittee((prev) => ({
                 ...prev,
                 deptId: value,
               }));
             }}
-            data={deptList.map((dept) => ({ value: String(dept.deptId), label: dept.name }))}
           />
-          {/* TODO: ProfessorsSelect 컴포넌트로 대체 */}
-          <Select
-            placeholder="교수 선택"
+          <ProfessorSelect
+            departmentId={Number(selectedCommittee.deptId)}
             onChange={(value) => {
               setSelectedCommittee((prev) => ({
                 ...prev,
@@ -240,10 +235,6 @@ function AssignReviewerSection({
               }));
             }}
             style={{ marginLeft: "10px" }}
-            data={profList.map((professor) => ({
-              value: String(professor.professorId),
-              label: professor.name,
-            }))}
           />
           <Button style={{ marginLeft: "20px" }} onClick={handleCommitteeSelect}>
             배정하기
@@ -252,20 +243,16 @@ function AssignReviewerSection({
       </RowGroup>
       <RowGroup>
         <BasicRow field="심사위원장 배정">
-          {/* TODO: DepartmentsSelect 컴포넌트로 대체 */}
-          <Select
-            placeholder="소속 선택"
+          <DepartmentSelect
             onChange={(value) => {
               setSelectedHeadReviewer((prev) => ({
                 ...prev,
                 deptId: value,
               }));
             }}
-            data={deptList.map((dept) => ({ value: String(dept.deptId), label: dept.name }))}
           />
-          {/* TODO: ProfessorsSelect 컴포넌트로 대체 */}
-          <Select
-            placeholder="교수 선택"
+          <ProfessorSelect
+            departmentId={Number(selectedHeadReviewer.deptId)}
             onChange={(value) => {
               setSelectedHeadReviewer((prev) => ({
                 ...prev,
@@ -273,10 +260,6 @@ function AssignReviewerSection({
               }));
             }}
             style={{ marginLeft: "10px" }}
-            data={profList.map((professor) => ({
-              value: String(professor.professorId),
-              label: professor.name,
-            }))}
           />
           <Button style={{ marginLeft: "20px" }} onClick={handleHeadReviewerSelect}>
             배정하기

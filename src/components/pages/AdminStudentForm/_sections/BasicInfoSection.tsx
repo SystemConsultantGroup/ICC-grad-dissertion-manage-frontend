@@ -11,7 +11,7 @@ import { API_ROUTES } from "@/api/apiRoute";
 import { Phase } from "@/api/_types/phase";
 import Modal from "@/components/common/Modal";
 import ThesisTitleSection from "./ThesisTitleSection";
-import { AdminStudentFormInputs } from "../_types/AdminStudentFormInputs";
+import { AdminStudentFormInputs } from "../_types/AdminStudentForm";
 import AssignReviewerSection from "./AssignReviewerSection";
 import useReviewersAssign from "../_hooks/useReviewersAssign";
 

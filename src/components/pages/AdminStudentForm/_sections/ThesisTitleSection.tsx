@@ -3,7 +3,7 @@
 import { Stack, TextInput } from "@mantine/core";
 import { UseFormReturnType } from "@mantine/form";
 import { RowGroup, BasicRow, TitleRow } from "@/components/common/rows";
-import { AdminStudentFormInputs } from "../_types/AdminStudentFormInputs";
+import { AdminStudentFormInputs } from "../_types/AdminStudentForm";
 
 interface Props {
   form: UseFormReturnType<AdminStudentFormInputs>;
