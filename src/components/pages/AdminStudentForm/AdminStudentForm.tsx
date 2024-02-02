@@ -13,7 +13,7 @@ import BasicInfoSection from "./_sections/BasicInfoSection";
 import AssignReviewerSection from "./_sections/AssignReviewerSection";
 import ThesisTitleSection from "./_sections/ThesisTitleSection";
 import ThesisInfoSection from "./_sections/ThesisInfoSection";
-import { AdminStudentFormInputs } from "./_types/AdminStudentFormInputs";
+import { AdminStudentFormInputs } from "./_types/AdminStudentForm";
 import useReviewersAssign from "./_hooks/useReviewersAssign";
 
 interface Props {

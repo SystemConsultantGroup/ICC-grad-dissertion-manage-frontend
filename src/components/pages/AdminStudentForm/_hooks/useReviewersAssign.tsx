@@ -1,6 +1,6 @@
 import { ReviewerRole, Professor } from "@/api/_types/professors";
 import { useState } from "react";
-import { SelectedProfessor } from "../_types/AdminStudentFormInputs";
+import { SelectedProfessor } from "../_types/AdminStudentForm";
 
 const useReviewersAssign = () => {
   const [headReviewer, setHeadReviewer] = useState<SelectedProfessor | null>(null);
