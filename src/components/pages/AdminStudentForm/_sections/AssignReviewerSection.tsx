@@ -6,20 +6,26 @@ import { RowGroup, BasicRow, TitleRow } from "@/components/common/rows";
 import { ClientAxios } from "@/api/ClientAxios";
 import { API_ROUTES } from "@/api/apiRoute";
 import { PAGE_NUMBER_GET_ALL, PAGE_SIZE_GET_ALL } from "@/constants/pagination";
-import { Professor, ReviewerRole, ProfessorResponse } from "@/api/_types/professors";
+import { Professor, ReviewerRole } from "@/api/_types/professors";
 import { ProfessorSelect } from "@/components/common/selects/ProfessorSelect";
 import { DepartmentSelect } from "@/components/common/selects/DepartmentSelect";
 import { useProfessors, useDepartments } from "@/api/SWR";
 import { SelectedProfessor } from "../_types/AdminStudentForm";
 
 interface Props {
-  onChangeReviewerCancle: (role: ReviewerRole, cancleReviewerId: string) => void;
-  onChangeReviewerAdd: (role: ReviewerRole, deptId: string, profId: string) => void;
-  onChangeReviewersSet?: (role: ReviewerRole, reviewers: Professor[]) => void;
+  studentId?: string | number;
+
   headReviewer: SelectedProfessor | null;
   advisors: SelectedProfessor[];
   committees: SelectedProfessor[];
-  studentId?: string | number;
+
+  onChangeReviewerCancle: (role: ReviewerRole, cancleReviewerId: string) => void;
+  onChangeReviewerAdd: (role: ReviewerRole, deptId: string, profId: string) => void;
+  onChangeReviewersSet?: (
+    _headReviewer: Professor,
+    _advisors: Professor[],
+    _committees: Professor[]
+  ) => void;
 }
 
 interface SelectedReviewer {
@@ -69,13 +75,11 @@ function AssignReviewerSection({
       if (studentId && onChangeReviewersSet) {
         const response = await ClientAxios.get(API_ROUTES.student.getReviewer(Number(studentId)));
         const reviewerDetails = response.data;
-        onChangeReviewerAdd(
-          "HEAD",
-          String(reviewerDetails.headReviewer.department.id),
-          String(reviewerDetails.headReviewer.id)
+        onChangeReviewersSet(
+          reviewerDetails.headReviewer,
+          reviewerDetails.advisors,
+          reviewerDetails.committees
         );
-        onChangeReviewersSet("ADVISOR", reviewerDetails.advisors);
-        onChangeReviewersSet("COMMITTEE", reviewerDetails.committees);
       }
     };
 

@@ -50,7 +50,6 @@ function BasicInfoSection({ form, studentId }: Props) {
             email: studentDetails.email,
             phone: studentDetails.phone,
             deptId: String(studentDetails.department.id),
-            phaseId: String(sysDetails.phase.id),
           });
         }
       } catch (error) {
@@ -58,7 +57,7 @@ function BasicInfoSection({ form, studentId }: Props) {
       }
     };
     fetchStudentDetails();
-  }, [studentId, form.setFieldValue]);
+  }, [studentId, form]);
 
   // 본심 정보 등록하기
   const handleSubmit = async () => {
@@ -163,15 +162,15 @@ function BasicInfoSection({ form, studentId }: Props) {
               <Select
                 placeholder="예심/본심 여부 선택"
                 data={[
-                  { value: "1", label: "예심" },
-                  { value: "4", label: "본심" },
+                  { value: "PRELIMINARY", label: "예심" },
+                  { value: "MAIN", label: "본심" },
                 ]}
                 styles={{
                   wrapper: {
                     width: 300,
                   },
                 }}
-                {...form.getInputProps("basicInfo.phaseId")}
+                {...form.getInputProps("stage")}
               />
             )}
           </BasicRow>
