@@ -1,10 +1,16 @@
 "use client";
 
-import { Button, FileButton, FileInput, Group } from "@mantine/core";
+import { Button, FileInput, Group } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 import { useEffect, useRef, useState } from "react";
 import Row from "@/components/common/rows/_elements/Row/Row";
 import { UseFormReturnType } from "@mantine/form";
+
+declare module "@mantine/core" {
+  interface FileInputProps {
+    placeholder?: string;
+  }
+}
 
 interface Props {
   field: string;
