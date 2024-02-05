@@ -18,9 +18,11 @@ export interface Reviewer {
   processId: number;
 }
 
+export type ThesisFileType = "PRESENTATION" | "THESIS" | "REVISION_REPORT";
+
 export interface ThesisFile {
   id: number;
-  type: string;
+  type: ThesisFileType;
   createdAt: string;
   updatedAt: string;
   file: File;
