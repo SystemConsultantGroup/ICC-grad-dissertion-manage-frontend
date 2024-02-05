@@ -10,9 +10,10 @@ interface Props {
   fieldSize?: "sm" | "md" | "lg" | "xl";
   url: string;
   name: string;
+  disabled?: boolean;
 }
 
-function FilePostRow({ field, fieldSize, url, name }: Props) {
+function FilePostRow({ field, fieldSize, url, name, disabled }: Props) {
   const saveFile = async () => {
     const response = await fetch(url);
     const blob = await response.blob();
@@ -20,7 +21,7 @@ function FilePostRow({ field, fieldSize, url, name }: Props) {
   };
   return (
     <Row field={field} fieldSize={fieldSize}>
-      <UnstyledButton onClick={saveFile}>
+      <UnstyledButton disabled={disabled} onClick={saveFile}>
         <Group gap={16}>
           <IconDownload size={24} />
           <Row.Text>{name}</Row.Text>
