@@ -1,5 +1,3 @@
-"use client";
-
 import { Stack, TextInput } from "@mantine/core";
 import { UseFormReturnType } from "@mantine/form";
 import { RowGroup, BasicRow, TitleRow } from "@/components/common/rows";

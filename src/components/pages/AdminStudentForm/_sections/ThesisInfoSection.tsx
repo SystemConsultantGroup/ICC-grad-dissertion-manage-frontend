@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import { Stack, TextInput, Group } from "@mantine/core";
 import { API_ROUTES } from "@/api/apiRoute";

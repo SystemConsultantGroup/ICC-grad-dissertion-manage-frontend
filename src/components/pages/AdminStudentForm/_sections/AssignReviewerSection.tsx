@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useEffect, useMemo } from "react";
 import { Stack, Select, Button } from "@mantine/core";
 import { RowGroup, BasicRow, TitleRow } from "@/components/common/rows";
