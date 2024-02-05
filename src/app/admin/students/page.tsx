@@ -5,6 +5,7 @@ import { StudentListSection } from "@/components/pages/lists/admin/StudentListSe
 
 export default async function AdminStudentsPage() {
   await AuthSSR({ userType: "ADMIN" });
+
   return (
     <>
       <PageHeader
@@ -16,3 +17,4 @@ export default async function AdminStudentsPage() {
       </Section>
     </>
   );
+}
