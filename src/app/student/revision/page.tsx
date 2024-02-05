@@ -6,7 +6,7 @@ import { Stack } from "@mantine/core";
 export default function StudentRevisionPage() {
   return (
     <>
-      <PageHeader title="수정사항 제출/확인" />
+      <PageHeader title="수정사항 제출" />
       <Stack gap={11}>
         <Section>
           <RevisionSubmissionForm />

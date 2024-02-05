@@ -87,7 +87,7 @@ export const STUDENT_NAVBAR_LIST: Props[] = [
     icon: <IconProgressCheck size="24" stroke={1} />,
   },
   {
-    label: "수정사항 제출/확인",
+    label: "수정사항 제출",
     href: "/student/revision",
     icon: <IconFileCheck size="24" stroke={1} />,
   },
