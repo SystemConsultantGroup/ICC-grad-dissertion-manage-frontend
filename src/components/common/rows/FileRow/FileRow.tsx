@@ -21,7 +21,7 @@ function FilePostRow({ field, fieldSize, url, name, disabled }: Props) {
   };
   return (
     <Row field={field} fieldSize={fieldSize}>
-      <UnstyledButton disabled={disabled} onClick={saveFile}>
+      <UnstyledButton disabled={disabled} opacity={disabled ? 0.6 : 1} onClick={saveFile}>
         <Group gap={16}>
           <IconDownload size={24} />
           <Row.Text>{name}</Row.Text>
