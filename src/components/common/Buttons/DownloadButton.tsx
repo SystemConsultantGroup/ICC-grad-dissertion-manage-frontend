@@ -1,3 +1,5 @@
+"use client";
+
 import { Button, ButtonProps } from "@mantine/core";
 import { MouseEventHandler, ReactNode } from "react";
 
@@ -16,7 +18,7 @@ export function DownloadButton({ disabled, link, onClick, children, ...props }: 
       href={link}
       download
       data-disabled={!!disabled}
-      onClick={disabled ? (event) => event.preventDefault() : onClick}
+      onClick={disabled ? (event) => event.preventDefault() : undefined}
       disabled={!!disabled}
       {...props}
     >

@@ -44,6 +44,7 @@
     "postcss": "^8.4.32",
     "react": "^18",
     "react-dom": "^18",
+    "react-imask": "^7.3.0",
     "swr": "^2.2.4"
   },
   "devDependencies": {

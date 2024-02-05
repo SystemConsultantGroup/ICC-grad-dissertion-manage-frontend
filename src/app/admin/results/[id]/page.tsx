@@ -1,25 +1,30 @@
-"use client";
-
-// "use client": 테스트용으로 임시로 삽입했으니 실제 페이지에서는 빼도 됩니다
-
+/* api 연결 필요 */
 import PageHeader from "@/components/common/PageHeader";
-import { ReviewResultCard } from "@/components/pages/review/ReviewResult";
+import { ButtonRow, RowGroup } from "@/components/common/rows";
 import { ArticleInfo } from "@/components/pages/review/ArticleInfo/ArticleInfo";
-import { ReviewReportAdmin } from "@/components/pages/review/ReviewResult/ReviewReport";
-import { ReviewResultList } from "@/components/pages/review/ReviewResult/ReviewResultList";
+import { ReviewCard, ReviewList } from "@/components/pages/review/Review";
+import { ReviewReportAdmin } from "@/components/pages/review/Review/ReviewReport";
+import { Button } from "@mantine/core";
+import Link from "next/link";
 
-function AdminResultPage({ params: { id } }: { params: { id: string } }) {
-  // 예시 코드
+export default function AdminReviewResultPage({ params: { id } }: { params: { id: string } }) {
   return (
     <>
       <PageHeader title="심사 결과" />
-      <ReviewResultCard>
-        <ArticleInfo />
-        <ReviewResultList />
+      <ReviewCard>
+        <ArticleInfo stage="MAIN" revision />
+        <ReviewList title="심사 결과" stage="MAIN" />
         <ReviewReportAdmin />
-      </ReviewResultCard>
+        <RowGroup withBorderBottom={false}>
+          <ButtonRow
+            buttons={[
+              <Button key="back" variant="outline" component={Link} href="../results">
+                목록으로
+              </Button>,
+            ]}
+          />
+        </RowGroup>
+      </ReviewCard>
     </>
   );
 }
-
-export default AdminResultPage;

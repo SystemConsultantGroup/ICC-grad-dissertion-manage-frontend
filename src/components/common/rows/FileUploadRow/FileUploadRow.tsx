@@ -14,12 +14,12 @@ declare module "@mantine/core" {
 
 interface Props {
   field: string;
+  fieldSize?: "sm" | "md" | "lg" | "xl" | number;
   onChange?: (file: File | null) => void;
   defaultFile?: File;
   /* eslint-disable @typescript-eslint/no-explicit-any */
   form?: UseFormReturnType<any>;
   formKey?: string;
-  fieldSize?: "sm" | "md" | "lg" | number;
 }
 
 function FileUploadRow({
