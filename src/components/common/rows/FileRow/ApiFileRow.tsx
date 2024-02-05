@@ -17,7 +17,7 @@ function ApiFilePostRow({ field, fieldSize, file }: Props) {
       field={field}
       disabled={!file}
       fieldSize={fieldSize}
-      name={file?.name ?? ""}
+      name={file?.name ?? "(파일 없음)"}
       url={file ? ClientAxios.getUri({ url: API_ROUTES.file.get(file.uuid) }) : ""}
     />
   );
