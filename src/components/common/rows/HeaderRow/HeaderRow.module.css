@@ -9,7 +9,7 @@
   background-color: var(--mantine-color-white);
   padding-left: 18px;
   padding-right: 20px;
-  min-height: 112px;
+  height: 112px;
   width: 100%;
   border-bottom: 1px solid var(--mantine-color-gray-2);
   align-items: start;
