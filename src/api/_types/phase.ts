@@ -3,6 +3,13 @@ export interface Phase {
   title: string;
   start: string;
   end: string;
-  createdAt: string;
-  updatedAt: string;
+}
+
+export interface PhasesResponse extends CommonApiResponse {
+  phases: Phase[];
+}
+
+export interface UpdatePhaseRequestBody {
+  start: string;
+  end: string;
 }

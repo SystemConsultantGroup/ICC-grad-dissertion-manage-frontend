@@ -56,6 +56,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/runtime-corejs3@npm:^7.23.6":
+  version: 7.23.8
+  resolution: "@babel/runtime-corejs3@npm:7.23.8"
+  dependencies:
+    core-js-pure: "npm:^3.30.2"
+    regenerator-runtime: "npm:^0.14.0"
+  checksum: 2ccc006308dc0afb88dab5b91380be3a644a7616b9e33b6039eeceb11080541d566e8c29d1e81495c3983990c6843cb872bb150dd6c0f23f85fa9eb8d1fe20c5
+  languageName: node
+  linkType: hard
+
 "@babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.20.13, @babel/runtime@npm:^7.20.7, @babel/runtime@npm:^7.23.2, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
   version: 7.23.6
   resolution: "@babel/runtime@npm:7.23.6"
@@ -1689,6 +1699,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"core-js-pure@npm:^3.30.2":
+  version: 3.35.0
+  resolution: "core-js-pure@npm:3.35.0"
+  checksum: 4e58b6b2b3759ffbfe3f904beafd547751aaefa87b94245136aced963120bc2cefc8787c7a980cd397c2c408eca141e0993fcda7ed2383c93ce53bc421acfec4
+  languageName: node
+  linkType: hard
+
 "cosmiconfig@npm:^7.0.0":
   version: 7.1.0
   resolution: "cosmiconfig@npm:7.1.0"
@@ -2887,6 +2904,15 @@ __metadata:
   version: 5.3.0
   resolution: "ignore@npm:5.3.0"
   checksum: 51594355cea4c6ad6b28b3b85eb81afa7b988a1871feefd7062baf136c95aa06760ee934fa9590e43d967bd377ce84a4cf6135fbeb6063e063f1182a0e9a3bcd
+  languageName: node
+  linkType: hard
+
+"imask@npm:^7.3.0":
+  version: 7.3.0
+  resolution: "imask@npm:7.3.0"
+  dependencies:
+    "@babel/runtime-corejs3": "npm:^7.23.6"
+  checksum: 79e7847cb089acb926087b2b5f58938c9576de4cdc15b8738706e7269a8621eceb08f829a832e829ab8131dfd718d659dcd59b45a8b61fc8b7fe56dace309aa5
   languageName: node
   linkType: hard
 
@@ -4326,6 +4352,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-imask@npm:^7.3.0":
+  version: 7.3.0
+  resolution: "react-imask@npm:7.3.0"
+  dependencies:
+    imask: "npm:^7.3.0"
+    prop-types: "npm:^15.8.1"
+  peerDependencies:
+    react: ">=0.14.0"
+  checksum: 2a6a5bec7d25fedd0a3b3a54a8109ed464c64e84f1de4fd59abe9650e48e8a6a3f7656f04c62a3ade8cd81c519c104827ccb6fcddc3fc721a4b2d5ff7d249354
+  languageName: node
+  linkType: hard
+
 "react-is@npm:^16.13.1, react-is@npm:^16.7.0":
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
@@ -4486,6 +4524,7 @@ __metadata:
     prettier: "npm:^3.1.0"
     react: "npm:^18"
     react-dom: "npm:^18"
+    react-imask: "npm:^7.3.0"
     swr: "npm:^2.2.4"
     typescript: "npm:5.1.6"
   languageName: unknown
