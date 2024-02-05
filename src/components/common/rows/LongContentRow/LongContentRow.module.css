@@ -1,7 +1,5 @@
 .content {
   min-width: 90px;
-  font-size: 12px;
-  color: var(--mantine-color-dimmed);
   justify-content: start;
 }
 .wrapper {
@@ -9,7 +7,7 @@
   background-color: var(--mantine-color-white);
   padding-left: 18px;
   padding-right: 20px;
-  height: 112px;
+  min-height: 112px;
   width: 100%;
   border-bottom: 1px solid var(--mantine-color-gray-2);
   align-items: start;
