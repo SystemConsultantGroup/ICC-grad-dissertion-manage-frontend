@@ -1,19 +1,13 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
-import { IconEditCircle } from "@tabler/icons-react";
 import { Stack, TextInput, PasswordInput, Select, Text, Button } from "@mantine/core";
 import { RowGroup, BasicRow, TitleRow, NoticeRow, ButtonRow } from "@/components/common/rows";
-import { useForm, UseFormReturnType } from "@mantine/form";
+import { UseFormReturnType } from "@mantine/form";
 import { ClientAxios } from "@/api/ClientAxios";
 import { API_ROUTES } from "@/api/apiRoute";
 import { Phase } from "@/api/_types/phase";
-import Modal from "@/components/common/Modal";
-import ThesisTitleSection from "./ThesisTitleSection";
 import { AdminStudentFormInputs } from "../_types/AdminStudentForm";
-import AssignReviewerSection from "./AssignReviewerSection";
-import useReviewersAssign from "../_hooks/useReviewersAssign";
+import MainRegisterModal from "./MainRegisterModal";
 
 interface Props {
   form: UseFormReturnType<AdminStudentFormInputs>;
@@ -23,11 +17,6 @@ interface Props {
 function BasicInfoSection({ form, studentId }: Props) {
   const [opened, { open, close }] = useDisclosure();
   const [phase, setPhase] = useState<Phase>();
-
-  const sysMainForm = useForm<AdminStudentFormInputs>({});
-  /** 본심 심사위원장 / 심사위원 설정*/
-  const { headReviewer, advisors, committees, handleReviewerCancel, handleReviewerAdd } =
-    useReviewersAssign();
 
   useEffect(() => {
     // 학생 기본 정보 가져오기
@@ -58,18 +47,6 @@ function BasicInfoSection({ form, studentId }: Props) {
     };
     fetchStudentDetails();
   }, [studentId, form]);
-
-  // 본심 정보 등록하기
-  const handleSubmit = async () => {
-    try {
-      if (studentId) {
-        const { basicInfo, ...sysMainValues } = sysMainForm.values;
-        await ClientAxios.post(API_ROUTES.student.putSystem(studentId), sysMainValues);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   return (
     <Stack gap={0}>
@@ -133,30 +110,7 @@ function BasicInfoSection({ form, studentId }: Props) {
                     ]}
                   />
                 )}
-                <Modal
-                  opened={opened}
-                  onClose={close}
-                  title="본심 정보 등록"
-                  icon={<IconEditCircle />}
-                  withCloseButton
-                  size="xl"
-                >
-                  <form onSubmit={sysMainForm.onSubmit(handleSubmit)}>
-                    <Stack gap={10}>
-                      <AssignReviewerSection
-                        headReviewer={headReviewer}
-                        advisors={advisors}
-                        committees={committees}
-                        onChangeReviewerAdd={handleReviewerAdd}
-                        onChangeReviewerCancle={handleReviewerCancel}
-                      />
-                      <ThesisTitleSection form={sysMainForm} />
-                      <RowGroup>
-                        <ButtonRow buttons={[<Button key="mainRegister">등록하기</Button>]} />
-                      </RowGroup>
-                    </Stack>
-                  </form>
-                </Modal>
+                <MainRegisterModal studentId={studentId} opened close={close} />
               </>
             ) : (
               <Select
