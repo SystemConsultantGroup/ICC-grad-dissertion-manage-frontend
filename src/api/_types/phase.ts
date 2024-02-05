@@ -1,3 +1,5 @@
+import { CommonApiResponse } from "@/api/_types/common";
+
 export interface Phase {
   id: number;
   title: string;
