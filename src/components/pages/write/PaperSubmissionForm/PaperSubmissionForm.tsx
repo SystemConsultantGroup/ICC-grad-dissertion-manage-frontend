@@ -62,7 +62,7 @@ function PaperSubmissionForm() {
         <TitleRow title="논문 투고" />
         <RowGroup>
           <BasicRow field="저자">
-            <BasicRow.Text>{user!.name}</BasicRow.Text>
+            <BasicRow.Text>{user?.name}</BasicRow.Text>
           </BasicRow>
         </RowGroup>
         <RowGroup>
