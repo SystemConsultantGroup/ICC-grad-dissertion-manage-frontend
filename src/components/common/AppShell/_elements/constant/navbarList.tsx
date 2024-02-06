@@ -24,6 +24,9 @@ interface Props {
   children?: Props[];
 }
 
+/**
+ * @todo href 수정
+ */
 export const ADMIN_NAVBAR_LIST: Props[] = [
   { label: "메인", href: "/", icon: <IconHome size="24" stroke={1} /> },
   {
@@ -84,7 +87,7 @@ export const STUDENT_NAVBAR_LIST: Props[] = [
     icon: <IconProgressCheck size="24" stroke={1} />,
   },
   {
-    label: "수정사항 제출/확인",
+    label: "수정사항 제출",
     href: "/student/revision",
     icon: <IconFileCheck size="24" stroke={1} />,
   },
