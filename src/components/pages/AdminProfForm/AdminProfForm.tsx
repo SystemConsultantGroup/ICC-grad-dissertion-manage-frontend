@@ -81,24 +81,20 @@ function AdminProfForm({ professorId }: Props) {
       const body = {
         ...values,
         deptId: Number(values.deptId),
-        email: isDirty("email") ? values.email : undefined,
-        phone: values.phone ?? undefined,
+        email: isDirty("email") ? values.email : null,
+        phone: values.phone ?? null,
       };
       if (!professorId) {
         await ClientAxios.post(API_ROUTES.professor.post(), body);
+        showNotificationSuccess({ message: "교수 등록이 완료되었습니다." });
+        router.push("/admin/professors");
       } else {
         await ClientAxios.post(API_ROUTES.professor.put(professorId), body);
+        showNotificationSuccess({ message: "교수 정보 수정이 완료되었습니다." });
+        router.push(`/admin/professors/${professorId}`);
       }
     } catch (err) {
       console.error(err);
-    } finally {
-      if (!professorId) {
-        showNotificationSuccess({ message: "교수 등록이 완료되었습니다." });
-        router.push("/admin/prof");
-      } else {
-        showNotificationSuccess({ message: "교수 정보 수정이 완료되었습니다." });
-        router.push(`/admin/prof/${professorId}`);
-      }
     }
   };
 
@@ -168,7 +164,7 @@ function AdminProfForm({ professorId }: Props) {
           <RowGroup>
             <BasicRow field="소속">
               <DepartmentSelect
-                {...getInputProps("department")}
+                {...getInputProps("deptId")}
                 styles={{
                   wrapper: {
                     width: 300,
