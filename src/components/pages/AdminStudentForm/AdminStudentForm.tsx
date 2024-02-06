@@ -40,8 +40,8 @@ function AdminStudentForm({ studentId }: Props) {
         loginId: "",
         password: "",
         name: "",
-        email: undefined,
-        phone: undefined,
+        email: "",
+        phone: "",
         deptId: "",
       },
 
@@ -55,7 +55,11 @@ function AdminStudentForm({ studentId }: Props) {
         password: isNotEmpty("비밀번호를 입력해주세요."),
         name: isNotEmpty("이름을 입력해주세요."),
         email: (value) =>
-          value && (/^\S+@\S+$/.test(value) ? null : "이메일 형식이 올바르지 않습니다."),
+          value
+            ? /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)
+              ? null
+              : "이메일 형식이 맞지 않습니다."
+            : undefined,
         phone: undefined,
         deptId: isNotEmpty("소속 학과를 선택해주세요."),
       },
@@ -87,6 +91,8 @@ function AdminStudentForm({ studentId }: Props) {
       const basicInfo = {
         ...form.values.basicInfo,
         deptId: Number(form.values.basicInfo.deptId),
+        email: form.isDirty("email") ? form.values.basicInfo.email : null,
+        phone: form.values.basicInfo.phone ?? null,
       };
       if (headReviewer && checkReviewersLength(advisors) && checkReviewersLength(committees)) {
         if (!studentId) {
