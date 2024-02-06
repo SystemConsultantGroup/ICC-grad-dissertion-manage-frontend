@@ -6,6 +6,7 @@ import { UseFormReturnType } from "@mantine/form";
 import { ClientAxios } from "@/api/ClientAxios";
 import { API_ROUTES } from "@/api/apiRoute";
 import { Phase } from "@/api/_types/phase";
+import { DepartmentSelect } from "@/components/common/selects/DepartmentSelect";
 import { AdminStudentFormInputs } from "../_types/AdminStudentForm";
 import MainRegisterModal from "./MainRegisterModal";
 
@@ -84,9 +85,7 @@ function BasicInfoSection({ form, studentId }: Props) {
         </RowGroup>
         <RowGroup>
           <BasicRow field="학과">
-            {/* TODO: DepartmentsSelect 컴포넌트로 대체 */}
-            <Select
-              placeholder="학과 선택"
+            <DepartmentSelect
               styles={{
                 wrapper: {
                   width: 300,
