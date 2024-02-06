@@ -20,11 +20,6 @@ interface Props {
   studentId?: string | number;
 }
 
-interface loginInputs {
-  loginId: string;
-  password: string;
-}
-
 function AdminStudentForm({ studentId }: Props) {
   const router = useRouter();
   const { login } = useAuth();
@@ -71,11 +66,11 @@ function AdminStudentForm({ studentId }: Props) {
     },
   });
 
-  const handleLogin = async (loginValues: loginInputs) => {
+  const handleLogin = async () => {
     try {
       const {
         data: { accessToken },
-      } = await ClientAxios.post<CommonApiResponse & { accessToken: string }>("/auth", loginValues);
+      } = await ClientAxios.get<CommonApiResponse & { accessToken: string }>(`/auth/${studentId}`);
       login(accessToken);
       router.push("/");
     } catch (err) {
@@ -174,29 +169,6 @@ function AdminStudentForm({ studentId }: Props) {
           message: "교수 배정 정보가 올바르지 않습니다.",
         });
       }
-      /* const registerInputs = {
-        ...basicInputs,
-
-        headReviewerId: form.values.headReviewer?.professorId,
-        reviewerIds: [
-          ...form.values.professors.map((professor) => professor.professorId),
-          form.values.headReviewer?.professorId,
-        ],
-        thesisTitle: form.values.thesisTitle,
-      }; 
-
-      if (studentId) {
-        // 학생 회원 정보 수정
-        await ClientAxios.post(API_ROUTES.student.put(studentId), basicInputs);
-
-        // 학생 시스템 단계 수정
-
-        // 교수 배정 정보 수정
-        showNotificationSuccess({ message: "학생 정보 수정이 완료되었습니다." });
-
-        router.push(`/admin/students/${studentId}`);
-      }
-      */
     } catch (err) {
       console.error(err);
     }
@@ -211,15 +183,7 @@ function AdminStudentForm({ studentId }: Props) {
           <RowGroup withBorderBottom={false}>
             <ButtonRow
               buttons={[
-                <Button
-                  key="login"
-                  onClick={() =>
-                    handleLogin({
-                      loginId: form.values.basicInfo.loginId,
-                      password: form.values.basicInfo.password,
-                    })
-                  }
-                >
+                <Button key="login" onClick={handleLogin}>
                   로그인하기
                 </Button>,
                 <Button key="goback" variant="outline" onClick={handleBack}>
