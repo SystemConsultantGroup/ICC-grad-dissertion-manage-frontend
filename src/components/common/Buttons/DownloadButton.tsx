@@ -1,13 +1,16 @@
 "use client";
 
 import { Button, ButtonProps } from "@mantine/core";
+import { MouseEventHandler, ReactNode } from "react";
 
 interface Props extends ButtonProps {
   disabled?: boolean;
   link: string;
+  onClick?: MouseEventHandler<HTMLAnchorElement>;
+  children?: ReactNode;
 }
 
-export function DownloadButton({ disabled, link, ...props }: Props) {
+export function DownloadButton({ disabled, link, onClick, children, ...props }: Props) {
   return (
     <Button
       component="a"
@@ -19,7 +22,7 @@ export function DownloadButton({ disabled, link, ...props }: Props) {
       disabled={!!disabled}
       {...props}
     >
-      다운로드
+      {children || "다운로드"}
     </Button>
   );
 }
