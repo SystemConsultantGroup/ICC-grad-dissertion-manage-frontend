@@ -9,14 +9,14 @@ interface Props {
   userType: Role;
 }
 
-export async function AuthSSR({ userType }: Props) {
+export async function AuthSSR({ userType }: Props): Promise<{ token: string }> {
   const token = cookies().get(JWT_COOKIE_NAME)?.value;
   if (token) {
     // already logged in
     const claims: CustomJwtPayload = jwtDecode(token);
 
     if (claims.type === userType) {
-      return;
+      return { token };
     }
   }
 
