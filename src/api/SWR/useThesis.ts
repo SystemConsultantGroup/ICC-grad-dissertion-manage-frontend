@@ -4,6 +4,7 @@ import { API_ROUTES } from "@/api/apiRoute";
 import { useAuth } from "@/components/common/AuthProvider";
 import { ThesisRequestQuery, ThesisResponse } from "@/api/_types/thesis";
 import { useConditionalSWR } from "./useConditionalSWR";
+import { ThesisInfo } from "@/api/_types/reviews";
 
 /**
  * @description 교수 목록 조회
@@ -16,7 +17,7 @@ function useThesis(studentId: number, queryParams: ThesisRequestQuery, shouldFet
   const { token } = useAuth();
   const query = { ...queryParams };
 
-  const result = useConditionalSWR<ThesisResponse>(
+  const result = useConditionalSWR<ThesisInfo>(
     { url: API_ROUTES.student.getThesis(studentId), query, token },
     !!token && shouldFetch
   );
