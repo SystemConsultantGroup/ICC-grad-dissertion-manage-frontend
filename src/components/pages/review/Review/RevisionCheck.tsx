@@ -16,7 +16,7 @@ export function RevisionCheck({ checked, setChecked }: RevisionCheckProps) {
         <FileUploadRow field="서명 파일 업로드" />
       </RowGroup>
       <RowGroup>
-        <BasicRow field="확인하기">
+        <BasicRow field="확인 완료 표시">
           <Button
             leftSection={checked && <IconCheck size={18} />}
             variant={checked ? "filled" : "outline"}
