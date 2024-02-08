@@ -7,6 +7,7 @@ export const API_ROUTES = {
       professor: () => "/files/excels/professor", // GET: 교수 일괄 업로드 양식 다운로드
       student: () => "/files/excels/student", // GET: 학생 일괄 업로드 양식 다운로드
     },
+    get: (uuid: ApiId) => `/files/${uuid}`,
     post: () => "/files", // POST: 파일 업로드
     delete: (uuid: ApiId) => `/files/${uuid}`, // DELETE: 파일 삭제
   },
