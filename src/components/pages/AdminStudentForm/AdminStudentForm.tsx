@@ -172,11 +172,14 @@ function AdminStudentForm({ studentId }: Props) {
       } else {
         showNotificationError({
           title: "교수 배정 정보가 올바르지 않습니다.",
-          message: "교수 배정 정보가 올바르지 않습니다.",
+          message:
+            "심사위원장 배정이 되어있는지, 지도교수와 심사위원이 최소 한 명 이상 두 명 이하로 배정되었는지 확인해주세요.",
         });
       }
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      let message = "Unknown Error";
+      if (error instanceof Error) message = error.message;
+      showNotificationError({ message });
     }
   };
 

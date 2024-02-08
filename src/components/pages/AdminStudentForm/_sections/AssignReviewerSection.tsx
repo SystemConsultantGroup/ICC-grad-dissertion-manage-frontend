@@ -203,16 +203,21 @@ function AssignReviewerSection({
               }));
             }}
           />
-          <ProfessorSelect
-            departmentId={Number(selectedAdvisor.deptId)}
-            onChange={(value) => {
-              setSelectedAdvisor((prev) => ({
-                ...prev,
-                profId: value,
-              }));
-            }}
-            style={{ marginLeft: "10px" }}
-          />
+          {selectedAdvisor.deptId ? (
+            <ProfessorSelect
+              departmentId={Number(selectedAdvisor.deptId)}
+              onChange={(value) => {
+                setSelectedAdvisor((prev) => ({
+                  ...prev,
+                  profId: value,
+                }));
+              }}
+              style={{ marginLeft: "10px" }}
+            />
+          ) : (
+            <Select disabled placeholder="교수를 선택해주세요" style={{ marginLeft: "10px" }} />
+          )}
+
           <Button style={{ marginLeft: "20px" }} onClick={handleAdvisorSelect}>
             배정하기
           </Button>
@@ -228,16 +233,20 @@ function AssignReviewerSection({
               }));
             }}
           />
-          <ProfessorSelect
-            departmentId={Number(selectedCommittee.deptId)}
-            onChange={(value) => {
-              setSelectedCommittee((prev) => ({
-                ...prev,
-                profId: value,
-              }));
-            }}
-            style={{ marginLeft: "10px" }}
-          />
+          {selectedCommittee.deptId ? (
+            <ProfessorSelect
+              departmentId={Number(selectedCommittee.deptId)}
+              onChange={(value) => {
+                setSelectedCommittee((prev) => ({
+                  ...prev,
+                  profId: value,
+                }));
+              }}
+              style={{ marginLeft: "10px" }}
+            />
+          ) : (
+            <Select disabled placeholder="교수를 선택해주세요" style={{ marginLeft: "10px" }} />
+          )}
           <Button style={{ marginLeft: "20px" }} onClick={handleCommitteeSelect}>
             배정하기
           </Button>
@@ -253,16 +262,20 @@ function AssignReviewerSection({
               }));
             }}
           />
-          <ProfessorSelect
-            departmentId={Number(selectedHeadReviewer.deptId)}
-            onChange={(value) => {
-              setSelectedHeadReviewer((prev) => ({
-                ...prev,
-                profId: value,
-              }));
-            }}
-            style={{ marginLeft: "10px" }}
-          />
+          {selectedHeadReviewer.deptId ? (
+            <ProfessorSelect
+              departmentId={Number(selectedHeadReviewer.deptId)}
+              onChange={(value) => {
+                setSelectedHeadReviewer((prev) => ({
+                  ...prev,
+                  profId: value,
+                }));
+              }}
+              style={{ marginLeft: "10px" }}
+            />
+          ) : (
+            <Select disabled placeholder="교수를 선택해주세요" style={{ marginLeft: "10px" }} />
+          )}
           <Button style={{ marginLeft: "20px" }} onClick={handleHeadReviewerSelect}>
             배정하기
           </Button>
