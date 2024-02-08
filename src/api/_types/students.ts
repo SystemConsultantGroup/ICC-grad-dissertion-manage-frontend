@@ -35,11 +35,13 @@ export interface StudentPhaseResponse extends CommonApiResponse {
   isLock: boolean;
 }
 
-export interface StudentThesisResponse extends Thesis, CommonApiResponse {
+export interface DetailedThesis extends Thesis {
   studentInfo: User;
   thesisFile: File;
   presentationFile: File;
 }
+
+export interface StudentThesisResponse extends DetailedThesis, CommonApiResponse {}
 
 export interface StudentReviewersResponse extends CommonApiResponse {
   headReviewer: User;
