@@ -59,6 +59,13 @@ export interface DetailedReview extends Review {
 
 export interface DetailedReviewResponse extends CommonApiResponse, DetailedReview {}
 
+export interface UpdateReviewRequestBody {
+  contentStatus: Status;
+  presentationStatus: Status;
+  comment: string;
+  fileUUID: string;
+}
+
 export interface DetailedRevision extends Review {
   abstract: string;
   thesisFiles: ThesisFile[];
