@@ -2,9 +2,9 @@
 
 import { API_ROUTES } from "@/api/apiRoute";
 import { useAuth } from "@/components/common/AuthProvider";
-import { ThesisRequestQuery, ThesisResponse } from "@/api/_types/thesis";
-import { useConditionalSWR } from "./useConditionalSWR";
+import { ThesisRequestQuery } from "@/api/_types/thesis";
 import { ThesisInfo } from "@/api/_types/reviews";
+import { useConditionalSWR } from "./useConditionalSWR";
 
 /**
  * @description 교수 목록 조회
