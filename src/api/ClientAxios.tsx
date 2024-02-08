@@ -1,10 +1,20 @@
 import axios from "axios";
 import { redirect } from "next/navigation";
-import { showNotificationError, showNotificationSuccess } from "@/components/common/Notifications";
+import { showNotificationError } from "@/components/common/Notifications";
 
 // 브라우저에서 사용하는 싱글톤 Axios 객체
 export const ClientAxios = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_ENDPOINT,
+});
+
+ClientAxios.interceptors.request.use((request) => {
+  console.log(`${request.method ?? "GET"} ${request.url} ${JSON.stringify(request.params ?? {})}`);
+  return request;
+});
+
+ClientAxios.interceptors.response.use((response) => {
+  console.log(`${response.status} ${response.statusText}`);
+  return response;
 });
 
 ClientAxios.interceptors.response.use(
@@ -17,14 +27,17 @@ ClientAxios.interceptors.response.use(
     // }
     Promise.resolve(response),
   (error) => {
+    console.error(error);
     // 4xx, 5xx status code (오류 코드 발생) 시 할 일.
 
     // 로그인 JWT 만료 또는 없을 시 & 로그인 실패 시 로그인 페이지로 리다이렉트
     if (error.response?.status === 401) {
-      showNotificationError({
-        title: error.response?.statusText,
-        message: error.response?.data.message,
-      });
+      if (typeof window !== "undefined") {
+        showNotificationError({
+          title: error.response?.statusText,
+          message: error.response?.data.message,
+        });
+      }
       redirect("/login");
     }
 
@@ -34,10 +47,12 @@ ClientAxios.interceptors.response.use(
       ? "서버 통신 오류가 발생했습니다."
       : error.response?.data?.message;
 
-    showNotificationError({
-      title: userErrorMessage,
-      message: userErrorMessage,
-    });
+    if (typeof window !== "undefined") {
+      showNotificationError({
+        title: userErrorMessage,
+        message: userErrorMessage,
+      });
+    }
 
     return Promise.reject(error);
   }
