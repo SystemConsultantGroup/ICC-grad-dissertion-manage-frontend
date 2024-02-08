@@ -17,8 +17,17 @@ interface Props {
   advisors: SelectedProfessor[];
   committees: SelectedProfessor[];
 
-  onChangeReviewerCancle: (role: ReviewerRole, cancleReviewerId: string) => void;
-  onChangeReviewerAdd: (role: ReviewerRole, deptId: string, profId: string) => void;
+  onChangeReviewerCancle: (
+    role: ReviewerRole,
+    cancleReviewerId: string,
+    clearSelectedReviewer: (isCancle: boolean, role?: ReviewerRole) => void
+  ) => void;
+  onChangeReviewerAdd: (
+    role: ReviewerRole,
+    deptId: string,
+    profId: string,
+    clearSelectedReviewer: (isCancle: boolean, role?: ReviewerRole) => void
+  ) => void;
   onChangeReviewersSet?: (
     _headReviewer: Professor,
     _advisors: Professor[],
@@ -106,6 +115,34 @@ function AssignReviewerSection({
     [professors, deptData]
   );
 
+  /** 선택 초기화 하는 함수 */
+  const clearSelectedReviewer = (isCancle: boolean, role?: ReviewerRole) => {
+    if (isCancle) {
+      setCancleReviewerId(null);
+    } else {
+      switch (role) {
+        case "HEAD":
+          setSelectedHeadReviewer((prev) => ({
+            ...prev,
+            profId: null,
+          }));
+          break;
+        case "ADVISOR":
+          setSelectedAdvisor((prev) => ({
+            ...prev,
+            profId: null,
+          }));
+          break;
+        case "COMMITTEE":
+          setSelectedCommittee((prev) => ({
+            ...prev,
+            profId: null,
+          }));
+          break;
+      }
+    }
+  };
+
   /** 배정된 교수 목록 업데이트 */
   useEffect(() => {
     setSelectedReviwers([
@@ -140,11 +177,11 @@ function AssignReviewerSection({
   const handleCancle = () => {
     if (cancleReviewerId) {
       if (headReviewer?.profId === cancleReviewerId) {
-        onChangeReviewerCancle("HEAD", cancleReviewerId);
+        onChangeReviewerCancle("HEAD", cancleReviewerId, clearSelectedReviewer);
       } else if (advisors.some((advisor) => advisor.profId === cancleReviewerId)) {
-        onChangeReviewerCancle("ADVISOR", cancleReviewerId);
+        onChangeReviewerCancle("ADVISOR", cancleReviewerId, clearSelectedReviewer);
       } else if (committees.some((committee) => committee.profId === cancleReviewerId)) {
-        onChangeReviewerCancle("COMMITTEE", cancleReviewerId);
+        onChangeReviewerCancle("COMMITTEE", cancleReviewerId, clearSelectedReviewer);
       } else {
         setCancleError(true);
       }
@@ -154,21 +191,36 @@ function AssignReviewerSection({
   /** 지도교수 선택 */
   const handleAdvisorSelect = () => {
     if (selectedAdvisor.deptId && selectedAdvisor.profId) {
-      onChangeReviewerAdd("ADVISOR", selectedAdvisor.deptId, selectedAdvisor.profId);
+      onChangeReviewerAdd(
+        "ADVISOR",
+        selectedAdvisor.deptId,
+        selectedAdvisor.profId,
+        clearSelectedReviewer
+      );
     }
   };
 
   /** 심사위원 선택 */
   const handleCommitteeSelect = () => {
     if (selectedCommittee.deptId && selectedCommittee.profId) {
-      onChangeReviewerAdd("COMMITTEE", selectedCommittee.deptId, selectedCommittee.profId);
+      onChangeReviewerAdd(
+        "COMMITTEE",
+        selectedCommittee.deptId,
+        selectedCommittee.profId,
+        clearSelectedReviewer
+      );
     }
   };
 
   /** 심사위원장 선택 */
   const handleHeadReviewerSelect = () => {
     if (selectedHeadReviewer.deptId && selectedHeadReviewer.profId) {
-      onChangeReviewerAdd("HEAD", selectedHeadReviewer.deptId, selectedHeadReviewer.profId);
+      onChangeReviewerAdd(
+        "HEAD",
+        selectedHeadReviewer.deptId,
+        selectedHeadReviewer.profId,
+        clearSelectedReviewer
+      );
     }
   };
 
@@ -180,6 +232,7 @@ function AssignReviewerSection({
           <Select
             placeholder="배정된 교수 조회"
             onChange={setCancleReviewerId}
+            value={cancleReviewerId}
             styles={{
               wrapper: {
                 width: 300,
@@ -202,6 +255,7 @@ function AssignReviewerSection({
                 deptId: value,
               }));
             }}
+            value={selectedAdvisor.deptId}
           />
           {selectedAdvisor.deptId ? (
             <ProfessorSelect
@@ -213,6 +267,7 @@ function AssignReviewerSection({
                 }));
               }}
               style={{ marginLeft: "10px" }}
+              value={selectedAdvisor.profId}
             />
           ) : (
             <Select disabled placeholder="교수를 선택해주세요" style={{ marginLeft: "10px" }} />
@@ -232,6 +287,7 @@ function AssignReviewerSection({
                 deptId: value,
               }));
             }}
+            value={selectedCommittee.deptId}
           />
           {selectedCommittee.deptId ? (
             <ProfessorSelect
@@ -243,6 +299,7 @@ function AssignReviewerSection({
                 }));
               }}
               style={{ marginLeft: "10px" }}
+              value={selectedCommittee.profId}
             />
           ) : (
             <Select disabled placeholder="교수를 선택해주세요" style={{ marginLeft: "10px" }} />
@@ -261,6 +318,7 @@ function AssignReviewerSection({
                 deptId: value,
               }));
             }}
+            value={selectedHeadReviewer.deptId}
           />
           {selectedHeadReviewer.deptId ? (
             <ProfessorSelect
@@ -272,6 +330,7 @@ function AssignReviewerSection({
                 }));
               }}
               style={{ marginLeft: "10px" }}
+              value={selectedHeadReviewer.profId}
             />
           ) : (
             <Select disabled placeholder="교수를 선택해주세요" style={{ marginLeft: "10px" }} />

@@ -9,7 +9,11 @@ const useReviewersAssign = () => {
 
   const prevReviewersRef = useRef<Reviewers>();
 
-  const handleReviewerCancel = (role: ReviewerRole, cancelReviewerId: string) => {
+  const handleReviewerCancel = (
+    role: ReviewerRole,
+    cancelReviewerId: string,
+    clearSelectedReviewer: (isCancle: boolean, role?: ReviewerRole) => void
+  ) => {
     switch (role) {
       case "HEAD":
         setHeadReviewer(null);
@@ -21,18 +25,27 @@ const useReviewersAssign = () => {
         setCommittees((prev) => prev.filter((committee) => committee.profId !== cancelReviewerId));
         break;
     }
+    clearSelectedReviewer(true);
   };
 
-  const handleReviewerAdd = (role: ReviewerRole, deptId: string, profId: string) => {
+  const handleReviewerAdd = (
+    role: ReviewerRole,
+    deptId: string,
+    profId: string,
+    clearSelectedReviewer: (isCancle: boolean, role?: ReviewerRole) => void
+  ) => {
     switch (role) {
       case "HEAD":
         setHeadReviewer({ deptId, profId });
+        clearSelectedReviewer(false, "HEAD");
         break;
       case "ADVISOR":
         setAdvisors((prev) => [...prev, { deptId, profId }]);
+        clearSelectedReviewer(false, "ADVISOR");
         break;
       case "COMMITTEE":
         setCommittees((prev) => [...prev, { deptId, profId }]);
+        clearSelectedReviewer(false, "COMMITTEE");
         break;
     }
   };
