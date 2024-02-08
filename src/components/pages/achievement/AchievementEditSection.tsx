@@ -1,19 +1,30 @@
 "use client";
 
 import { isNotEmpty, useForm } from "@mantine/form";
-import { MOCKUP_ACHIEVEMENT } from "@/mockups/achievement";
 import AchievementForm, {
   AchievementFormInput,
 } from "@/components/pages/achievement/AchievementForm";
 import { TitleRow } from "@/components/common/rows";
+import { Achievement } from "@/api/_types/achievement";
+import { API_ROUTES } from "@/api/apiRoute";
+import { ClientAxios } from "@/api/ClientAxios";
+import { showNotificationSuccess } from "@/components/common/Notifications";
+import { useAuth } from "@/components/common/AuthProvider";
+import { useConditionalSWR } from "@/api/SWR/useConditionalSWR";
+import { useEffect } from "react";
 
-function AchievementEditSection() {
-  const data = MOCKUP_ACHIEVEMENT;
-  /**
-   * @TODO: GET API 연결
-   */
+interface Props {
+  id: number | string;
+}
 
-  const transformedAchievement = {
+function AchievementEditSection({ id }: Props) {
+  const { token } = useAuth();
+  const { data, mutate } = useConditionalSWR<Achievement>(
+    { url: API_ROUTES.achievement.get(id), token },
+    !!token
+  );
+
+  const transformedAchievement = data && {
     ...data,
     publicationDate: new Date(data.publicationDate),
     ISSN1: data.ISSN.slice(0, 4),
@@ -32,12 +43,26 @@ function AchievementEditSection() {
     },
   });
 
-  const handleSubmit = (input: AchievementFormInput) => {
-    /**
-     * @TODO: PUT/PATCH API 연결
-     */
+  useEffect(() => {
+    if (data) {
+      form.setValues({
+        ...data,
+        publicationDate: new Date(data.publicationDate),
+        ISSN1: data.ISSN.slice(0, 4),
+        ISSN2: data.ISSN.slice(-4),
+      });
+    }
+  }, [data]);
+
+  const handleSubmit = async (input: AchievementFormInput) => {
     const body = { ...input, ISSN: input.ISSN1 + input.ISSN2 };
-    console.log(body);
+    try {
+      await ClientAxios.put(API_ROUTES.achievement.put(id), body);
+      await mutate();
+      showNotificationSuccess({ message: "실적 정보가 수정되었습니다." });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

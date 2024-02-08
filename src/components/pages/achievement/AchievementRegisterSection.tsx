@@ -33,7 +33,7 @@ function AchievementRegisterSection() {
         params: { id: user?.id },
       });
       showNotificationSuccess({ message: "연구 실적이 등록되었습니다." });
-      router.push(`/students/achievement/${res.data.id}`);
+      router.push(`/student/achievement/${res.data.id}`);
     } catch (error) {
       console.error(error);
     }
