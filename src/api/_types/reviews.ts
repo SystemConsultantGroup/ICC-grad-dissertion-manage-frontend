@@ -107,6 +107,7 @@ export interface ThesisReview {
 // GET: /v1/reviews/result/{id}, /v1/reviews/current/{id}
 export interface AdminReviewResponse extends CommonApiResponse {
   id: number;
+  stage: Stage;
   title: string;
   student: string;
   department: string;
