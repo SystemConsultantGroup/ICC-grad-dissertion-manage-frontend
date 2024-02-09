@@ -1,4 +1,8 @@
+import { Dispatch } from "react";
+import Link from "next/link";
 import { Button, Group, Stack } from "@mantine/core";
+import { UseFormReturnType } from "@mantine/form";
+import { IconCheck } from "@tabler/icons-react";
 import {
   BasicRow,
   ButtonRow,
@@ -7,32 +11,32 @@ import {
   TextAreaRow,
   TitleRow,
 } from "@/components/common/rows";
-import { Dispatch, SetStateAction, useState } from "react";
-import { IconCheck } from "@tabler/icons-react";
-import Link from "next/link";
 import { Stage } from "../ThesisInfo/ThesisInfo";
 
 export interface ProfessorReviewProps {
-  onTemporarySave: () => void;
-  onSave: () => void;
   stage: Stage;
   thesis?: Status;
   presentation?: Status;
-  setThesis: Dispatch<SetStateAction<Status | undefined>>;
-  setPresentation: Dispatch<SetStateAction<Status | undefined>>;
+  setThesis: Dispatch<Status>;
+  setPresentation: Dispatch<Status>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  form?: UseFormReturnType<any>;
+  formKeys?: { comment?: string; commentFile?: string };
 }
 
 export type Status = "UNEXAMINED" | "PASS" | "FAIL" | "PENDING";
 
 export function ProfessorReview({
-  onTemporarySave,
-  onSave,
   stage,
   thesis,
   presentation,
   setThesis,
   setPresentation,
+  form,
+  formKeys,
 }: ProfessorReviewProps) {
+  const hasPending = thesis === "PENDING" || presentation === "PENDING";
+
   return (
     <Stack gap={0}>
       <TitleRow title="심사하기" />
@@ -98,19 +102,26 @@ export function ProfessorReview({
           </BasicRow>
         </RowGroup>
       )}
-      <TextAreaRow field="심사 의견" />
+      <TextAreaRow field="심사 의견" form={form} formKey={formKeys?.comment ?? "comment"} />
       <RowGroup>
-        <FileUploadRow field="심사 의견 파일" />
+        <FileUploadRow
+          field="심사 의견 파일"
+          form={form}
+          formKey={formKeys?.commentFile ?? "commentFile"}
+        />
       </RowGroup>
       <RowGroup withBorderBottom={false}>
         <ButtonRow
           buttons={[
-            <Button key="temp" color="grape" variant="outline" onClick={onTemporarySave}>
-              임시저장
-            </Button>,
-            <Button key="final" color="blue" onClick={onSave}>
-              최종저장
-            </Button>,
+            hasPending ? (
+              <Button key="temp" color="violet" type="submit">
+                임시저장
+              </Button>
+            ) : (
+              <Button key="final" color="blue" type="submit">
+                최종저장
+              </Button>
+            ),
             <Button key="back" variant="outline" component={Link} href="../review">
               목록으로
             </Button>,
