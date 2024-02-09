@@ -1,0 +1,10 @@
+.previous {
+  :global(.mantine-FileInput-input) {
+    display: flex;
+    align-items: center;
+    ::before {
+      content: "(기존 파일) ";
+      color: var(--mantine-primary-color-6);
+    }
+  }
+}
