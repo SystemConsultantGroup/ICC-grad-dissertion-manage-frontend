@@ -1,6 +1,6 @@
 import { Dispatch } from "react";
 import Link from "next/link";
-import { Button, Group, Stack } from "@mantine/core";
+import { Button, Group, Stack, Text } from "@mantine/core";
 import { UseFormReturnType } from "@mantine/form";
 import { IconCheck } from "@tabler/icons-react";
 import {
@@ -15,8 +15,8 @@ import { Stage } from "../ThesisInfo/ThesisInfo";
 
 export interface ProfessorReviewProps {
   stage: Stage;
-  thesis?: Status;
-  presentation?: Status;
+  thesis: Status;
+  presentation: Status | null;
   setThesis: Dispatch<Status>;
   setPresentation: Dispatch<Status>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -67,6 +67,11 @@ export function ProfessorReview({
             >
               보류
             </Button>
+            {form?.errors?.thesis ? (
+              <Text c="red" size="sm" ml={24}>
+                {form.errors.thesis}
+              </Text>
+            ) : null}
           </Group>
         </BasicRow>
       </RowGroup>
@@ -98,6 +103,11 @@ export function ProfessorReview({
               >
                 보류
               </Button>
+              {form?.errors?.presentation ? (
+                <Text c="red" size="sm" ml={24}>
+                  {form.errors.presentation}
+                </Text>
+              ) : null}
             </Group>
           </BasicRow>
         </RowGroup>
