@@ -12,7 +12,7 @@ import { ProfessorReviewResult } from "./ProfessorReviewResult";
 export default async function ProfessorReviewPage({
   params: { id: reviewId },
 }: {
-  params: { id: number };
+  params: { id: string };
 }) {
   const { token } = await AuthSSR({ userType: "PROFESSOR" });
   const review = (await fetcher({
@@ -38,7 +38,7 @@ export default async function ProfessorReviewPage({
     <>
       <PageHeader title="논문 심사" />
       <ReviewCard>
-        <ThesisInfo thesis={thesisInfo} />
+        <ThesisInfo thesis={thesisInfo} isAdvisor />
         {!isPermanent ? (
           <ProfessorReviewForm reviewId={reviewId} thesisInfo={thesisInfo} previous={review} />
         ) : (

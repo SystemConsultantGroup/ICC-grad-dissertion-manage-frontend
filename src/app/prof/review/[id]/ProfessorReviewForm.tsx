@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Router from "next/router";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { ClientAxios } from "@/api/ClientAxios";
@@ -16,7 +16,7 @@ import { ThesisInfoData } from "@/components/pages/review/ThesisInfo/ThesisInfo"
 import { PreviousFile } from "@/components/common/rows/FileUploadRow/FileUploadRow";
 
 export interface ProfessorReviewProps {
-  reviewId: number;
+  reviewId: string;
   thesisInfo: ThesisInfoData;
   previous: {
     contentStatus: Status;
@@ -28,7 +28,7 @@ export interface ProfessorReviewProps {
 
 interface FormInput {
   thesis: Status;
-  presentation: Status;
+  presentation: Status | null;
   comment: string;
   commentFile: File | PreviousFile | null;
 }
@@ -46,9 +46,19 @@ export function ProfessorReviewForm({ reviewId, thesisInfo, previous }: Professo
       thesis: previous.contentStatus,
       presentation: previous.presentationStatus,
       comment: previous.comment ?? "",
-      commentFile: previous.reviewFile ? stubFile(previous.reviewFile) : null,
+      commentFile: useMemo(
+        () => (previous.reviewFile ? stubFile(previous.reviewFile) : null),
+        [previous.reviewFile]
+      ),
     },
     validate: {
+      thesis: (value) =>
+        value && value !== "UNEXAMINED" ? null : "합격, 불합격, 보류 중 하나를 선택해주세요.",
+      presentation:
+        thesisInfo.stage === "MAIN"
+          ? (value) =>
+              value && value !== "UNEXAMINED" ? null : "합격, 불합격, 보류 중 하나를 선택해주세요."
+          : undefined,
       commentFile: isNotEmpty("심사 의견 파일을 첨부해주세요."),
     },
   });
@@ -96,7 +106,7 @@ export function ProfessorReviewForm({ reviewId, thesisInfo, previous }: Professo
       })}
     >
       <ProfessorReview
-        stage="MAIN"
+        stage={thesisInfo.stage}
         thesis={values.thesis}
         setThesis={(value) => form.setFieldValue("thesis", value)}
         presentation={values.presentation}

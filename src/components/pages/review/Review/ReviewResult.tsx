@@ -7,7 +7,7 @@ import { Stage } from "../ThesisInfo/ThesisInfo";
 export interface ReviewResultProps {
   stage: Stage;
   thesis?: Status;
-  presentation?: Status;
+  presentation?: Status | null;
   comment?: string;
   commentFile?: string;
 }
@@ -58,14 +58,27 @@ export function ReviewResult({
       </RowGroup>
       <RowGroup>
         <BasicRow field="심사 의견">
-          <BasicRow.Text>
+          <Group gap={6} align="center" wrap="nowrap" style={{ maxWidth: 402 }}>
             {commentFile && (
-              <Group>
-                <IconFile /> {commentFile}
-              </Group>
+              <>
+                <IconFile />
+                <Text>
+                  {commentFile}
+                  {comment ? ", " : ""}
+                </Text>
+              </>
             )}
-            {comment}
-          </BasicRow.Text>
+            <Text
+              style={{
+                flex: "1 1 0",
+                overflow: "hidden",
+                whiteSpace: "nowrap",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {comment}
+            </Text>
+          </Group>
         </BasicRow>
       </RowGroup>
     </Stack>

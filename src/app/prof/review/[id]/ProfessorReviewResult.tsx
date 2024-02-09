@@ -28,7 +28,7 @@ function textForStatus(status: Status) {
 export function ProfessorReviewResult({ previous }: Pick<ProfessorReviewProps, "previous">) {
   return (
     <Stack gap={0}>
-      <TitleRow title="내 심사 내역" badge={<Badge>최종저장</Badge>} />
+      <TitleRow title="내 심사 내역" badge={<Badge>최종저장 완료</Badge>} />
       <RowGroup>
         <BasicRow field="내용심사 합격 여부">
           <BasicRow.Text>

@@ -61,7 +61,7 @@ export interface DetailedReviewResponse extends CommonApiResponse, DetailedRevie
 
 export interface UpdateReviewRequestBody {
   contentStatus: Status;
-  presentationStatus: Status;
+  presentationStatus: Status | null;
   comment: string;
   fileUUID: string;
 }
