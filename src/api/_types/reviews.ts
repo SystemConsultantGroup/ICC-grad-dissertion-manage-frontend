@@ -53,8 +53,8 @@ export interface Review {
 export interface DetailedReview extends Review {
   abstract: string;
   thesisFiles: ThesisFile[];
-  comment: string;
-  reviewFile: File;
+  comment: string | null;
+  reviewFile: File | null;
 }
 
 export interface DetailedReviewResponse extends CommonApiResponse, DetailedReview {}
