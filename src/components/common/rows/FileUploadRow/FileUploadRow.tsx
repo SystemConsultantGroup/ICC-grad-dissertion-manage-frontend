@@ -1,10 +1,13 @@
 "use client";
 
-import { Button, Checkbox, FileInput, Group } from "@mantine/core";
+import { Button, FileInput, Group } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Row from "@/components/common/rows/_elements/Row/Row";
 import { UseFormReturnType } from "@mantine/form";
+import { handleDownloadFile } from "@/api/_utils/handleDownloadFile";
+import { API_ROUTES } from "@/api/apiRoute";
+import classes from "./FileUploadRow.module.css";
 
 declare module "@mantine/core" {
   interface FileInputProps {
@@ -36,17 +39,15 @@ function FileUploadRow({
 }: Props) {
   const [file, setFile] = useState<File | PreviousFile | null>(null);
   const resetRef = useRef<() => void>(null);
-  let isPreviousFile: boolean;
-  const value = form?.values?.[formKey];
+  let previousFile: PreviousFile | null;
+  const value: File | PreviousFile | null = form?.values?.[formKey];
   if (value === null) {
-    isPreviousFile = false;
+    previousFile = null;
   } else {
-    isPreviousFile = "previousUuid" in value;
+    previousFile = "previousUuid" in value ? value : null;
   }
-  const initialPreviousFile = useMemo(
-    () => (isPreviousFile ? value : null),
-    [] // eslint-disable-line react-hooks/exhaustive-deps
-  );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const initialPreviousFile = useMemo(() => previousFile, []);
   const clearFile = () => {
     resetRef.current?.();
     setFile(null);
@@ -72,14 +73,13 @@ function FileUploadRow({
         </FileButton> */}
         <FileInput
           style={{ width: 300 }}
+          className={previousFile ? classes.previous : undefined}
           value={form ? undefined : file}
           onChange={handleFileChange}
           defaultValue={defaultFile}
           placeholder="파일 업로드..."
           {...form?.getInputProps(formKey)}
-        >
-          {file?.name}
-        </FileInput>
+        />
         <Button
           color="red"
           variant="outline"
@@ -87,24 +87,31 @@ function FileUploadRow({
           disabled={form ? !form.values[formKey] : !file}
           onClick={form ? () => form.setFieldValue(formKey, null) : clearFile}
         >
-          삭제
+          {previousFile ? "덮어쓰기" : "삭제"}
         </Button>
-        {initialPreviousFile && ( // 정말 대충 만들었으니 다시 쓸 일이 있으면 고쳐주세요...
-          <>
-            <Checkbox
-              label="기존 파일 사용"
-              ml="24px"
-              checked={isPreviousFile}
-              onChange={(checkbox) => {
-                if (checkbox.target.checked) {
-                  form?.setFieldValue(formKey, initialPreviousFile);
-                } else {
-                  form!.setFieldValue(formKey, null);
-                }
+        {initialPreviousFile &&
+          (previousFile ? (
+            <Button
+              color="gray"
+              variant="outline"
+              onClick={() => {
+                handleDownloadFile({
+                  fileLink: API_ROUTES.file.get(previousFile!.previousUuid),
+                  fileName: previousFile!.name,
+                });
               }}
-            />
-          </>
-        )}
+            >
+              다운로드
+            </Button>
+          ) : (
+            <Button
+              color="gray"
+              variant="outline"
+              onClick={() => form!.setFieldValue(formKey, initialPreviousFile)}
+            >
+              기존 파일 사용
+            </Button>
+          ))}
       </Group>
     </Row>
   );
