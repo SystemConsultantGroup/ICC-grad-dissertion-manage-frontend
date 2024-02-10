@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Router from "next/router";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { ClientAxios } from "@/api/ClientAxios";
 import { Status } from "@/api/_types/common";
@@ -14,6 +13,7 @@ import { ProfessorReview } from "@/components/pages/review/Review";
 import { ReviewConfirmModal } from "@/components/pages/review/ReviewConfirmModal";
 import { ThesisInfoData } from "@/components/pages/review/ThesisInfo/ThesisInfo";
 import { PreviousFile } from "@/components/common/rows/FileUploadRow/FileUploadRow";
+import { useRouter } from "next/navigation";
 
 export interface ProfessorReviewProps {
   reviewId: string;
@@ -41,6 +41,7 @@ function stubFile(apiFile: ApiFile) {
 }
 
 export function ProfessorReviewForm({ reviewId, thesisInfo, previous }: ProfessorReviewProps) {
+  const router = useRouter();
   const form = useForm<FormInput>({
     initialValues: {
       thesis: previous.contentStatus,
@@ -88,7 +89,7 @@ export function ProfessorReviewForm({ reviewId, thesisInfo, previous }: Professo
         }했습니다.`,
       });
 
-      Router.push("../review");
+      router.push("../review");
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e);
