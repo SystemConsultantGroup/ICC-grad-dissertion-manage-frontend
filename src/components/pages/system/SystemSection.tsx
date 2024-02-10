@@ -84,27 +84,6 @@ function SystemSection() {
         <Stack gap={0}>
           <TitleRow title="수정지시사항 단계 제외 학과" />
           <RowGroup>
-            <form onSubmit={onCancelSubmit(handleCancelSubmit)}>
-              <BasicRow field="제외 학과 목록">
-                <Group>
-                  <Select
-                    w={250}
-                    data={DepartmentsData?.departments
-                      .filter((department) => department.modificationFlag)
-                      .map((department) => ({
-                        label: department.name,
-                        value: String(department.id),
-                      }))}
-                    {...getCancelInputProps("id")}
-                  />
-                  <Button bg="red" key="calcel" type="submit">
-                    제외 취소
-                  </Button>
-                </Group>
-              </BasicRow>
-            </form>
-          </RowGroup>
-          <RowGroup>
             <form onSubmit={onExcludeSubmit(handleExcludeSubmit)}>
               <BasicRow field="학과 제외">
                 <Group>
@@ -120,6 +99,27 @@ function SystemSection() {
                   />
                   <Button bg="red" key="exclude" type="submit">
                     제외하기
+                  </Button>
+                </Group>
+              </BasicRow>
+            </form>
+          </RowGroup>
+          <RowGroup>
+            <form onSubmit={onCancelSubmit(handleCancelSubmit)}>
+              <BasicRow field="제외 학과 목록">
+                <Group>
+                  <Select
+                    w={250}
+                    data={DepartmentsData?.departments
+                      .filter((department) => department.modificationFlag)
+                      .map((department) => ({
+                        label: department.name,
+                        value: String(department.id),
+                      }))}
+                    {...getCancelInputProps("id")}
+                  />
+                  <Button bg="red" key="calcel" type="submit">
+                    제외 취소
                   </Button>
                 </Group>
               </BasicRow>
