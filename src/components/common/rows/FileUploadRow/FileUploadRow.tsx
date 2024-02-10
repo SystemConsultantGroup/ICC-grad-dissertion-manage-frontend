@@ -41,7 +41,7 @@ function FileUploadRow({
   const resetRef = useRef<() => void>(null);
   let previousFile: PreviousFile | null;
   const value: File | PreviousFile | null = form?.values?.[formKey];
-  if (value === null) {
+  if (!value) {
     previousFile = null;
   } else {
     previousFile = "previousUuid" in value ? value : null;

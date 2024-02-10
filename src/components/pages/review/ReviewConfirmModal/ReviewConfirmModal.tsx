@@ -9,7 +9,12 @@ import { ReviewResult } from "../Review";
 
 export interface ReviewConfirmModalProps extends PropsWithChildren {
   thesis: ThesisInfoData;
-  review: { thesis: Status; presentation: Status | null; comment: string; commentFile: string };
+  review: {
+    thesis: Status;
+    presentation: Status | null;
+    comment: string;
+    commentFile: string | null;
+  };
   opened: boolean;
   onConfirm: () => void;
   onClose: () => void;
