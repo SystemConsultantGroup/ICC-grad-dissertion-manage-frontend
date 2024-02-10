@@ -88,7 +88,7 @@ export function ProfessorReviewForm({ reviewId, thesisInfo, previous }: Professo
         }했습니다.`,
       });
 
-      Router.back();
+      Router.push("../review");
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e);
@@ -105,21 +105,14 @@ export function ProfessorReviewForm({ reviewId, thesisInfo, previous }: Professo
         }
       })}
     >
-      <ProfessorReview
-        stage={thesisInfo.stage}
-        thesis={values.thesis}
-        setThesis={(value) => form.setFieldValue("thesis", value)}
-        presentation={values.presentation}
-        setPresentation={(value) => form.setFieldValue("presentation", value)}
-        form={form}
-      />
+      <ProfessorReview stage={thesisInfo.stage} form={form} />
       <ReviewConfirmModal
         thesis={thesisInfo}
         review={{
           thesis: values.thesis,
           presentation: values.presentation,
           comment: values.comment,
-          commentFile: values.commentFile?.name ?? "(없음)",
+          commentFile: values.commentFile?.name ?? null,
         }}
         opened={showConfirmDialog}
         onConfirm={() => handleSubmit(values)}

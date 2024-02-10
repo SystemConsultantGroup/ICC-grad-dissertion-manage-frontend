@@ -1,4 +1,3 @@
-import { Dispatch } from "react";
 import Link from "next/link";
 import { Button, Group, Stack, Text } from "@mantine/core";
 import { UseFormReturnType } from "@mantine/form";
@@ -11,30 +10,21 @@ import {
   TextAreaRow,
   TitleRow,
 } from "@/components/common/rows";
+import { Status } from "@/api/_types/common";
 import { Stage } from "../ThesisInfo/ThesisInfo";
 
 export interface ProfessorReviewProps {
   stage: Stage;
-  thesis: Status;
-  presentation: Status | null;
-  setThesis: Dispatch<Status>;
-  setPresentation: Dispatch<Status>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  form?: UseFormReturnType<any>;
-  formKeys?: { comment?: string; commentFile?: string };
+  form: UseFormReturnType<{
+    thesis: Status;
+    presentation: Status | null;
+    comment: string;
+    commentFile: File | null;
+  }>;
 }
 
-export type Status = "UNEXAMINED" | "PASS" | "FAIL" | "PENDING";
-
-export function ProfessorReview({
-  stage,
-  thesis,
-  presentation,
-  setThesis,
-  setPresentation,
-  form,
-  formKeys,
-}: ProfessorReviewProps) {
+export function ProfessorReview({ stage, form }: ProfessorReviewProps) {
+  const { thesis, presentation } = form.values;
   const hasPending = thesis === "PENDING" || presentation === "PENDING";
 
   return (
@@ -47,7 +37,7 @@ export function ProfessorReview({
               leftSection={thesis === "PASS" && <IconCheck size={18} />}
               variant={thesis === "PASS" ? "filled" : "outline"}
               color="green"
-              onClick={() => setThesis("PASS")}
+              onClick={() => form.setFieldValue("thesis", "PASS")}
             >
               합격
             </Button>
@@ -55,7 +45,7 @@ export function ProfessorReview({
               leftSection={thesis === "FAIL" && <IconCheck size={18} />}
               variant={thesis === "FAIL" ? "filled" : "outline"}
               color="red"
-              onClick={() => setThesis("FAIL")}
+              onClick={() => form.setFieldValue("thesis", "FAIL")}
             >
               불합격
             </Button>
@@ -63,7 +53,7 @@ export function ProfessorReview({
               leftSection={thesis === "PENDING" && <IconCheck size={18} />}
               variant={thesis === "PENDING" ? "filled" : "outline"}
               color="violet"
-              onClick={() => setThesis("PENDING")}
+              onClick={() => form.setFieldValue("thesis", "PENDING")}
             >
               보류
             </Button>
@@ -83,7 +73,7 @@ export function ProfessorReview({
                 leftSection={presentation === "PASS" && <IconCheck size={18} />}
                 variant={presentation === "PASS" ? "filled" : "outline"}
                 color="green"
-                onClick={() => setPresentation("PASS")}
+                onClick={() => form.setFieldValue("presentation", "PASS")}
               >
                 합격
               </Button>
@@ -91,7 +81,7 @@ export function ProfessorReview({
                 leftSection={presentation === "FAIL" && <IconCheck size={18} />}
                 variant={presentation === "FAIL" ? "filled" : "outline"}
                 color="red"
-                onClick={() => setPresentation("FAIL")}
+                onClick={() => form.setFieldValue("presentation", "FAIL")}
               >
                 불합격
               </Button>
@@ -99,7 +89,7 @@ export function ProfessorReview({
                 leftSection={presentation === "PENDING" && <IconCheck size={18} />}
                 variant={presentation === "PENDING" ? "filled" : "outline"}
                 color="violet"
-                onClick={() => setPresentation("PENDING")}
+                onClick={() => form.setFieldValue("presentation", "PENDING")}
               >
                 보류
               </Button>
@@ -112,13 +102,9 @@ export function ProfessorReview({
           </BasicRow>
         </RowGroup>
       )}
-      <TextAreaRow field="심사 의견" form={form} formKey={formKeys?.comment ?? "comment"} />
+      <TextAreaRow field="심사 의견" form={form} formKey="comment" />
       <RowGroup>
-        <FileUploadRow
-          field="심사 의견 파일"
-          form={form}
-          formKey={formKeys?.commentFile ?? "commentFile"}
-        />
+        <FileUploadRow field="심사 의견 파일" form={form} formKey="commentFile" />
       </RowGroup>
       <RowGroup withBorderBottom={false}>
         <ButtonRow

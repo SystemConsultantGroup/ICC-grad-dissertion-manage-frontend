@@ -1,7 +1,7 @@
 import { BasicRow, RowGroup, TitleRow } from "@/components/common/rows";
 import { Group, Stack, Text } from "@mantine/core";
 import { IconFile } from "@tabler/icons-react";
-import { Status } from "./ProfessorReview";
+import { Status } from "@/api/_types/common";
 import { Stage } from "../ThesisInfo/ThesisInfo";
 
 export interface ReviewResultProps {
@@ -9,7 +9,7 @@ export interface ReviewResultProps {
   thesis?: Status;
   presentation?: Status | null;
   comment?: string;
-  commentFile?: string;
+  commentFile?: string | null;
 }
 
 export interface StudentReviewResultProps {
