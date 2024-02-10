@@ -10,7 +10,7 @@ import {
 } from "@/components/common/rows";
 import { Status } from "@/api/_types/common";
 import { API_ROUTES } from "@/api/apiRoute";
-import type { ProfessorReviewProps } from "./ProfessorReviewForm";
+import type { ProfessorFinalProps } from "./ProfessorFinalForm";
 
 function textForStatus(status: Status) {
   switch (status) {
@@ -21,23 +21,16 @@ function textForStatus(status: Status) {
     case "PENDING":
       return "보류";
     default:
-      return "알 수 없음";
+      return "???";
   }
 }
 
-export function ProfessorReviewResult({ previous }: Pick<ProfessorReviewProps, "previous">) {
+export function ProfessorFinalResult({ previous }: Pick<ProfessorFinalProps, "previous">) {
   return (
     <Stack gap={0}>
       <TitleRow title="내 심사 내역" badge={<Badge>최종저장 완료</Badge>} />
       <RowGroup>
-        <BasicRow field="내용심사 합격 여부">
-          <BasicRow.Text>
-            <b>{textForStatus(previous.contentStatus)}</b>
-          </BasicRow.Text>
-        </BasicRow>
-      </RowGroup>
-      <RowGroup>
-        <BasicRow field="구두심사 합격 여부">
+        <BasicRow field="합격 여부">
           <BasicRow.Text>
             <b>{textForStatus(previous.contentStatus)}</b>
           </BasicRow.Text>
