@@ -1,7 +1,7 @@
 "use client";
 
-import { Button, Stack, Space, TextInput, PasswordInput, Select } from "@mantine/core";
-import { isNotEmpty, isEmail, useForm } from "@mantine/form";
+import { Button, Stack, Space, TextInput, PasswordInput } from "@mantine/core";
+import { isEmail, isNotEmpty, useForm } from "@mantine/form";
 import { API_ROUTES } from "@/api/apiRoute";
 import { useRouter } from "next/navigation";
 import { ClientAxios } from "@/api/ClientAxios";
@@ -10,22 +10,18 @@ import { RowGroup, BasicRow, TitleRow, ButtonRow } from "@/components/common/row
 import { useEffect } from "react";
 import { useAuth } from "@/components/common/AuthProvider/AuthProvider";
 import { showNotificationSuccess } from "@/components/common/Notifications";
+import { DepartmentSelect } from "@/components/common/selects/DepartmentSelect";
 
 interface Props {
   professorId?: number | string;
-}
-
-interface loginInputs {
-  loginId: string;
-  password: string;
 }
 
 interface AdminProfFormInputs {
   loginId: string;
   password: string;
   name: string;
-  email: string | null;
-  phone: string | null;
+  email?: string;
+  phone?: string;
   deptId: string;
 }
 
@@ -33,13 +29,13 @@ function AdminProfForm({ professorId }: Props) {
   const router = useRouter();
   const { login } = useAuth();
 
-  const { onSubmit, getInputProps, setValues, values } = useForm<AdminProfFormInputs>({
+  const { onSubmit, getInputProps, setValues, isDirty } = useForm<AdminProfFormInputs>({
     initialValues: {
       loginId: "",
       password: "",
       name: "",
-      email: null,
-      phone: null,
+      email: "",
+      phone: "",
       deptId: "",
     },
     validate: {
@@ -47,7 +43,11 @@ function AdminProfForm({ professorId }: Props) {
       password: isNotEmpty("비밀번호를 입력해주세요."),
       name: isNotEmpty("이름을 입력해주세요."),
       email: (value) =>
-        value ? (/^\S+@\S+$/.test(value) ? null : "이메일 형식이 올바르지 않습니다.") : null,
+        value
+          ? /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)
+            ? null
+            : "이메일 형식이 맞지 않습니다."
+          : undefined,
       phone: undefined,
       deptId: isNotEmpty("소속된 학과를 선택해주세요."),
     },
@@ -76,32 +76,40 @@ function AdminProfForm({ professorId }: Props) {
     fetchProfessorDetails();
   }, [professorId, setValues]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (values: AdminProfFormInputs) => {
     try {
-      const realValues = { ...values, deptId: parseInt(values.deptId, 10) };
+      const body = {
+        ...values,
+        deptId: Number(values.deptId),
+        email: isDirty("email") ? values.email : null,
+        phone: values.phone ?? null,
+      };
       if (!professorId) {
-        await ClientAxios.post(API_ROUTES.professor.post(), realValues);
+        await ClientAxios.post(API_ROUTES.professor.post(), body);
         showNotificationSuccess({ message: "교수 등록이 완료되었습니다." });
-        router.push("/admin/prof");
+        router.push("/admin/professors");
       } else {
-        await ClientAxios.post(API_ROUTES.professor.put(professorId), realValues);
+        await ClientAxios.post(API_ROUTES.professor.put(professorId), body);
         showNotificationSuccess({ message: "교수 정보 수정이 완료되었습니다." });
-        router.push(`/admin/prof/${professorId}`);
+        router.push(`/admin/professors/${professorId}`);
       }
     } catch (err) {
       console.error(err);
     }
   };
 
-  const handleLogin = async (loginValues: loginInputs) => {
+  const handleLogin = async () => {
     try {
       const {
         data: { accessToken },
-      } = await ClientAxios.post<CommonApiResponse & { accessToken: string }>("/auth", loginValues);
+      } = await ClientAxios.get<CommonApiResponse & { accessToken: string }>(
+        `/auth/${professorId}`
+      );
       login(accessToken);
-      router.push("/");
     } catch (err) {
       console.error(err);
+    } finally {
+      router.push("/");
     }
   };
 
@@ -115,15 +123,7 @@ function AdminProfForm({ professorId }: Props) {
         <RowGroup>
           <ButtonRow
             buttons={[
-              <Button
-                key="login"
-                onClick={() =>
-                  handleLogin({
-                    loginId: values.loginId,
-                    password: values.password,
-                  })
-                }
-              >
+              <Button key="login" onClick={() => handleLogin()}>
                 로그인하기
               </Button>,
               <Button key="goback" variant="outline" onClick={handleBack}>
@@ -163,10 +163,8 @@ function AdminProfForm({ professorId }: Props) {
           </RowGroup>
           <RowGroup>
             <BasicRow field="소속">
-              {/* TODO: DepartmentsSelect 컴포넌트로 대체 */}
-              <Select
-                placeholder="소속을 선택해주세요"
-                {...getInputProps("department")}
+              <DepartmentSelect
+                {...getInputProps("deptId")}
                 styles={{
                   wrapper: {
                     width: 300,
