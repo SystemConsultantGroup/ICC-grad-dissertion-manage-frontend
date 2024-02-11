@@ -13,7 +13,8 @@ import { ReviewConfirmModal } from "@/components/pages/review/ReviewConfirmModal
 import { ThesisInfoData } from "@/components/pages/review/ThesisInfo/ThesisInfo";
 import { PreviousFile } from "@/components/common/rows/FileUploadRow/FileUploadRow";
 import { useRouter } from "next/navigation";
-import { atomicTask } from "@/api/_utils/task";
+import { transactionTask } from "@/api/_utils/task";
+import { uploadFile } from "@/api/_utils/uploadFile";
 
 export interface ProfessorFinalProps {
   reviewId: string;
@@ -59,7 +60,7 @@ export function ProfessorFinalForm({ reviewId, thesisInfo, previous }: Professor
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [currentState, setCurrentState] = useState<null | "pending" | "submitted">(null);
 
-  const handleSubmit = atomicTask(async (task, input: FormInput) => {
+  const handleSubmit = transactionTask(async (task, input: FormInput) => {
     setCurrentState("pending");
     task.onComplete(() => setCurrentState("submitted"));
 
@@ -68,7 +69,7 @@ export function ProfessorFinalForm({ reviewId, thesisInfo, previous }: Professor
     if ("previousUuid" in input.commentFile!) {
       fileUUID = input.commentFile.previousUuid satisfies string;
     } else {
-      fileUUID = (await task.atomicUploadFile(input.commentFile!)).uuid;
+      fileUUID = (await uploadFile(input.commentFile!)).uuid;
     }
 
     await ClientAxios.put(API_ROUTES.review.final.put(reviewId), {
