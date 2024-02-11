@@ -6,7 +6,6 @@ import { ClientAxios } from "@/api/ClientAxios";
 import { Status } from "@/api/_types/common";
 import { File as ApiFile } from "@/api/_types/file";
 import { UpdateReviewRequestBody } from "@/api/_types/reviews";
-import { uploadFile } from "@/api/_utils/uploadFile";
 import { API_ROUTES } from "@/api/apiRoute";
 import { showNotificationSuccess } from "@/components/common/Notifications";
 import { FinalReview } from "@/components/pages/review/Review";
@@ -14,6 +13,7 @@ import { ReviewConfirmModal } from "@/components/pages/review/ReviewConfirmModal
 import { ThesisInfoData } from "@/components/pages/review/ThesisInfo/ThesisInfo";
 import { PreviousFile } from "@/components/common/rows/FileUploadRow/FileUploadRow";
 import { useRouter } from "next/navigation";
+import { atomicTask } from "@/api/_utils/task";
 
 export interface ProfessorFinalProps {
   reviewId: string;
@@ -57,35 +57,34 @@ export function ProfessorFinalForm({ reviewId, thesisInfo, previous }: Professor
   });
   const { values } = form;
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [currentState, setCurrentState] = useState<null | "pending" | "submitted">(null);
 
-  const handleSubmit = async (input: FormInput) => {
+  const handleSubmit = atomicTask(async (task, input: FormInput) => {
+    setCurrentState("pending");
+    task.onComplete(() => setCurrentState("submitted"));
+
     const isPending = input.status === "PENDING";
-    try {
-      let fileUUID;
-      if ("previousUuid" in input.commentFile!) {
-        fileUUID = input.commentFile.previousUuid satisfies string;
-      } else {
-        fileUUID = (await uploadFile(input.commentFile!)).uuid;
-      }
-
-      await ClientAxios.put(API_ROUTES.review.final.put(reviewId), {
-        contentStatus: input.status,
-        comment: input.comment,
-        fileUUID,
-      } satisfies UpdateReviewRequestBody);
-
-      showNotificationSuccess({
-        message: `${thesisInfo.studentInfo.name} 학생의 논문 심사결과를 ${
-          isPending ? "임시저장" : "저장"
-        }했습니다.`,
-      });
-
-      router.push("../final");
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(e);
+    let fileUUID;
+    if ("previousUuid" in input.commentFile!) {
+      fileUUID = input.commentFile.previousUuid satisfies string;
+    } else {
+      fileUUID = (await task.atomicUploadFile(input.commentFile!)).uuid;
     }
-  };
+
+    await ClientAxios.put(API_ROUTES.review.final.put(reviewId), {
+      contentStatus: input.status,
+      comment: input.comment,
+      fileUUID,
+    } satisfies UpdateReviewRequestBody);
+
+    showNotificationSuccess({
+      message: `${thesisInfo.studentInfo.name} 학생의 논문 심사결과를 ${
+        isPending ? "임시저장" : "저장"
+      }했습니다.`,
+    });
+
+    router.push("../final");
+  });
 
   return (
     <form
@@ -97,7 +96,7 @@ export function ProfessorFinalForm({ reviewId, thesisInfo, previous }: Professor
         }
       })}
     >
-      <FinalReview form={form} />
+      <FinalReview form={form} currentState={currentState} />
       <ReviewConfirmModal
         thesis={thesisInfo}
         review={{
