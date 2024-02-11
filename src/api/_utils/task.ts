@@ -1,26 +1,30 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ClientAxios } from "../ClientAxios";
-import { FileResponse } from "../_types/file";
-import { API_ROUTES } from "../apiRoute";
-import { uploadFile } from "./uploadFile";
 
-export function atomicTask<Args extends unknown[]>(
+let currentTask: AtomicTask | null = null;
+
+export function transactionTask<Args extends unknown[]>(
   task: (task: AtomicTask, ...args: Args) => Promise<void>
 ): (...args: Args) => Promise<void> {
-  return async (...args) => {
-    const atomic = new AtomicTask();
-    let error: any;
-    try {
-      await task.apply(null, [atomic, ...args]);
-    } catch (e) {
-      atomic._cancel();
-      console.error(e);
-      error = e;
-    } finally {
-      await atomic._complete(error);
-    }
-  };
+  return async (...args) => transaction(() => task.call(null, currentTask!, ...args));
+}
+
+export async function transaction<R>(block: () => R): Promise<R> {
+  const previousAtomic = currentTask;
+  const atomic = new AtomicTask();
+  currentTask = atomic;
+  let error: any;
+  try {
+    return await block();
+  } catch (e) {
+    atomic._cancel();
+    console.error(e);
+    error = e;
+    throw e;
+  } finally {
+    await atomic._complete(error);
+    currentTask = previousAtomic;
+  }
 }
 
 class AtomicTask {
@@ -56,13 +60,16 @@ class AtomicTask {
   onComplete(callback: (error?: any) => void | Promise<void>) {
     this.onCompletes.push(callback);
   }
-
-  async atomicUploadFile(file: File): Promise<FileResponse> {
-    return this.run(
-      () => uploadFile(file),
-      (result) => ClientAxios.delete(API_ROUTES.file.delete(result.uuid))
-    );
-  }
 }
 
 export type { AtomicTask };
+
+export async function transact<T>(
+  task: () => Promise<T>,
+  revert: (value: T) => Promise<void>
+): Promise<T> {
+  if (currentTask !== null) {
+    return currentTask.run(task, revert);
+  }
+  return task();
+}
