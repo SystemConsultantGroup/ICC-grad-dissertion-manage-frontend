@@ -7,16 +7,6 @@ export const ClientAxios = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_ENDPOINT,
 });
 
-ClientAxios.interceptors.request.use((request) => {
-  console.log(`${request.method ?? "GET"} ${request.url} ${JSON.stringify(request.params ?? {})}`);
-  return request;
-});
-
-ClientAxios.interceptors.response.use((response) => {
-  console.log(`${response.status} ${response.statusText}`);
-  return response;
-});
-
 ClientAxios.interceptors.response.use(
   (response) =>
     //TODO: 200 등 응답에 따른 메세지 알맞게 추가
