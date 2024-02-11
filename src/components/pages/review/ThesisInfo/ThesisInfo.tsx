@@ -22,8 +22,8 @@ export interface ThesisInfoData {
     };
   };
   abstract: string;
-  thesisFile: File;
-  presentationFile: File;
+  thesisFile?: File;
+  presentationFile?: File;
 }
 
 export interface ThesisRevisionInfoData {

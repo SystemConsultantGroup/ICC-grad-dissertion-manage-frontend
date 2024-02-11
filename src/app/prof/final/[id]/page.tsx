@@ -27,8 +27,8 @@ export default async function ProfessorFinalPage({
       department: { name: review.department },
     },
     abstract: review.abstract,
-    thesisFile: review.thesisFiles.find((file) => file.type === "THESIS")!.file,
-    presentationFile: review.thesisFiles.find((file) => file.type === "PRESENTATION")!.file,
+    thesisFile: review.thesisFiles.find((file) => file.type === "THESIS")?.file,
+    presentationFile: review.thesisFiles.find((file) => file.type === "PRESENTATION")?.file,
   };
   const isPermanent = review.status === "PASS" || review.status === "FAIL";
 
