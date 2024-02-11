@@ -32,7 +32,7 @@ export function ProfessorFinalResult({ previous }: Pick<ProfessorFinalProps, "pr
       <RowGroup>
         <BasicRow field="합격 여부">
           <BasicRow.Text>
-            <b>{textForStatus(previous.contentStatus)}</b>
+            <b>{textForStatus(previous.status)}</b>
           </BasicRow.Text>
         </BasicRow>
       </RowGroup>

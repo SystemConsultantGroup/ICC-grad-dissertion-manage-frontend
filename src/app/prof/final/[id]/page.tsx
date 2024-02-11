@@ -1,8 +1,6 @@
 import PageHeader from "@/components/common/PageHeader";
 import { ThesisInfo } from "@/components/pages/review/ThesisInfo";
 import { ReviewCard } from "@/components/pages/review/Review/ReviewCard";
-import { FinalReview, ReviewList, ReviewResult } from "@/components/pages/review/Review";
-import { ReviewConfirmModal } from "@/components/pages/review/ReviewConfirmModal";
 import { AuthSSR } from "@/api/AuthSSR";
 import { DetailedReviewResponse } from "@/api/_types/reviews";
 import { API_ROUTES } from "@/api/apiRoute";
@@ -32,7 +30,7 @@ export default async function ProfessorFinalPage({
     thesisFile: review.thesisFiles.find((file) => file.type === "THESIS")!.file,
     presentationFile: review.thesisFiles.find((file) => file.type === "PRESENTATION")!.file,
   };
-  const isPermanent = review.contentStatus === "PASS" || review.contentStatus === "FAIL";
+  const isPermanent = review.status === "PASS" || review.status === "FAIL";
 
   return (
     <>
@@ -44,15 +42,6 @@ export default async function ProfessorFinalPage({
         ) : (
           <ProfessorFinalResult previous={review} />
         )}
-        {/* <ReviewList title="심사 결과" stage="PRELIMINARY" />
-        <FinalReview
-          onTemporarySave={() => {}}
-          onSave={() => {
-            setShowConfirmDialog(true);
-          }}
-          status={status}
-          setStatus={setStatus}
-        /> */}
       </ReviewCard>
     </>
   );
