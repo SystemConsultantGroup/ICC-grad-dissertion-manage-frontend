@@ -36,6 +36,7 @@ export interface ThesisInfo {
   studentInfo: User;
   thesisFile: File;
   presentationFile: File;
+  revisionReportFile: File;
 }
 
 export interface Review {

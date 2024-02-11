@@ -2,7 +2,8 @@
 
 import { API_ROUTES } from "@/api/apiRoute";
 import { useAuth } from "@/components/common/AuthProvider";
-import { ThesisRequestQuery, ThesisResponse } from "@/api/_types/thesis";
+import { ThesisRequestQuery } from "@/api/_types/thesis";
+import { ThesisInfo } from "@/api/_types/reviews";
 import { useConditionalSWR } from "./useConditionalSWR";
 
 /**
@@ -16,7 +17,7 @@ function useThesis(studentId: number, queryParams: ThesisRequestQuery, shouldFet
   const { token } = useAuth();
   const query = { ...queryParams };
 
-  const result = useConditionalSWR<ThesisResponse>(
+  const result = useConditionalSWR<ThesisInfo>(
     { url: API_ROUTES.student.getThesis(studentId), query, token },
     !!token && shouldFetch
   );
