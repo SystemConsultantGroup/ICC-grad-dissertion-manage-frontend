@@ -18,9 +18,10 @@ export interface FinalReviewProps {
     comment: string;
     commentFile: File | null;
   }>;
+  currentState: null | "pending" | "submitted";
 }
 
-export function FinalReview({ form }: FinalReviewProps) {
+export function FinalReview({ form, currentState }: FinalReviewProps) {
   const { status } = form.values;
   const hasPending = status === "PENDING";
 
@@ -69,15 +70,15 @@ export function FinalReview({ form }: FinalReviewProps) {
       <RowGroup withBorderBottom={false}>
         <ButtonRow
           buttons={[
-            hasPending ? (
-              <Button key="temp" color="violet" type="submit">
-                임시저장
-              </Button>
-            ) : (
-              <Button key="final" color="blue" type="submit">
-                최종저장
-              </Button>
-            ),
+            <Button
+              key="save"
+              color={hasPending ? "violet" : "blue"}
+              type="submit"
+              loading={currentState === "pending"}
+              disabled={currentState === "submitted"}
+            >
+              {hasPending ? "임시저장" : "최종저장"}
+            </Button>,
             <Button key="back" variant="outline" component={Link} href="../final">
               목록으로
             </Button>,

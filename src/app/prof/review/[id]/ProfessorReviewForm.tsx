@@ -6,7 +6,6 @@ import { ClientAxios } from "@/api/ClientAxios";
 import { Status } from "@/api/_types/common";
 import { File as ApiFile } from "@/api/_types/file";
 import { UpdateReviewRequestBody } from "@/api/_types/reviews";
-import { uploadFile } from "@/api/_utils/uploadFile";
 import { API_ROUTES } from "@/api/apiRoute";
 import { showNotificationSuccess } from "@/components/common/Notifications";
 import { ProfessorReview } from "@/components/pages/review/Review";
@@ -14,6 +13,7 @@ import { ReviewConfirmModal } from "@/components/pages/review/ReviewConfirmModal
 import { ThesisInfoData } from "@/components/pages/review/ThesisInfo/ThesisInfo";
 import { PreviousFile } from "@/components/common/rows/FileUploadRow/FileUploadRow";
 import { useRouter } from "next/navigation";
+import { atomicTask } from "@/api/_utils/task";
 
 export interface ProfessorReviewProps {
   reviewId: string;
@@ -65,15 +65,19 @@ export function ProfessorReviewForm({ reviewId, thesisInfo, previous }: Professo
   });
   const { values } = form;
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [currentState, setCurrentState] = useState<null | "pending" | "submitted">(null);
 
-  const handleSubmit = async (input: FormInput) => {
+  const handleSubmit = atomicTask(async (task, input: FormInput) => {
+    setCurrentState("pending");
+    task.onComplete(() => setCurrentState("submitted"));
+
     const isPending = input.thesis === "PENDING" || input.presentation === "PENDING";
     try {
       let fileUUID;
       if ("previousUuid" in input.commentFile!) {
         fileUUID = input.commentFile.previousUuid satisfies string;
       } else {
-        fileUUID = (await uploadFile(input.commentFile!)).uuid;
+        fileUUID = (await task.atomicUploadFile(input.commentFile!)).uuid;
       }
 
       await ClientAxios.put(API_ROUTES.review.put(reviewId), {
@@ -94,7 +98,7 @@ export function ProfessorReviewForm({ reviewId, thesisInfo, previous }: Professo
       // eslint-disable-next-line no-console
       console.error(e);
     }
-  };
+  });
 
   return (
     <form
@@ -106,7 +110,7 @@ export function ProfessorReviewForm({ reviewId, thesisInfo, previous }: Professo
         }
       })}
     >
-      <ProfessorReview stage={thesisInfo.stage} form={form} />
+      <ProfessorReview stage={thesisInfo.stage} form={form} currentState={currentState} />
       <ReviewConfirmModal
         thesis={thesisInfo}
         review={{

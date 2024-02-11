@@ -21,9 +21,10 @@ export interface ProfessorReviewProps {
     comment: string;
     commentFile: File | null;
   }>;
+  currentState: null | "pending" | "submitted";
 }
 
-export function ProfessorReview({ stage, form }: ProfessorReviewProps) {
+export function ProfessorReview({ stage, form, currentState }: ProfessorReviewProps) {
   const { thesis, presentation } = form.values;
   const hasPending = thesis === "PENDING" || presentation === "PENDING";
 
@@ -109,15 +110,15 @@ export function ProfessorReview({ stage, form }: ProfessorReviewProps) {
       <RowGroup withBorderBottom={false}>
         <ButtonRow
           buttons={[
-            hasPending ? (
-              <Button key="temp" color="violet" type="submit">
-                임시저장
-              </Button>
-            ) : (
-              <Button key="final" color="blue" type="submit">
-                최종저장
-              </Button>
-            ),
+            <Button
+              key="save"
+              color={hasPending ? "violet" : "blue"}
+              type="submit"
+              loading={currentState === "pending"}
+              disabled={currentState === "submitted"}
+            >
+              {hasPending ? "임시저장" : "최종저장"}
+            </Button>,
             <Button key="back" variant="outline" component={Link} href="../review">
               목록으로
             </Button>,
