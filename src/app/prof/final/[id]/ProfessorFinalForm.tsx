@@ -19,7 +19,7 @@ export interface ProfessorFinalProps {
   reviewId: string;
   thesisInfo: ThesisInfoData;
   previous: {
-    contentStatus: Status;
+    status: Status;
     comment: string | null;
     reviewFile: ApiFile | null;
   };
@@ -42,7 +42,7 @@ export function ProfessorFinalForm({ reviewId, thesisInfo, previous }: Professor
   const router = useRouter();
   const form = useForm<FormInput>({
     initialValues: {
-      status: previous.contentStatus,
+      status: previous.status,
       comment: previous.comment ?? "",
       commentFile: useMemo(
         () => (previous.reviewFile ? stubFile(previous.reviewFile) : null),
@@ -70,7 +70,6 @@ export function ProfessorFinalForm({ reviewId, thesisInfo, previous }: Professor
 
       await ClientAxios.put(API_ROUTES.review.final.put(reviewId), {
         contentStatus: input.status,
-        presentationStatus: null,
         comment: input.comment,
         fileUUID,
       } satisfies UpdateReviewRequestBody);
