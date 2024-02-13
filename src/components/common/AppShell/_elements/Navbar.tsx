@@ -30,7 +30,7 @@ function Navbar({ userType, modificationFlag }: Props) {
       <AppShell.Section>
         <Profile />
       </AppShell.Section>
-      {userType && modificationFlag && (
+      {userType && modificationFlag !== undefined && (
         <NavbarList userType={userType} modificationFlag={modificationFlag} />
       )}
     </AppShell.Navbar>
