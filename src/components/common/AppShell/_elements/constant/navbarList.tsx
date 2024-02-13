@@ -92,7 +92,7 @@ export const STUDENT_NAVBAR_LIST: Props[] = [
     icon: <IconFileCheck size="24" stroke={1} />,
   },
   {
-    label: "연구실적 등록",
+    label: "연구실적",
     href: "/student/achievement",
     icon: <IconMicroscope size="24" stroke={1} />,
   },
