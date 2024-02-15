@@ -57,6 +57,7 @@ export const API_ROUTES = {
   },
   review: {
     get: (reviewId?: ApiId) => `/reviews/${reviewId ?? ""}`, // GET: 심사 대상 논문 목록 조회 및 상세 조회(교수)
+    getMe: () => "/reviews/me",
     put: (reviewId: ApiId) => `/reviews/${reviewId}`, // PUT: 논문 심사 등록/수정(교수)
     excel: () => "/reviews/excel", // GET: 심사 대상 논문 리스트 다운로드
     final: {
