@@ -101,7 +101,6 @@ export type PagedRevisionRequestQuery = PagedQueryRequest &
 
 export interface ThesisReview {
   id: number;
-  thesisInfo: ThesisInfo;
   reviewer: User;
   file: File;
   contentStatus: Status;
@@ -114,6 +113,16 @@ export interface ThesisReview {
 
 // GET: /v1/reviews/result/{id}, /v1/reviews/current/{id}
 export interface AdminReviewResponse extends CommonApiResponse {
+  id: number;
+  stage: Stage;
+  title: string;
+  student: string;
+  department: string;
+  abstract: string;
+  thesisFiles: ThesisFile[];
+  reviews: ThesisReview[];
+}
+export interface MyReviewResponse extends CommonApiResponse {
   id: number;
   stage: Stage;
   title: string;
