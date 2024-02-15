@@ -28,8 +28,8 @@ export default async function AdminReviewPage({
       department: { name: data.department },
     },
     abstract: data.abstract,
-    thesisFile: data.thesisFiles.find((file) => file.type === "THESIS")!.file,
-    presentationFile: data.thesisFiles.find((file) => file.type === "PRESENTATION")!.file,
+    thesisFile: data.thesisFiles.find((file) => file.type === "THESIS")?.file,
+    presentationFile: data.thesisFiles.find((file) => file.type === "PRESENTATION")?.file,
   };
 
   return (
@@ -37,7 +37,11 @@ export default async function AdminReviewPage({
       <PageHeader title="심사 현황" />
       <ReviewCard>
         <ThesisInfo thesis={thesis} />
-        <ReviewList title="심사 현황" stage="MAIN" />
+        <ReviewList
+          title="심사 현황"
+          stage={data.stage}
+          reviews={data.reviews.filter((review) => !review.isFinal)}
+        />
         <RowGroup withBorderBottom={false}>
           <ButtonRow
             buttons={[
