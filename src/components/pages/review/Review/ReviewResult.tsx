@@ -2,6 +2,7 @@ import { BasicRow, RowGroup, TitleRow } from "@/components/common/rows";
 import { Group, Stack, Text } from "@mantine/core";
 import { IconFile } from "@tabler/icons-react";
 import { Status } from "@/api/_types/common";
+import { ThesisReview } from "@/api/_types/reviews";
 import { Stage } from "../ThesisInfo/ThesisInfo";
 
 export interface ReviewResultProps {
@@ -14,6 +15,7 @@ export interface ReviewResultProps {
 
 export interface StudentReviewResultProps {
   stage: Stage;
+  review: ThesisReview | undefined;
 }
 
 function nameForStatus(status: Status) {
@@ -85,7 +87,39 @@ export function ReviewResult({
   );
 }
 
-export function StudentReviewResult({ stage }: StudentReviewResultProps) {
+function nameForStudentStatus(status: Status) {
+  return status === "PASS" ? "합격" : status === "FAIL" ? "불합격" : "대기중";
+}
+
+export function StudentReviewResult({ stage, review }: StudentReviewResultProps) {
+  if (!review) {
+    return (
+      <Stack>
+        <Stack gap={0}>
+          <TitleRow title="심사 결과" />
+          <RowGroup>
+            {stage === "PRELIMINARY" && (
+              <BasicRow field="심사 결과">
+                <BasicRow.Text>
+                  <b>-</b>
+                </BasicRow.Text>
+              </BasicRow>
+            )}
+            {stage === "MAIN" && (
+              <>
+                <BasicRow field="내용 심사 결과">
+                  <BasicRow.Text>-</BasicRow.Text>
+                </BasicRow>
+                <BasicRow field="구두 심사 결과">
+                  <BasicRow.Text>-</BasicRow.Text>
+                </BasicRow>
+              </>
+            )}
+          </RowGroup>
+        </Stack>
+      </Stack>
+    );
+  }
   return (
     <Stack>
       <Stack gap={0}>
@@ -94,17 +128,21 @@ export function StudentReviewResult({ stage }: StudentReviewResultProps) {
           {stage === "PRELIMINARY" && (
             <BasicRow field="심사 결과">
               <BasicRow.Text>
-                <b>합격</b>
+                <b>{nameForStudentStatus(review.contentStatus)}</b>
               </BasicRow.Text>
             </BasicRow>
           )}
           {stage === "MAIN" && (
             <>
               <BasicRow field="내용 심사 결과">
-                <BasicRow.Text>대기중</BasicRow.Text>
+                <BasicRow.Text>
+                  <b>{nameForStudentStatus(review.contentStatus)}</b>
+                </BasicRow.Text>
               </BasicRow>
               <BasicRow field="구두 심사 결과">
-                <BasicRow.Text>대기중</BasicRow.Text>
+                <BasicRow.Text>
+                  <b>{nameForStudentStatus(review.presentationStatus)}</b>
+                </BasicRow.Text>
               </BasicRow>
             </>
           )}
