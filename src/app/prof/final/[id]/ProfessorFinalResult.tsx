@@ -1,15 +1,14 @@
 import Link from "next/link";
 import { Badge, Button, Stack } from "@mantine/core";
 import {
+  ApiFileRow,
   BasicRow,
   ButtonRow,
-  FileRow,
   LongContentRow,
   RowGroup,
   TitleRow,
 } from "@/components/common/rows";
 import { Status } from "@/api/_types/common";
-import { API_ROUTES } from "@/api/apiRoute";
 import type { ProfessorFinalProps } from "./ProfessorFinalForm";
 
 function textForStatus(status: Status) {
@@ -38,11 +37,7 @@ export function ProfessorFinalResult({ previous }: Pick<ProfessorFinalProps, "pr
       </RowGroup>
       <LongContentRow field="심사 의견" content={previous.comment!} />
       <RowGroup>
-        <FileRow
-          field="심사 의견 파일"
-          name={previous.reviewFile!.name}
-          url={API_ROUTES.file.get(previous.reviewFile!.uuid)}
-        />
+        <ApiFileRow field="심사 의견 파일" file={previous.reviewFile} />
       </RowGroup>
       <RowGroup withBorderBottom={false}>
         <ButtonRow
