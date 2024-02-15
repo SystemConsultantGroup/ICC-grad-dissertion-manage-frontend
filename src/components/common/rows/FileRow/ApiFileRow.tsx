@@ -1,8 +1,7 @@
 "use client";
 
 import { File } from "@/api/_types/file";
-import { ClientAxios } from "@/api/ClientAxios";
-import { API_ROUTES } from "@/api/apiRoute";
+import { downloadUrlForUuid, handleDownloadFile } from "@/api/_utils/handleDownloadFile";
 import FilePostRow from "./FileRow";
 
 interface Props {
@@ -18,7 +17,8 @@ function ApiFilePostRow({ field, fieldSize, file }: Props) {
       disabled={!file}
       fieldSize={fieldSize}
       name={file?.name ?? "(파일 없음)"}
-      url={file ? ClientAxios.getUri({ url: API_ROUTES.file.get(file.uuid) }) : ""}
+      url={file ? downloadUrlForUuid(file.uuid) : ""}
+      saveFile={handleDownloadFile}
     />
   );
 }
