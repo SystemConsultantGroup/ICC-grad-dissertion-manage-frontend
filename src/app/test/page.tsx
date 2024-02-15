@@ -30,7 +30,9 @@ export default function TestPage() {
         <DatePicker />
         <Container />
         <SearchInput onChange={(s) => console.log(s)} />
-        <DownloadButton link="/">히히</DownloadButton>
+        <DownloadButton fileName="dummy.txt" link="/">
+          히히
+        </DownloadButton>
         <Modal
           opened={ho}
           onClose={() => setHo(false)}
