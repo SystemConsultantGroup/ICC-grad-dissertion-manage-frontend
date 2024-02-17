@@ -1,5 +1,6 @@
 import { CommonApiResponse, PagedApiResponse, PagedQueryRequest } from "./common";
 import { User } from "./user";
+import { Department } from "./department";
 
 export interface ProfessorQueryBrief {
   loginId: string;
@@ -24,3 +25,19 @@ export interface CreateProfessorRequestBody extends Omit<User, "id" | "departmen
   password: string;
   deptId: number;
 }
+
+export interface Professor {
+  id: number;
+  loginId: string;
+  name: string;
+  email: string;
+  phone: string;
+  department: Department;
+}
+
+export interface SelectProfessorFormValues {
+  departmentId: Professor["department"]["id"];
+  professorId: number;
+}
+
+export type ReviewerRole = "HEAD" | "ADVISOR" | "COMMITTEE";

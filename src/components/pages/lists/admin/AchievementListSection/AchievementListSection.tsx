@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* api 연결 필요 */
 
 "use client";
 
-import { ActionIcon, Button, Center, Group, Popover, Select, Stack } from "@mantine/core";
+import { ActionIcon, Button, Center, Group, Popover, Select, Skeleton, Stack } from "@mantine/core";
 import { Table } from "@/components/common/Table";
 import { IconDownload } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
@@ -19,10 +18,16 @@ import {
   PagedAchievementRequestQuery,
 } from "@/api/_types/achievement";
 import { getPageSizeStartEndNumber } from "@/api/_utils/getPageSizeStartEndNumber";
-import { MOCKUP_ACHIEVEMENT_LIST } from "@/mockups/achievement";
-import { ACHIEVEMENT_TABLE_HEADERS } from "../../_constants/table";
-import { REFRESH_DEFAULT_PAGE_NUMBER } from "../../_constants/page";
+import useAchievements from "@/api/SWR/useAchievements";
+import dayjs from "dayjs";
+import { DATE_TIME_FORMAT_HYPHEN } from "@/constants/date";
+import { objectToQueryString } from "@/api/_utils/objectToUrl";
+import { API_ROUTES } from "@/api/apiRoute";
+import { handleDownloadFile } from "@/api/_utils/handleDownloadFile";
 import { TChangeQueryArg } from "../../_types/common";
+import { REFRESH_DEFAULT_PAGE_NUMBER } from "../../_constants/page";
+import { ACHIEVEMENT_TABLE_HEADERS } from "../../_constants/table";
+import { formatISSN } from "../../StudentAchievementListSection/StudentAchievementListSection";
 
 function AchievementListSection() {
   const { push } = useRouter();
@@ -37,14 +42,15 @@ function AchievementListSection() {
     500
   );
 
-  const data = MOCKUP_ACHIEVEMENT_LIST;
-  const pageData = {
-    pageNumber: data.pageNumber,
-    pageSize: data.pageSize,
-    totalCount: data.totalCount,
-    totalPages: data.totalPages,
-  };
-  const achievements = data.content;
+  const {
+    data: achievements,
+    isLoading,
+    pageData,
+  } = useAchievements({ ...query, pageNumber, pageSize: pageSizeNumber });
+
+  const transformedAchievementTypeList = Object.entries(ACHIEVEMENT_TYPE_LOOKUP_TABLE).map(
+    ([key, value]) => ({ value: key, label: value })
+  );
 
   const { startNumber } = getPageSizeStartEndNumber({
     pageNumber,
@@ -64,6 +70,22 @@ function AchievementListSection() {
       [name]: value === "" ? undefined : value,
       pageNumber: REFRESH_DEFAULT_PAGE_NUMBER,
     })) as any);
+  };
+
+  // Todo: 파일명 및 필터 저장 방식 논의
+  const handleDownloadAchievementsExcel = (option: "all" | "filtered") => {
+    const dateString = dayjs().format(DATE_TIME_FORMAT_HYPHEN);
+    const queryString = objectToQueryString({ ...query });
+
+    const isAll = option === "all";
+    const urlSuffix = isAll ? "" : queryString;
+
+    const fileLink = API_ROUTES.achievement.excel() + urlSuffix;
+
+    handleDownloadFile({
+      fileLink,
+      fileName: `연구실적 일괄 다운로드 파일_${dateString}.xlsx`,
+    });
   };
 
   useEffect(() => {
@@ -93,7 +115,7 @@ function AchievementListSection() {
                 <Stack>
                   <Button
                     onClick={() => {
-                      // handleDownloadStudentExcel("all");
+                      handleDownloadAchievementsExcel("all");
                     }}
                   >
                     전체 목록 엑셀 저장
@@ -101,7 +123,7 @@ function AchievementListSection() {
                   <Button
                     variant="outline"
                     onClick={() => {
-                      // handleDownloadStudentExcel("filtered");
+                      handleDownloadAchievementsExcel("filtered");
                     }}
                   >
                     필터 목록 엑셀 저장
@@ -112,6 +134,7 @@ function AchievementListSection() {
           </Group>
         </SectionHeader.Buttons>
       </SectionHeader>
+      {isLoading && <Skeleton />}
       <Table headers={ACHIEVEMENT_TABLE_HEADERS} h={650}>
         {/* 필터 영역 */}
         <Table.FilterRow>
@@ -122,7 +145,7 @@ function AchievementListSection() {
               placeholder="학과"
               allowDeselect
               onChange={(value) => {
-                handleChangeFilter<string | null>({ name: "department", value });
+                handleChangeFilter<string | null>({ name: "departmentId", value });
               }}
             />
           </Table.Data>
@@ -131,13 +154,13 @@ function AchievementListSection() {
               w={80}
               placeholder="저자"
               onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                handleChangeFilter<string>({ name: "name", value: event.target.value });
+                handleChangeFilter<string>({ name: "author", value: event.target.value });
               }}
             />
           </Table.Data>
           <Table.Data>
             <Table.TextInput
-              w={250}
+              w={300}
               placeholder="논문 제목"
               onChange={(event: ChangeEvent<HTMLInputElement>) => {
                 handleChangeFilter<string>({ name: "paperTitle", value: event.target.value });
@@ -145,11 +168,12 @@ function AchievementListSection() {
             />
           </Table.Data>
           <Table.Data>
-            <Table.TextInput
-              w={100}
-              placeholder="실적 구분"
-              onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                handleChangeFilter<string>({ name: "performance", value: event.target.value });
+            <Select
+              w={350}
+              allowDeselect
+              data={transformedAchievementTypeList}
+              onChange={(value) => {
+                handleChangeFilter<string | null>({ name: "performance", value });
               }}
             />
           </Table.Data>
@@ -163,40 +187,16 @@ function AchievementListSection() {
             />
           </Table.Data>
           <Table.Data>
-            <Table.TextInput
-              w={100}
-              placeholder="ISSN"
-              onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                handleChangeFilter<string>({ name: "ISSN", value: event.target.value });
-              }}
-            />
+            <></>
           </Table.Data>
           <Table.Data>
-            <Table.TextInput
-              w={150}
-              placeholder="게재년월일"
-              onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                handleChangeFilter<string>({ name: "publicationDate", value: event.target.value });
-              }}
-            />
+            <></>
           </Table.Data>
           <Table.Data>
-            <Table.TextInput
-              w={110}
-              placeholder="주저자여부"
-              onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                handleChangeFilter<string>({ name: "authorType", value: event.target.value });
-              }}
-            />
+            <></>
           </Table.Data>
           <Table.Data>
-            <Table.TextInput
-              w={80}
-              placeholder="저자수"
-              onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                handleChangeFilter<string>({ name: "authorNumbers", value: event.target.value });
-              }}
-            />
+            <></>
           </Table.Data>
         </Table.FilterRow>
         {achievements?.map((achievement, index) => (
@@ -212,7 +212,7 @@ function AchievementListSection() {
             <Table.Data>{achievement.paperTitle}</Table.Data>
             <Table.Data>{ACHIEVEMENT_TYPE_LOOKUP_TABLE[achievement.performance]}</Table.Data>
             <Table.Data>{achievement.journalName}</Table.Data>
-            <Table.Data>{achievement.ISSN}</Table.Data>
+            <Table.Data>{formatISSN(achievement.ISSN)}</Table.Data>
             <Table.Data>
               {new Date(achievement.publicationDate).toLocaleDateString("ko-KR")}
             </Table.Data>

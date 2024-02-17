@@ -66,4 +66,11 @@ export interface Achievement {
 }
 
 export interface PagedAchievementResponse extends PagedApiResponse<Achievement> {}
-export type PagedAchievementRequestQuery = PagedQueryRequest & Partial<Achievement>;
+export type PagedAchievementRequestQuery = PagedQueryRequest &
+  Partial<
+    Omit<Achievement, "name" | "id" | "department" | "ISSN" | "authorNumbers" | "authorType"> & {
+      studentNumber: string;
+      author: string;
+      departmentId: string;
+    }
+  >;

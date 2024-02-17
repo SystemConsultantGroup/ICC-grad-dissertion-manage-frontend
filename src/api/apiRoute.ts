@@ -20,6 +20,8 @@ export const API_ROUTES = {
     get: () => "/departments",
     post: () => "/departments",
     delete: (deptId: ApiId) => `/departments/${deptId}`,
+    put: (deptId: ApiId, exclude: boolean) =>
+      `/departments/${deptId}?exclude=${exclude ? "true" : "false"}`,
   },
   user: {
     get: () => "/users/me", // GET: 유저 정보 조회
@@ -60,23 +62,30 @@ export const API_ROUTES = {
     getMe: () => "/reviews/me",
     put: (reviewId: ApiId) => `/reviews/${reviewId}`, // PUT: 논문 심사 등록/수정(교수)
     excel: () => "/reviews/excel", // GET: 심사 대상 논문 리스트 다운로드
+    current: {
+      get: (reviewId?: ApiId) => `/reviews/current/${reviewId ?? ""}`, // GET: 현재 심사 대상 논문 목록 조회 및 상세 조회
+      put: (reviewId: ApiId) => `/reviews/current/${reviewId}`, // PUT: 현재 심사 등록/수정
+      excel: () => "/reviews/current/excel", // GET: 현재 심사 대상 논문 리스트 다운로드
+    },
     final: {
       get: (finalId?: ApiId) => `/reviews/final/${finalId ?? ""}`, // GET: 최종 심사 대상 논문 목록 조회 및 상세 조회
       put: (finalId: ApiId) => `/reviews/final/${finalId}`, // PUT: 최종 심사 등록/수정
       excel: () => "/reviews/final/excel", // GET: 최종 심사 대상 논문 리스트 다운로드
     },
-    current: {
-      get: (reviewId?: ApiId) => `/reviews/current/${reviewId ?? ""}`, // GET: 심사 현황 목록 조회 및 상세 조회
-      excel: () => "/reviews/current/excel", // GET: 심사 결과 엑셀 다운로드
-    },
     result: {
-      get: (reviewId?: ApiId) => `/reviews/result/${reviewId ?? ""}`, // GET: 심사 결과 목록 조회 및 상세 조회
+      get: () => "/reviews/result", // GET: 심사 결과 목록 조회
       excel: () => "/reviews/result/excel", // GET: 심사 결과 엑셀 다운로드
-      report: () => "/reviews/result/reports", // GET: 심사 결과보고서 일괄 다운로드
+      report: () => "/reviews/result/reports", // GET: 전체 심사보고서 다운로드
     },
     revision: {
-      get: (revisionId?: ApiId) => `/reviews/revision/${revisionId ?? ""}`,
-      put: (revisionId: ApiId) => `/reviews/revision/${revisionId}`,
+      get: (revisionId?: ApiId) => `/reviews/revision/${revisionId ?? ""}`, // GET: 수정지시사항 목록 조회 및 상세 조회
+      put: (revisionId: ApiId) => `/reviews/revision/${revisionId}`, // PUT: 수정지시사항 심사 등록/수정
     },
+  },
+  achievement: {
+    get: (achievementId?: ApiId) => `/achievements/${achievementId ?? ""}`,
+    put: (achievementId: ApiId) => `/achievements/${achievementId}`,
+    post: () => "/achievements",
+    excel: () => "/achievements/excel",
   },
 };
