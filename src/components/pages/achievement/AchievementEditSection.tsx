@@ -10,7 +10,7 @@ import { TitleRow } from "@/components/common/rows";
 function AchievementEditSection() {
   const data = MOCKUP_ACHIEVEMENT;
   /**
-   * @TODO: GET API 연결
+   * @TODO: GET API 연결 및 useEffect 적용
    */
 
   const transformedAchievement = {
@@ -34,7 +34,7 @@ function AchievementEditSection() {
 
   const handleSubmit = (input: AchievementFormInput) => {
     /**
-     * @TODO: PUT/PATCH API 연결
+     * @TODO: PUT/PATCH API 연결 및 useEffect 적용
      */
     const body = { ...input, ISSN: input.ISSN1 + input.ISSN2 };
     console.log(body);
