@@ -99,6 +99,8 @@ function AdminStudentForm({ studentId }: Props) {
           /** 학생 등록 */
           const registerInputs = {
             ...basicInfo,
+            stage: form.values.stage,
+            thesisTitle: form.values.thesisTitle,
             headReviewerId: Number(headReviewer.profId),
             advisorIds: advisors.map((advisor: SelectedProfessor) => Number(advisor.profId)),
             committeeIds: committees.map((committee: SelectedProfessor) =>
