@@ -6,9 +6,10 @@ import Link from "next/link";
 
 interface Props {
   userType?: Role;
+  modificationFlag?: boolean;
 }
 
-function Navbar({ userType }: Props) {
+function Navbar({ userType, modificationFlag }: Props) {
   const theme = useMantineTheme();
 
   return (
@@ -29,7 +30,9 @@ function Navbar({ userType }: Props) {
       <AppShell.Section>
         <Profile />
       </AppShell.Section>
-      {userType && <NavbarList userType={userType} />}
+      {userType && modificationFlag !== undefined && (
+        <NavbarList userType={userType} modificationFlag={modificationFlag} />
+      )}
     </AppShell.Navbar>
   );
 }

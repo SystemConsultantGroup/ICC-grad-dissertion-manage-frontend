@@ -83,7 +83,7 @@ export interface PagedRevisionResponse
     student: string;
     department: string;
     title: string;
-    contentStatus: Status;
+    status: Status;
   }> {}
 
 export type PagedReviewsRequestQuery = PagedQueryRequest &
