@@ -119,7 +119,7 @@ function ReviewResultListSection() {
       >
         <SectionHeader.Buttons>
           <Group>
-            <Popover width={200} position="bottom" withArrow shadow="md">
+            <Popover width={220} position="bottom" withArrow shadow="md">
               <Popover.Target>
                 <ActionIcon variant="outline" color="blue">
                   <IconDownload size={16} />
@@ -147,7 +147,7 @@ function ReviewResultListSection() {
                       handleDownloadReports("all");
                     }}
                   >
-                    심사보고서 전체 출력
+                    심사보고서 전체 다운로드
                   </Button>
                   <Button
                     variant="outline"
@@ -155,7 +155,7 @@ function ReviewResultListSection() {
                       handleDownloadReports("filtered");
                     }}
                   >
-                    심사보고서 필터 출력
+                    심사보고서 필터 다운로드
                   </Button>
                 </Stack>
               </Popover.Dropdown>

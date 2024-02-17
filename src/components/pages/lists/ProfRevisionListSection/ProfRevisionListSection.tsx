@@ -133,9 +133,7 @@ function ProfRevisionListSection() {
             <Table.Data>{revision.department}</Table.Data>
             <Table.Data>{revision.student}</Table.Data>
             <Table.Data>{revision.title}</Table.Data>
-            <Table.Data>
-              {revision.contentStatus === "UNEXAMINED" ? "미확인" : "확인 완료"}
-            </Table.Data>
+            <Table.Data>{revision.status === "UNEXAMINED" ? "미확인" : "확인 완료"}</Table.Data>
           </Table.Row>
         ))}
       </Table>

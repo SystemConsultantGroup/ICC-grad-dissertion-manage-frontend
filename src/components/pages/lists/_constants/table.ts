@@ -6,7 +6,7 @@ export const STUDENTS_TABLE_HEADERS: TableHeaderProps[] = [
   { label: "이름", widthPercentage: 10 },
   { label: "이메일", widthPercentage: 15 },
   { label: "연락처", widthPercentage: 10 },
-  { label: "소속", widthPercentage: 10 },
+  { label: "학과", widthPercentage: 10 },
 ];
 
 export const PROF_TABLE_HEADERS: TableHeaderProps[] = [
