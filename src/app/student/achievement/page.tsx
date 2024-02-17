@@ -6,7 +6,7 @@ function StudentAchievementPage() {
   return (
     <>
       <PageHeader
-        title="연구실적 등록"
+        title="연구실적"
         description="각 행을 클릭하면 상세보기 및 수정 페이지로 이동합니다."
       />
       <Section>
