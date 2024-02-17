@@ -19,6 +19,8 @@ export const API_ROUTES = {
     get: () => "/departments",
     post: () => "/departments",
     delete: (deptId: ApiId) => `/departments/${deptId}`,
+    put: (deptId: ApiId, exclude: boolean) =>
+      `/departments/${deptId}?exclude=${exclude ? "true" : "false"}`,
   },
   user: {
     get: () => "/users/me", // GET: 유저 정보 조회
