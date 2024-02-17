@@ -10,7 +10,7 @@ interface Props {
 function LongContentRow({ field, content }: Props) {
   return (
     <Group gap={0} className={classes.wrapper}>
-      <Row field={field}>
+      <Row field={field} flexStart>
         <Text className={classes.content}>{content}</Text>
       </Row>
     </Group>

@@ -1,4 +1,4 @@
-import { Table, Text } from "@mantine/core";
+import { TableTd } from "@mantine/core";
 import React, { ReactNode } from "react";
 
 interface Props {
@@ -7,9 +7,14 @@ interface Props {
 
 function TableData({ children }: Props) {
   return (
-    <Table.Td>
-      <Text fz="md">{children}</Text>
-    </Table.Td>
+    <TableTd
+      fz={16}
+      style={{
+        whiteSpace: "nowrap",
+      }}
+    >
+      {children}
+    </TableTd>
   );
 }
 

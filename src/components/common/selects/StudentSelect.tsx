@@ -4,8 +4,13 @@ import { useEffect, useRef } from "react";
 import { UseFormReturnType } from "@mantine/form";
 import { Select, SelectProps } from "@mantine/core";
 import { PAGE_NUMBER_GET_ALL, PAGE_SIZE_GET_ALL } from "@/constants/pagination";
-import { SelectStudentFormValues } from "@/api/_types/students";
 import useStudents from "@/api/SWR/useStudents";
+import { User } from "@/api/_types/user";
+
+export interface SelectStudentFormValues {
+  departmentId: User["department"]["id"];
+  studentId: number;
+}
 
 interface Props extends Omit<SelectProps, "data" | "form"> {
   departmentId?: number;
