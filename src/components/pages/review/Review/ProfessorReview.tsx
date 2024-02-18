@@ -1,4 +1,7 @@
-import { Button, Group, Stack } from "@mantine/core";
+import Link from "next/link";
+import { Button, Group, Stack, Text } from "@mantine/core";
+import { UseFormReturnType } from "@mantine/form";
+import { IconCheck } from "@tabler/icons-react";
 import {
   BasicRow,
   ButtonRow,
@@ -7,32 +10,24 @@ import {
   TextAreaRow,
   TitleRow,
 } from "@/components/common/rows";
-import { Dispatch, SetStateAction, useState } from "react";
-import { IconCheck } from "@tabler/icons-react";
-import Link from "next/link";
-import { Stage } from "../ArticleInfo/ArticleInfo";
+import { Status } from "@/api/_types/common";
+import { Stage } from "../ThesisInfo/ThesisInfo";
 
 export interface ProfessorReviewProps {
-  onTemporarySave: () => void;
-  onSave: () => void;
   stage: Stage;
-  thesis?: Status;
-  presentation?: Status;
-  setThesis: Dispatch<SetStateAction<Status | undefined>>;
-  setPresentation: Dispatch<SetStateAction<Status | undefined>>;
+  form: UseFormReturnType<{
+    thesis: Status;
+    presentation: Status | null;
+    comment: string;
+    commentFile: File | null;
+  }>;
+  currentState: null | "pending" | "submitted";
 }
 
-export type Status = "UNEXAMINED" | "PASS" | "FAIL" | "PENDING";
+export function ProfessorReview({ stage, form, currentState }: ProfessorReviewProps) {
+  const { thesis, presentation } = form.values;
+  const hasPending = thesis === "PENDING" || presentation === "PENDING";
 
-export function ProfessorReview({
-  onTemporarySave,
-  onSave,
-  stage,
-  thesis,
-  presentation,
-  setThesis,
-  setPresentation,
-}: ProfessorReviewProps) {
   return (
     <Stack gap={0}>
       <TitleRow title="심사하기" />
@@ -43,7 +38,7 @@ export function ProfessorReview({
               leftSection={thesis === "PASS" && <IconCheck size={18} />}
               variant={thesis === "PASS" ? "filled" : "outline"}
               color="green"
-              onClick={() => setThesis("PASS")}
+              onClick={() => form.setFieldValue("thesis", "PASS")}
             >
               합격
             </Button>
@@ -51,7 +46,7 @@ export function ProfessorReview({
               leftSection={thesis === "FAIL" && <IconCheck size={18} />}
               variant={thesis === "FAIL" ? "filled" : "outline"}
               color="red"
-              onClick={() => setThesis("FAIL")}
+              onClick={() => form.setFieldValue("thesis", "FAIL")}
             >
               불합격
             </Button>
@@ -59,10 +54,15 @@ export function ProfessorReview({
               leftSection={thesis === "PENDING" && <IconCheck size={18} />}
               variant={thesis === "PENDING" ? "filled" : "outline"}
               color="violet"
-              onClick={() => setThesis("PENDING")}
+              onClick={() => form.setFieldValue("thesis", "PENDING")}
             >
               보류
             </Button>
+            {form?.errors?.thesis ? (
+              <Text c="red" size="sm" ml={24}>
+                {form.errors.thesis}
+              </Text>
+            ) : null}
           </Group>
         </BasicRow>
       </RowGroup>
@@ -74,7 +74,7 @@ export function ProfessorReview({
                 leftSection={presentation === "PASS" && <IconCheck size={18} />}
                 variant={presentation === "PASS" ? "filled" : "outline"}
                 color="green"
-                onClick={() => setPresentation("PASS")}
+                onClick={() => form.setFieldValue("presentation", "PASS")}
               >
                 합격
               </Button>
@@ -82,7 +82,7 @@ export function ProfessorReview({
                 leftSection={presentation === "FAIL" && <IconCheck size={18} />}
                 variant={presentation === "FAIL" ? "filled" : "outline"}
                 color="red"
-                onClick={() => setPresentation("FAIL")}
+                onClick={() => form.setFieldValue("presentation", "FAIL")}
               >
                 불합격
               </Button>
@@ -90,26 +90,34 @@ export function ProfessorReview({
                 leftSection={presentation === "PENDING" && <IconCheck size={18} />}
                 variant={presentation === "PENDING" ? "filled" : "outline"}
                 color="violet"
-                onClick={() => setPresentation("PENDING")}
+                onClick={() => form.setFieldValue("presentation", "PENDING")}
               >
                 보류
               </Button>
+              {form?.errors?.presentation ? (
+                <Text c="red" size="sm" ml={24}>
+                  {form.errors.presentation}
+                </Text>
+              ) : null}
             </Group>
           </BasicRow>
         </RowGroup>
       )}
-      <TextAreaRow field="심사 의견" />
+      <TextAreaRow field="심사 의견" form={form} formKey="comment" />
       <RowGroup>
-        <FileUploadRow field="심사 의견 파일" />
+        <FileUploadRow field="심사 의견 파일" form={form} formKey="commentFile" />
       </RowGroup>
       <RowGroup withBorderBottom={false}>
         <ButtonRow
           buttons={[
-            <Button key="temp" color="grape" variant="outline" onClick={onTemporarySave}>
-              임시저장
-            </Button>,
-            <Button key="final" color="blue" onClick={onSave}>
-              최종저장
+            <Button
+              key="save"
+              color={hasPending ? "violet" : "blue"}
+              type="submit"
+              loading={currentState === "pending"}
+              disabled={currentState === "submitted"}
+            >
+              {hasPending ? "임시저장" : "최종저장"}
             </Button>,
             <Button key="back" variant="outline" component={Link} href="../review">
               목록으로

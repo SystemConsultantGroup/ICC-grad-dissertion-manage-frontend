@@ -1,4 +1,5 @@
 import { ClientAxios } from "../ClientAxios";
+import { API_ROUTES } from "../apiRoute";
 
 type TArg = {
   fileLink: string;
@@ -23,4 +24,8 @@ export async function handleDownloadFile({ fileLink, fileName }: TArg) {
   a.click();
 
   URL.revokeObjectURL(url);
+}
+
+export function downloadUrlForUuid(uuid: string): string {
+  return ClientAxios.getUri({ url: API_ROUTES.file.get(uuid) });
 }

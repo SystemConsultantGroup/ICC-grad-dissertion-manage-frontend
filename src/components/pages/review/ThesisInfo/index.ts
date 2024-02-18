@@ -1,0 +1,1 @@
+export { ThesisInfo } from "./ThesisInfo";

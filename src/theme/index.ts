@@ -77,6 +77,15 @@ export const AppTheme = createTheme({
         },
       },
     },
+    Badge: {
+      styles: {
+        root: {
+          // Badge 글자가 약간 위쪽으로 올라가는 문제 해결
+          // 사실 근본적인 이유가 있을 텐데 무엇인지 알 수가 없었습니다...
+          lineHeight: "unset",
+        },
+      },
+    },
   } satisfies MantineThemeComponents,
 });
 

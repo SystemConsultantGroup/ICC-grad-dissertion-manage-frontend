@@ -18,9 +18,11 @@ export interface Reviewer {
   processId: number;
 }
 
+export type ThesisFileType = "PRESENTATION" | "THESIS" | "REVISION_REPORT";
+
 export interface ThesisFile {
   id: number;
-  type: string;
+  type: ThesisFileType;
   createdAt: string;
   updatedAt: string;
   file: File;
@@ -52,11 +54,18 @@ export interface Review {
 export interface DetailedReview extends Review {
   abstract: string;
   thesisFiles: ThesisFile[];
-  comment: string;
-  reviewFile: File;
+  comment: string | null;
+  reviewFile: File | null;
 }
 
 export interface DetailedReviewResponse extends CommonApiResponse, DetailedReview {}
+
+export interface UpdateReviewRequestBody {
+  contentStatus: Status;
+  presentationStatus?: Status | null;
+  comment: string;
+  fileUUID: string;
+}
 
 export interface DetailedRevision extends Review {
   abstract: string;
@@ -92,7 +101,6 @@ export type PagedRevisionRequestQuery = PagedQueryRequest &
 
 export interface ThesisReview {
   id: number;
-  thesisInfo: ThesisInfo;
   reviewer: User;
   file: File;
   contentStatus: Status;
@@ -106,6 +114,17 @@ export interface ThesisReview {
 // GET: /v1/reviews/result/{id}, /v1/reviews/current/{id}
 export interface AdminReviewResponse extends CommonApiResponse {
   id: number;
+  stage: Stage;
+  title: string;
+  student: string;
+  department: string;
+  abstract: string;
+  thesisFiles: ThesisFile[];
+  reviews: ThesisReview[];
+}
+export interface MyReviewResponse extends CommonApiResponse {
+  id: number;
+  stage: Stage;
   title: string;
   student: string;
   department: string;

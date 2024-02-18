@@ -1,46 +1,50 @@
-/* api 연결 필요 */
-
-"use client";
-
 import PageHeader from "@/components/common/PageHeader";
-import { ArticleInfo } from "@/components/pages/review/ArticleInfo";
+import { ThesisInfo } from "@/components/pages/review/ThesisInfo";
 import { ReviewCard } from "@/components/pages/review/Review/ReviewCard";
-import { ReviewResult, ProfessorReview } from "@/components/pages/review/Review";
-import { ReviewConfirmModal } from "@/components/pages/review/ReviewConfirmModal/ReviewConfirmModal";
-import { useState } from "react";
-import { Status } from "@/components/pages/review/Review/ProfessorReview";
+import { DetailedReviewResponse } from "@/api/_types/reviews";
+import { API_ROUTES } from "@/api/apiRoute";
+import { ThesisInfoData } from "@/components/pages/review/ThesisInfo/ThesisInfo";
+import { fetcher } from "@/api/fetcher";
+import { AuthSSR } from "@/api/AuthSSR";
+import { ProfessorReviewForm } from "./ProfessorReviewForm";
+import { ProfessorReviewResult } from "./ProfessorReviewResult";
 
-export default function ProfessorReviewPage() {
-  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-  const [thesis, setThesis] = useState<Status>();
-  const [presentation, setPresentation] = useState<Status>();
+export default async function ProfessorReviewPage({
+  params: { id: reviewId },
+}: {
+  params: { id: string };
+}) {
+  const { token } = await AuthSSR({ userType: "PROFESSOR" });
+  const review = (await fetcher({
+    url: API_ROUTES.review.get(reviewId),
+    token,
+  })) as DetailedReviewResponse;
+  const thesisInfo: ThesisInfoData = {
+    title: review.title,
+    stage: review.stage,
+    studentInfo: {
+      name: review.student,
+      department: { name: review.department },
+    },
+    abstract: review.abstract,
+    thesisFile: review.thesisFiles.find((file) => file.type === "THESIS")?.file,
+    presentationFile: review.thesisFiles.find((file) => file.type === "PRESENTATION")?.file,
+  };
+  const isPermanent =
+    (review.contentStatus === "PASS" || review.contentStatus === "FAIL") &&
+    (review.presentationStatus === "PASS" || review.presentationStatus === "FAIL");
 
   return (
     <>
       <PageHeader title="논문 심사" />
       <ReviewCard>
-        <ArticleInfo stage="MAIN" isAdvisor />
-        <ProfessorReview
-          onTemporarySave={() => {}}
-          onSave={() => {
-            setShowConfirmDialog(true);
-          }}
-          stage="MAIN"
-          thesis={thesis}
-          setThesis={setThesis}
-          presentation={presentation}
-          setPresentation={setPresentation}
-        />
+        <ThesisInfo thesis={thesisInfo} isAdvisor />
+        {!isPermanent ? (
+          <ProfessorReviewForm reviewId={reviewId} thesisInfo={thesisInfo} previous={review} />
+        ) : (
+          <ProfessorReviewResult previous={review} />
+        )}
       </ReviewCard>
-      <ReviewConfirmModal
-        opened={showConfirmDialog}
-        onClose={() => {
-          setShowConfirmDialog(false);
-        }}
-      >
-        <ArticleInfo simple stage="MAIN" />
-        <ReviewResult stage="MAIN" />
-      </ReviewConfirmModal>
     </>
   );
 }
