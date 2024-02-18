@@ -26,13 +26,13 @@ function AdminExcelRegister({ isProf = false }: Props) {
   const handleExcelDownload = async () => {
     try {
       if (isProf) {
-        const fileLink = API_ROUTES.professor.excel.get();
+        const fileLink = API_ROUTES.file.excel.professor();
         handleDownloadFile({
           fileLink,
           fileName: "교수 일괄 업로드 양식.xlsx",
         });
       } else {
-        const fileLink = API_ROUTES.student.excel.get();
+        const fileLink = API_ROUTES.file.excel.student();
         handleDownloadFile({
           fileLink,
           fileName: "학생 일괄 업로드 양식.xlsx",
