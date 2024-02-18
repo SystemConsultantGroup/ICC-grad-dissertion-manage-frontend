@@ -9,6 +9,7 @@ import { ClientAxios } from "@/api/ClientAxios";
 import { API_ROUTES } from "@/api/apiRoute";
 import { useState } from "react";
 import classes from "@/components/pages/write/PaperSubmissionForm/PaperSubmissionForm.module.css";
+import { transaction } from "@/api/_utils/task";
 
 interface PaperSubmissionFormInputs {
   title: string;
@@ -39,14 +40,16 @@ function PaperSubmissionForm() {
   const handleSubmit = async (values: PaperSubmissionFormInputs) => {
     setIsSubmitting(true);
     try {
-      const thesisFileUUID = (await uploadFile(values.thesisFile!)).uuid;
-      const presentationFileUUID = (await uploadFile(values.presentationFile!)).uuid;
-      const { title, abstract } = values;
-      ClientAxios.put(API_ROUTES.student.putThesis(user!.id), {
-        title,
-        abstract,
-        thesisFileUUID,
-        presentationFileUUID,
+      await transaction(async () => {
+        const thesisFileUUID = (await uploadFile(values.thesisFile!)).uuid;
+        const presentationFileUUID = (await uploadFile(values.presentationFile!)).uuid;
+        const { title, abstract } = values;
+        await ClientAxios.put(API_ROUTES.student.putThesis(user!.id), {
+          title,
+          abstract,
+          thesisFileUUID,
+          presentationFileUUID,
+        });
       });
     } catch (error) {
       console.error(error);

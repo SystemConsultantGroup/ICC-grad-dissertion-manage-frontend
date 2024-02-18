@@ -7,6 +7,7 @@ export const API_ROUTES = {
       professor: () => "/files/excels/professor", // GET: 교수 일괄 업로드 양식 다운로드
       student: () => "/files/excels/student", // GET: 학생 일괄 업로드 양식 다운로드
     },
+    get: (uuid: ApiId) => `/files/${uuid}`,
     post: () => "/files", // POST: 파일 업로드
     delete: (uuid: ApiId) => `/files/${uuid}`, // DELETE: 파일 삭제
   },
@@ -57,8 +58,9 @@ export const API_ROUTES = {
       `/students/${studentId}/reviewers/${reviewerId}`, // PUT: 학생 심사위원 배정 취소
   },
   review: {
-    get: (reviewId?: ApiId) => `/reviews/${reviewId ?? ""}`, // GET: 심사 대상 논문 목록 조회 및 상세 조회
-    put: (reviewId: ApiId) => `/reviews/${reviewId}`, // PUT: 논문 심사 등록/수정
+    get: (reviewId?: ApiId) => `/reviews/${reviewId ?? ""}`, // GET: 심사 대상 논문 목록 조회 및 상세 조회(교수)
+    getMe: () => "/reviews/me",
+    put: (reviewId: ApiId) => `/reviews/${reviewId}`, // PUT: 논문 심사 등록/수정(교수)
     excel: () => "/reviews/excel", // GET: 심사 대상 논문 리스트 다운로드
     current: {
       get: (reviewId?: ApiId) => `/reviews/current/${reviewId ?? ""}`, // GET: 현재 심사 대상 논문 목록 조회 및 상세 조회

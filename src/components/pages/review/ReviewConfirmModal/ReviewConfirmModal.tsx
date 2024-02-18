@@ -1,14 +1,32 @@
+import { PropsWithChildren } from "react";
+import { Button, Group, Modal as MantineModal, Stack } from "@mantine/core";
 import SectionTitle from "@/components/common/SectionTitle";
 import { NoticeRow, TitleRow } from "@/components/common/rows";
-import { Button, Group, Modal as MantineModal, Stack } from "@mantine/core";
-import { PropsWithChildren } from "react";
+import { Status } from "@/api/_types/common";
+import { ThesisInfo } from "../ThesisInfo";
+import { ThesisInfoData } from "../ThesisInfo/ThesisInfo";
+import { ReviewResult } from "../Review";
 
 export interface ReviewConfirmModalProps extends PropsWithChildren {
+  thesis: ThesisInfoData;
+  review: {
+    thesis: Status;
+    presentation: Status | null;
+    comment: string;
+    commentFile: string | null;
+  };
   opened: boolean;
+  onConfirm: () => void;
   onClose: () => void;
 }
 
-export function ReviewConfirmModal({ opened, onClose, children }: ReviewConfirmModalProps) {
+export function ReviewConfirmModal({
+  thesis,
+  review,
+  opened,
+  onConfirm,
+  onClose,
+}: ReviewConfirmModalProps) {
   return (
     <MantineModal
       opened={opened}
@@ -18,12 +36,12 @@ export function ReviewConfirmModal({ opened, onClose, children }: ReviewConfirmM
       padding="lg"
       radius="lg"
       size="lg"
-      styles={{ content: { overflowY: "hidden" }, body: { height: "80vh" } }}
+      styles={{ content: { overflowY: "initial" } }}
     >
-      <Stack gap={0} style={{ height: "100%" }}>
+      <Stack gap={0} style={{ maxHeight: "76vh" }}>
         <Stack style={{ flexShrink: 0 }} gap={0}>
           <TitleRow
-            title={<SectionTitle>심사 결과 최종저장</SectionTitle>}
+            title={<SectionTitle>심사 결과를 최종저장할까요?</SectionTitle>}
             style={{ borderBottomWidth: 0, marginBottom: -4 }}
           />
           <NoticeRow
@@ -31,13 +49,29 @@ export function ReviewConfirmModal({ opened, onClose, children }: ReviewConfirmM
             withBorderBottom={false}
           />
         </Stack>
-        <Stack style={{ overflowY: "auto", flex: "1 0 0" }}>{children}</Stack>
+        <Stack style={{ overflowY: "auto", flex: "0 1 auto" }}>
+          <ThesisInfo thesis={thesis} simple />
+          <ReviewResult
+            stage={thesis.stage}
+            thesis={review.thesis}
+            presentation={review.presentation}
+            comment={review.comment}
+            commentFile={review.commentFile}
+          />
+        </Stack>
         <Stack style={{ flexShrink: 0 }} gap={0}>
           <Group justify="center" mt={36}>
             <Button key="cancel" variant="outline" onClick={onClose}>
               취소
             </Button>
-            <Button key="save" color="orange">
+            <Button
+              key="save"
+              color="orange"
+              onClick={() => {
+                onConfirm();
+                onClose();
+              }}
+            >
               최종저장
             </Button>
           </Group>

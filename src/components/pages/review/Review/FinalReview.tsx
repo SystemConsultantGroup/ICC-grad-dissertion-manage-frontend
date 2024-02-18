@@ -1,4 +1,6 @@
-import { Button, Group, Stack } from "@mantine/core";
+import { Button, Group, Stack, Text } from "@mantine/core";
+import Link from "next/link";
+import { UseFormReturnType } from "@mantine/form";
 import {
   BasicRow,
   ButtonRow,
@@ -7,19 +9,22 @@ import {
   TextAreaRow,
   TitleRow,
 } from "@/components/common/rows";
-import { Dispatch, SetStateAction } from "react";
 import { IconCheck } from "@tabler/icons-react";
-import Link from "next/link";
-import { Status } from "./ProfessorReview";
+import { Status } from "@/api/_types/common";
 
 export interface FinalReviewProps {
-  status?: Status;
-  setStatus: Dispatch<SetStateAction<Status | undefined>>;
-  onTemporarySave: () => void;
-  onSave: () => void;
+  form: UseFormReturnType<{
+    status: Status;
+    comment: string;
+    commentFile: File | null;
+  }>;
+  currentState: null | "pending" | "submitted";
 }
 
-export function FinalReview({ status, setStatus, onTemporarySave, onSave }: FinalReviewProps) {
+export function FinalReview({ form, currentState }: FinalReviewProps) {
+  const { status } = form.values;
+  const hasPending = status === "PENDING";
+
   return (
     <Stack gap={0}>
       <TitleRow title="최종 심사하기" />
@@ -30,7 +35,7 @@ export function FinalReview({ status, setStatus, onTemporarySave, onSave }: Fina
               leftSection={status === "PASS" && <IconCheck size={18} />}
               variant={status === "PASS" ? "filled" : "outline"}
               color="green"
-              onClick={() => setStatus("PASS")}
+              onClick={() => form.setFieldValue("status", "PASS")}
             >
               합격
             </Button>
@@ -38,7 +43,7 @@ export function FinalReview({ status, setStatus, onTemporarySave, onSave }: Fina
               leftSection={status === "FAIL" && <IconCheck size={18} />}
               variant={status === "FAIL" ? "filled" : "outline"}
               color="red"
-              onClick={() => setStatus("FAIL")}
+              onClick={() => form.setFieldValue("status", "FAIL")}
             >
               불합격
             </Button>
@@ -46,25 +51,33 @@ export function FinalReview({ status, setStatus, onTemporarySave, onSave }: Fina
               leftSection={status === "PENDING" && <IconCheck size={18} />}
               variant={status === "PENDING" ? "filled" : "outline"}
               color="violet"
-              onClick={() => setStatus("PENDING")}
+              onClick={() => form.setFieldValue("status", "PENDING")}
             >
               보류
             </Button>
+            {form?.errors?.thesis ? (
+              <Text c="red" size="sm" ml={24}>
+                {form.errors.thesis}
+              </Text>
+            ) : null}
           </Group>
         </BasicRow>
       </RowGroup>
-      <TextAreaRow field="심사 의견" />
+      <TextAreaRow field="심사 의견" form={form} formKey="comment" />
       <RowGroup>
-        <FileUploadRow field="심사 의견 파일" />
+        <FileUploadRow field="심사 의견 파일" form={form} formKey="commentFile" />
       </RowGroup>
       <RowGroup withBorderBottom={false}>
         <ButtonRow
           buttons={[
-            <Button key="temp" color="grape" variant="outline" onClick={onTemporarySave}>
-              임시저장
-            </Button>,
-            <Button key="final" color="blue" onClick={onSave}>
-              최종저장
+            <Button
+              key="save"
+              color={hasPending ? "violet" : "blue"}
+              type="submit"
+              loading={currentState === "pending"}
+              disabled={currentState === "submitted"}
+            >
+              {hasPending ? "임시저장" : "최종저장"}
             </Button>,
             <Button key="back" variant="outline" component={Link} href="../final">
               목록으로
