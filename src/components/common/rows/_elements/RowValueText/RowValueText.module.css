@@ -1,0 +1,6 @@
+.valueText {
+  font-weight: var(--mantine-other-font-weight-bold);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

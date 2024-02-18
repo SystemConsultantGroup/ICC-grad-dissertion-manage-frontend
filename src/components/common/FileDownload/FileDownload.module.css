@@ -1,0 +1,6 @@
+.fileNameText {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  font-weight: var(--mantine-other-font-weight-bold);
+}
