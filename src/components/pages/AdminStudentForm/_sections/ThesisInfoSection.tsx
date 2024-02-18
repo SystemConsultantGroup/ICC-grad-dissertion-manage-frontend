@@ -47,7 +47,7 @@ function ThesisInfoSection({ studentId }: Props) {
         <BasicRow field="논문 파일">
           <Group gap={10}>
             <TextInput value={thesisFile.name} disabled color="" />
-            <DownloadButton link={thesisFile.link} />
+            <DownloadButton link={thesisFile.link} fileName={thesisFile.name} />
           </Group>
         </BasicRow>
       </RowGroup>
@@ -55,7 +55,7 @@ function ThesisInfoSection({ studentId }: Props) {
         <BasicRow field="논문 발표 파일">
           <Group gap={10}>
             <TextInput value={presentationFile.name} disabled />
-            <DownloadButton link={presentationFile.link} />
+            <DownloadButton link={presentationFile.link} fileName={thesisFile.name} />
           </Group>
         </BasicRow>
       </RowGroup>

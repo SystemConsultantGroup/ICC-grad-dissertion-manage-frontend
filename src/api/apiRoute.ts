@@ -73,7 +73,7 @@ export const API_ROUTES = {
       excel: () => "/reviews/final/excel", // GET: 최종 심사 대상 논문 리스트 다운로드
     },
     result: {
-      get: () => "/reviews/result", // GET: 심사 결과 목록 조회
+      get: (reviewId?: ApiId) => `/reviews/result/${reviewId ?? ""}`, // GET: 심사 결과 목록 조회
       excel: () => "/reviews/result/excel", // GET: 심사 결과 엑셀 다운로드
       report: () => "/reviews/result/reports", // GET: 전체 심사보고서 다운로드
     },
