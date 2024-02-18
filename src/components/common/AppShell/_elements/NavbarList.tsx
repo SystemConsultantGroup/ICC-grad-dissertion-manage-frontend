@@ -11,16 +11,20 @@ import {
 
 interface Props {
   userType: Role;
+  modificationFlag: boolean;
 }
 
 const USER_TYPE_NAVBAR_LIST = {
   ADMIN: ADMIN_NAVBAR_LIST,
   PROFESSOR: PROF_NAVBAR_LIST,
-  STUDENT: STUDENT_NAVBAR_LIST,
+  STUDENT: (modificationFlag: boolean) => STUDENT_NAVBAR_LIST(modificationFlag),
 };
 
-function NavbarList({ userType }: Props) {
-  const navbarList = USER_TYPE_NAVBAR_LIST[userType];
+function NavbarList({ userType, modificationFlag }: Props) {
+  const navbarList =
+    userType === "STUDENT"
+      ? USER_TYPE_NAVBAR_LIST[userType](modificationFlag)
+      : USER_TYPE_NAVBAR_LIST[userType];
   const pathname = usePathname();
 
   function isNavbarActive(href: string | undefined): boolean {

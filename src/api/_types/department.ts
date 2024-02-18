@@ -1,3 +1,5 @@
+import { CommonApiResponse } from "./common";
+
 export interface Department {
   id: number;
   name: string;
@@ -5,6 +7,6 @@ export interface Department {
   userCount: number;
 }
 
-export interface DepartmentsResponse {
+export interface DepartmentsResponse extends CommonApiResponse {
   departments: Department[];
 }

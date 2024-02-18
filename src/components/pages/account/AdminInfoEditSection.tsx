@@ -74,7 +74,7 @@ function AdminInfoEditSection() {
             </Group>
           </BasicRow>
         </RowGroup>
-        <RowGroup>
+        <RowGroup withBorderBottom={false}>
           <ButtonRow
             buttons={[
               <Button key="save" type="submit">
