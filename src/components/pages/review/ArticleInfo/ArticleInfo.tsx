@@ -1,14 +1,33 @@
-import { Stack } from "@mantine/core";
+import { Badge, Stack } from "@mantine/core";
 import { BasicRow, FileRow, RowGroup, TitleRow } from "@/components/common/rows";
 
+export type Stage = "PRELIMINARY" | "MAIN";
+
 interface ArticleInfoProps {
+  stage?: Stage;
+  isAdvisor?: boolean;
+  revision?: boolean;
   simple?: boolean;
 }
 
-export function ArticleInfo({ simple = false }: ArticleInfoProps) {
+export function ArticleInfo({ stage, isAdvisor, revision, simple = false }: ArticleInfoProps) {
   return (
     <Stack gap={0}>
-      <TitleRow title="논문 정보" />
+      <TitleRow
+        title="논문 정보"
+        badge={
+          <>
+            {isAdvisor && <Badge>지도 학생</Badge>}
+            {stage === "MAIN" ? (
+              <Badge>본심</Badge>
+            ) : stage === "PRELIMINARY" ? (
+              <Badge>예심</Badge>
+            ) : (
+              <></>
+            )}
+          </>
+        }
+      />
       <RowGroup>
         <BasicRow field="논문 제목">
           <BasicRow.Text>Design of Real-time SIFT Feature Extension</BasicRow.Text>
@@ -25,7 +44,7 @@ export function ArticleInfo({ simple = false }: ArticleInfoProps) {
         </BasicRow>
       </RowGroup>
       <RowGroup>
-        <BasicRow field="논문 초록">
+        <BasicRow field="논문 초록" p="14 0 14 0">
           <BasicRow.Text>
             A real-time hardware architecture based on scale-invariant feature transform algorithm
             (SIFT) feature extraction with parallel technology has been introduced in this paper.
@@ -42,6 +61,24 @@ export function ArticleInfo({ simple = false }: ArticleInfoProps) {
           </RowGroup>
           <RowGroup>
             <FileRow field="논문 발표 파일" name="test.pptx" url="." />
+          </RowGroup>
+        </>
+      )}
+      {revision && (
+        <>
+          <RowGroup>
+            <FileRow field="수정 논문 파일" name="test.pdf" url="." />
+          </RowGroup>
+          <RowGroup>
+            <FileRow field="수정지시사항 결과보고서" fieldSize="lg" name="test.pptx" url="." />
+          </RowGroup>
+          <RowGroup>
+            <FileRow
+              field="(서명)수정지시사항 결과보고서"
+              fieldSize="lg"
+              name="test.pptx"
+              url="."
+            />
           </RowGroup>
         </>
       )}

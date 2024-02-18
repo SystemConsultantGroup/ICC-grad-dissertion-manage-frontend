@@ -1,3 +1,5 @@
+import { PagedApiResponse, PagedQueryRequest } from "./common";
+
 export type AchievementType =
   | "SCI"
   | "SCOPUS"
@@ -62,3 +64,13 @@ export interface Achievement {
   publicationDate: string;
   paperTitle: string;
 }
+
+export interface PagedAchievementResponse extends PagedApiResponse<Achievement> {}
+export type PagedAchievementRequestQuery = PagedQueryRequest &
+  Partial<
+    Omit<Achievement, "name" | "id" | "department" | "ISSN" | "authorNumbers" | "authorType"> & {
+      studentNumber: string;
+      author: string;
+      departmentId: string;
+    }
+  >;

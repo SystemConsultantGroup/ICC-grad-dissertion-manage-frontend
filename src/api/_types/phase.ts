@@ -1,16 +1,14 @@
-import { CommonApiResponse } from "./common";
+import { CommonApiResponse } from "@/api/_types/common";
 
 export interface Phase {
   id: number;
   title: string;
   start: string;
   end: string;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export interface PhasesResponse extends CommonApiResponse {
-  phases: Omit<Phase, "createdAt" | "updatedAt">[];
+  phases: Phase[];
 }
 
 export interface UpdatePhaseRequestBody {

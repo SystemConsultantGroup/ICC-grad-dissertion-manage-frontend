@@ -1,17 +1,35 @@
 "use client";
 
-import { Button, FileButton, FileInput, Group } from "@mantine/core";
+import { Button, FileInput, Group } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 import { useEffect, useRef, useState } from "react";
 import Row from "@/components/common/rows/_elements/Row/Row";
+import { UseFormReturnType } from "@mantine/form";
+
+declare module "@mantine/core" {
+  interface FileInputProps {
+    placeholder?: string;
+  }
+}
 
 interface Props {
   field: string;
+  fieldSize?: "sm" | "md" | "lg" | "xl" | number;
   onChange?: (file: File | null) => void;
   defaultFile?: File;
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  form?: UseFormReturnType<any>;
+  formKey?: string;
 }
 
-function FileUploadRow({ field, onChange, defaultFile }: Props) {
+function FileUploadRow({
+  field,
+  onChange,
+  defaultFile,
+  form,
+  formKey = "file",
+  fieldSize = "md",
+}: Props) {
   const [file, setFile] = useState<File | null>(null);
   const resetRef = useRef<() => void>(null);
   const clearFile = () => {
@@ -31,16 +49,19 @@ function FileUploadRow({ field, onChange, defaultFile }: Props) {
   }, [defaultFile]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <Row field={field} fieldSize="sm">
+    <Row field={field} fieldSize={fieldSize}>
       <Group gap={16}>
-        <FileButton onChange={handleFileChange} resetRef={resetRef}>
+        {/* form API와 함께 사용시 예기치 못한 동작이 발생하여 주석처리 */}
+        {/* <FileButton onChange={handleFileChange} resetRef={resetRef}>
           {(props) => <Button {...props}>파일 선택</Button>}
-        </FileButton>
+        </FileButton> */}
         <FileInput
           style={{ width: 300 }}
-          value={file}
+          value={form ? undefined : file}
           onChange={handleFileChange}
           defaultValue={defaultFile}
+          placeholder="파일 업로드..."
+          {...form?.getInputProps(formKey)}
         >
           {file?.name}
         </FileInput>
@@ -48,8 +69,8 @@ function FileUploadRow({ field, onChange, defaultFile }: Props) {
           color="red"
           variant="outline"
           leftSection={<IconTrash size={20} />}
-          disabled={!file}
-          onClick={clearFile}
+          disabled={form ? !form.values[formKey] : !file}
+          onClick={form ? () => form.setValues({ ...form.values, [formKey]: null }) : clearFile}
         >
           삭제
         </Button>

@@ -18,11 +18,30 @@ interface Props {
   children: ReactNode;
   /** 모달 하단 버튼 컴포넌트 그룹 */
   buttonGroup?: ReactNode;
+  /** close 버튼 유무 */
+  withCloseButton?: boolean;
+  /** 모달 크기 */
+  size?: string;
 }
 
-function Modal({ opened, onClose, icon, title, children, buttonGroup }: Props) {
+function Modal({
+  opened,
+  onClose,
+  icon,
+  title,
+  children,
+  buttonGroup,
+  withCloseButton = false,
+  size,
+}: Props) {
   return (
-    <MantineModal opened={opened} onClose={onClose} centered withCloseButton={false}>
+    <MantineModal
+      opened={opened}
+      onClose={onClose}
+      centered
+      withCloseButton={withCloseButton}
+      size={size}
+    >
       <Stack align="center" gap={0} pt={16}>
         {icon || <IconAlertTriangle />}
         <Text fw={700} fz={24} mt={16} mb={32}>
