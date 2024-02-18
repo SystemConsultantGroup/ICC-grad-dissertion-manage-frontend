@@ -2,7 +2,6 @@
 next-env.d.ts
 yarn.lock
 public
-next.config.js
 README.md
 Dockerfile
 .nvmrc

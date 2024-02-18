@@ -1,0 +1,16 @@
+@import url(./typography/pretendard.css);
+
+:root[data-mantine-color-scheme="light"] {
+  --color-main: #fafafa;
+  --mantine-color-dimmed-border: var(--mantine-color-gray-1);
+}
+
+:root[data-mantine-color-scheme="dark"] {
+  --color-main: var(--mantine-color-dark-7);
+  --mantine-color-dimmed-border: var(--mantine-color-gray-9);
+}
+
+/* g같은 일부 글자의 아랫부분이 잘리는 현상 방지 */
+.mantine-FileInput-input > div {
+  padding: 0.2em 0;
+}

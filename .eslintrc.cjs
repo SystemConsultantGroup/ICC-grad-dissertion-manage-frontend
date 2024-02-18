@@ -6,11 +6,13 @@ module.exports = {
   extends: [
     "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
+    "mantine",
     "next/core-web-vitals",
     "prettier",
   ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
+    project: ["tsconfig.json"],
     ecmaFeatures: {
       jsx: true,
     },
@@ -30,5 +32,6 @@ module.exports = {
     "require-jsdoc": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-this-alias": "off",
+    "@typescript-eslint/return-await": "off",
   },
 };
