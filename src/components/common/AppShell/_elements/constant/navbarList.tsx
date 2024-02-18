@@ -78,26 +78,37 @@ export const ADMIN_NAVBAR_LIST: Props[] = [
     icon: <IconSettings size="24" stroke={1} />,
   },
 ];
-export const STUDENT_NAVBAR_LIST: Props[] = [
-  { label: "메인", href: "/", icon: <IconHome size="24" stroke={1} /> },
-  { label: "논문 투고", href: "/student/write", icon: <IconFileText size="24" stroke={1} /> },
-  {
-    label: "심사 결과 확인",
-    href: "/student/result",
-    icon: <IconProgressCheck size="24" stroke={1} />,
-  },
-  {
-    label: "수정사항 제출/확인",
-    href: "/student/revision",
-    icon: <IconFileCheck size="24" stroke={1} />,
-  },
-  {
-    label: "연구실적 등록",
-    href: "/student/achievement",
-    icon: <IconMicroscope size="24" stroke={1} />,
-  },
-  { label: "회원정보 수정", href: "/student/account", icon: <IconSettings size="24" stroke={1} /> },
-];
+export const STUDENT_NAVBAR_LIST = (modificationFlag: boolean) => {
+  const navbarList: Props[] = [
+    { label: "메인", href: "/", icon: <IconHome size="24" stroke={1} /> },
+    { label: "논문 투고", href: "/student/write", icon: <IconFileText size="24" stroke={1} /> },
+    {
+      label: "심사 결과 확인",
+      href: "/student/result",
+      icon: <IconProgressCheck size="24" stroke={1} />,
+    },
+    {
+      label: "연구실적",
+      href: "/student/achievement",
+      icon: <IconMicroscope size="24" stroke={1} />,
+    },
+    {
+      label: "회원정보 수정",
+      href: "/student/account",
+      icon: <IconSettings size="24" stroke={1} />,
+    },
+  ];
+
+  if (modificationFlag) {
+    navbarList.splice(3, 0, {
+      label: "수정사항 제출",
+      href: "/student/revision",
+      icon: <IconFileCheck size="24" stroke={1} />,
+    });
+  }
+
+  return navbarList;
+};
 export const PROF_NAVBAR_LIST: Props[] = [
   { label: "메인", href: "/", icon: <IconHome size="24" stroke={1} /> },
   { label: "논문 심사", href: "/prof/review", icon: <IconChecklist size="24" stroke={1} /> },

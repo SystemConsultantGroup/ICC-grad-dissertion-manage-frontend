@@ -23,7 +23,7 @@ function Profile() {
       >
         <Group wrap="nowrap">
           <Avatar src="" radius="xl" size={60} />
-          <Stack gap={0} w="50%">
+          <Stack gap={6} w="50%">
             <Text size="md" fw={500} truncate>
               {user?.name}
             </Text>

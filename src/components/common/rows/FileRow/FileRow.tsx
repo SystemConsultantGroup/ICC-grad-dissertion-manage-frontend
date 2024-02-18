@@ -1,30 +1,31 @@
 "use client";
 
 import { Group, UnstyledButton } from "@mantine/core";
-import { IconFileMinus } from "@tabler/icons-react";
+import { IconDownload } from "@tabler/icons-react";
 import Row from "@/components/common/rows/_elements/Row/Row";
 import { saveAs } from "file-saver";
 
 interface Props {
   field: string;
+  fieldSize?: "sm" | "md" | "lg" | "xl";
   url: string;
   name: string;
 }
 
-function FilePostRow({ field, url, name }: Props) {
+function FilePostRow({ field, fieldSize, url, name }: Props) {
   const saveFile = async () => {
     const response = await fetch(url);
     const blob = await response.blob();
     saveAs(blob, name);
   };
   return (
-    <Row field={field} fieldSize="sm">
-      <Group gap={16}>
-        <IconFileMinus size={24} />
-        <UnstyledButton onClick={saveFile}>
+    <Row field={field} fieldSize={fieldSize}>
+      <UnstyledButton onClick={saveFile}>
+        <Group gap={16}>
+          <IconDownload size={24} />
           <Row.Text>{name}</Row.Text>
-        </UnstyledButton>
-      </Group>
+        </Group>
+      </UnstyledButton>
     </Row>
   );
 }

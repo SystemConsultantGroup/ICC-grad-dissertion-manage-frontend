@@ -9,9 +9,10 @@ interface Props {
   onChange?: ChangeEventHandler;
   /* eslint-disable @typescript-eslint/no-explicit-any */
   form?: UseFormReturnType<any>;
+  formKey?: string;
 }
 
-function TextAreaRow({ field, content, onChange, form }: Props) {
+function TextAreaRow({ field, content, onChange, form, formKey = "content" }: Props) {
   return (
     <Group gap={0} className={classes.wrapper}>
       <Text className={classes.fieldText}>{field}</Text>
@@ -24,7 +25,7 @@ function TextAreaRow({ field, content, onChange, form }: Props) {
           input: classes.contentInput,
         }}
         onChange={onChange}
-        {...form?.getInputProps("content")}
+        {...form?.getInputProps(formKey)}
       />
     </Group>
   );

@@ -13,6 +13,7 @@ import { useAuth } from "@/components/common/AuthProvider";
 import { useConditionalSWR } from "@/api/SWR/useConditionalSWR";
 import { useEffect } from "react";
 
+
 interface Props {
   id: number | string;
 }

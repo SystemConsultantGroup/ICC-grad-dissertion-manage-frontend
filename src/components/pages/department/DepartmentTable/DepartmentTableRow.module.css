@@ -1,0 +1,19 @@
+.wrapper {
+  padding: 14px;
+  border-bottom: 1px solid var(--mantine-color-gray-2);
+  height: 71px;
+}
+
+.deptNameText {
+  font-size: var(--mantine-font-size-lg);
+  font-weight: 500;
+}
+
+.userCountText {
+  font-size: var(--mantine-font-size-sm);
+  color: var(--mantine-color-gray-6);
+}
+
+.deleteButton {
+  background-color: var(--mantine-color-red-9);
+}
