@@ -8,6 +8,7 @@ import { Professor, ReviewerRole } from "@/api/_types/professors";
 import { ProfessorSelect } from "@/components/common/selects/ProfessorSelect";
 import { DepartmentSelect } from "@/components/common/selects/DepartmentSelect";
 import { useProfessors, useDepartments } from "@/api/SWR";
+import { showNotificationError } from "@/components/common/Notifications";
 import { SelectedProfessor } from "../_types/AdminStudentForm";
 
 interface Props {
@@ -91,7 +92,7 @@ function AssignReviewerSection({
     };
 
     fetchReviewer();
-  });
+  }, [studentId]);
 
   /** 배정된 교수 목록 조회시 label 설정하는 함수 */
   const assignedReviewerLabel = useMemo(
@@ -190,7 +191,13 @@ function AssignReviewerSection({
 
   /** 지도교수 선택 */
   const handleAdvisorSelect = () => {
-    if (selectedAdvisor.deptId && selectedAdvisor.profId) {
+    const isDuplicate = selectedReviewers.some(
+      (reviewer) => reviewer.value === selectedAdvisor.profId
+    );
+
+    if (isDuplicate) {
+      showNotificationError({ message: "중복된 배정입니다. 배정 교수 목록을 확인해주세요." });
+    } else if (selectedAdvisor.deptId && selectedAdvisor.profId) {
       onChangeReviewerAdd(
         "ADVISOR",
         selectedAdvisor.deptId,
@@ -202,7 +209,13 @@ function AssignReviewerSection({
 
   /** 심사위원 선택 */
   const handleCommitteeSelect = () => {
-    if (selectedCommittee.deptId && selectedCommittee.profId) {
+    const isDuplicate = selectedReviewers.some(
+      (reviewer) => reviewer.value === selectedCommittee.profId
+    );
+
+    if (isDuplicate) {
+      showNotificationError({ message: "중복된 배정입니다. 배정 교수 목록을 확인해주세요." });
+    } else if (selectedCommittee.deptId && selectedCommittee.profId) {
       onChangeReviewerAdd(
         "COMMITTEE",
         selectedCommittee.deptId,
@@ -214,7 +227,13 @@ function AssignReviewerSection({
 
   /** 심사위원장 선택 */
   const handleHeadReviewerSelect = () => {
-    if (selectedHeadReviewer.deptId && selectedHeadReviewer.profId) {
+    const isDuplicate = selectedReviewers.some(
+      (reviewer) => reviewer.value === selectedHeadReviewer.profId
+    );
+
+    if (isDuplicate) {
+      showNotificationError({ message: "중복된 배정입니다. 배정 교수 목록을 확인해주세요." });
+    } else if (selectedHeadReviewer.deptId && selectedHeadReviewer.profId) {
       onChangeReviewerAdd(
         "HEAD",
         selectedHeadReviewer.deptId,
