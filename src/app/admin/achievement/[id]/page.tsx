@@ -18,7 +18,7 @@ async function AdminAchievementPage({ params: { id } }: Props) {
         description="각 행을 클릭하면 상세보기 및 수정 페이지로 이동합니다."
       />
       <Section>
-        <AchievementEditSection id={id} />
+        <AchievementEditSection id={id} isAdmin />
       </Section>
     </>
   );
