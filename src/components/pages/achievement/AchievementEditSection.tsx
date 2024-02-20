@@ -15,9 +15,10 @@ import { useEffect } from "react";
 
 interface Props {
   id: number | string;
+  isAdmin?: boolean;
 }
 
-function AchievementEditSection({ id }: Props) {
+function AchievementEditSection({ id, isAdmin }: Props) {
   const { token } = useAuth();
   const { data, mutate } = useConditionalSWR<Achievement>(
     { url: API_ROUTES.achievement.get(id), token },
@@ -68,7 +69,7 @@ function AchievementEditSection({ id }: Props) {
   return (
     <>
       <TitleRow title="연구실적 상세보기" />
-      <AchievementForm form={form} handleSubmit={handleSubmit} isEdit />
+      <AchievementForm form={form} handleSubmit={handleSubmit} isEdit isAdmin />
     </>
   );
 }

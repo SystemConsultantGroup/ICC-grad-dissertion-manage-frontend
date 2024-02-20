@@ -24,7 +24,9 @@ function ThesisInfoSection({ studentId }: Props) {
       // 학생 논문 정보 조회
       try {
         if (studentId) {
-          const response = await ClientAxios.get(API_ROUTES.student.getThesis(studentId));
+          const response = await ClientAxios.get(API_ROUTES.student.getThesis(studentId), {
+            params: { type: "now" },
+          });
           const thesisDetail = response.data;
           setThesisTitle(thesisDetail.title);
           setThesisFile({ name: thesisDetail.thesisFile.name, link: "" });
@@ -35,7 +37,7 @@ function ThesisInfoSection({ studentId }: Props) {
       }
     };
     fetchThesisInfo();
-  }, []);
+  }, [studentId]);
 
   return (
     <Stack gap={0}>

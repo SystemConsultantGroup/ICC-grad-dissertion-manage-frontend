@@ -1,8 +1,10 @@
+import { AuthSSR } from "@/api/AuthSSR";
 import PageHeader from "@/components/common/PageHeader";
 import { Section } from "@/components/common/Section";
 import StudentAchievementListSection from "@/components/pages/lists/StudentAchievementListSection/StudentAchievementListSection";
 
-function StudentAchievementPage() {
+async function StudentAchievementPage() {
+  await AuthSSR({ userType: "STUDENT" });
   return (
     <>
       <PageHeader
