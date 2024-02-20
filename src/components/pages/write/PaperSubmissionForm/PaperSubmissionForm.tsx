@@ -7,9 +7,11 @@ import { useAuth } from "@/components/common/AuthProvider";
 import { uploadFile } from "@/api/_utils/uploadFile";
 import { ClientAxios } from "@/api/ClientAxios";
 import { API_ROUTES } from "@/api/apiRoute";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import classes from "@/components/pages/write/PaperSubmissionForm/PaperSubmissionForm.module.css";
 import { transaction } from "@/api/_utils/task";
+import useThesis from "@/api/SWR/useThesis";
+import { showNotificationSuccess } from "@/components/common/Notifications";
 
 interface PaperSubmissionFormInputs {
   title: string;
@@ -20,6 +22,7 @@ interface PaperSubmissionFormInputs {
 
 function PaperSubmissionForm() {
   const { user } = useAuth();
+  const { data: thesis, isLoading } = useThesis(user?.id || 0, { type: "now" }, !!user);
   const form = useForm<PaperSubmissionFormInputs>({
     initialValues: {
       title: "",
@@ -37,6 +40,15 @@ function PaperSubmissionForm() {
   const { onSubmit, getInputProps } = form;
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  useEffect(() => {
+    if (!isLoading) {
+      form.setValues({
+        title: thesis?.title || "",
+        abstract: thesis?.abstract || "",
+      });
+    }
+  }, [isLoading]);
+
   const handleSubmit = async (values: PaperSubmissionFormInputs) => {
     setIsSubmitting(true);
     try {
@@ -51,8 +63,11 @@ function PaperSubmissionForm() {
           presentationFileUUID,
         });
       });
+      showNotificationSuccess({
+        title: "논문 투고 완료",
+        message: "논문이 성공적으로 투고되었습니다.",
+      });
     } catch (error) {
-      console.error(error);
       // TODO: Notification & 에러 처리
     } finally {
       setIsSubmitting(false);
@@ -70,10 +85,20 @@ function PaperSubmissionForm() {
         </RowGroup>
         <RowGroup>
           <BasicRow field="논문 제목">
-            <TextInput {...getInputProps("title")} />
+            <TextInput
+              {...getInputProps("title")}
+              disabled={isLoading}
+              placeholder={isLoading ? "로딩 중..." : ""}
+            />
           </BasicRow>
         </RowGroup>
-        <TextAreaRow field="논문 초록" form={form} formKey="abstract" />
+        <TextAreaRow
+          field="논문 초록"
+          form={form}
+          formKey="abstract"
+          disabled={isLoading}
+          placeholder={isLoading ? "로딩 중..." : ""}
+        />
         <RowGroup>
           <FileUploadRow field="논문 파일" form={form} formKey="thesisFile" />
         </RowGroup>
