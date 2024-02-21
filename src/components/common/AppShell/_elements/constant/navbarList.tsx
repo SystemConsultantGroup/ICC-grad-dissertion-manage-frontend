@@ -38,8 +38,8 @@ export const ADMIN_NAVBAR_LIST: Props[] = [
     label: ADMIN_MANAGE_PROFESSOR_LABEL,
     icon: <IconUser size="24" stroke={1} />,
     children: [
-      { label: "교수 현황", href: "/admin/professors" },
-      { label: "교수 등록 및 수정", href: "/admin/prof_register" },
+      { label: "교수 현황 및 수정", href: "/admin/professors" },
+      { label: "교수 등록", href: "/admin/prof_register" },
       { label: "교수 일괄 등록", href: "/admin/prof_excel_register" },
     ],
   },
@@ -47,8 +47,8 @@ export const ADMIN_NAVBAR_LIST: Props[] = [
     label: ADMIN_MANAGE_STUDENT_LABEL,
     icon: <IconUsers size="24" stroke={1} />,
     children: [
-      { label: "학생 현황", href: "/admin/students" },
-      { label: "학생 등록 및 수정", href: "/admin/student_register" },
+      { label: "학생 현황 및 수정", href: "/admin/students" },
+      { label: "학생 등록", href: "/admin/student_register" },
       { label: "학생 일괄 등록", href: "/admin/student_excel_register" },
     ],
   },
