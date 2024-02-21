@@ -39,7 +39,7 @@ jobs:
             cat .env
       - name: Docker 이미지 빌드+푸시
         id: build-and-push
-        uses: docker/build-push-action@v5.1
+        uses: docker/build-push-action@v5.1.0
         with:
           context: .
           file: ./Dockerfile
