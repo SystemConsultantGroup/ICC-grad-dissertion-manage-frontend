@@ -16,6 +16,8 @@ import useThesis from "@/api/SWR/useThesis";
 import { uploadFile } from "@/api/_utils/uploadFile";
 import { ClientAxios } from "@/api/ClientAxios";
 import { API_ROUTES } from "@/api/apiRoute";
+import { transaction } from "@/api/_utils/task";
+import { showNotificationSuccess } from "@/components/common/Notifications";
 
 interface RevisionSubmissionFormInputs {
   thesisFile: File | null;
@@ -41,14 +43,19 @@ function RevisionSubmissionForm() {
   const handleSubmit = async (values: RevisionSubmissionFormInputs) => {
     setIsSubmitting(true);
     try {
-      const thesisFileUUID = (await uploadFile(values.thesisFile!)).uuid;
-      const revisionReportFileUUID = (await uploadFile(values.revisionReportFile!)).uuid;
-      ClientAxios.put(API_ROUTES.student.putThesis(user!.id), {
-        thesisFileUUID,
-        revisionReportFileUUID,
+      await transaction(async () => {
+        const thesisFileUUID = (await uploadFile(values.thesisFile!)).uuid;
+        const revisionReportFileUUID = (await uploadFile(values.revisionReportFile!)).uuid;
+        ClientAxios.put(API_ROUTES.student.putThesis(user!.id), {
+          thesisFileUUID,
+          revisionReportFileUUID,
+        });
+      });
+      showNotificationSuccess({
+        title: "수정사항 제출 완료",
+        message: "수정사항이 제출되었습니다.",
       });
     } catch (error) {
-      console.error(error);
       // TODO: Notification & 에러 처리
     } finally {
       setIsSubmitting(false);
