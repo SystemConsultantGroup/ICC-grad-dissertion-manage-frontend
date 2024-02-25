@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Stack, Button } from "@mantine/core";
 import { ClientAxios } from "@/api/ClientAxios";
 import { useRouter } from "next/navigation";
@@ -23,6 +24,7 @@ interface Props {
 function AdminStudentForm({ studentId }: Props) {
   const router = useRouter();
   const { login } = useAuth();
+  const [isPwEditing, setIsPwEditing] = useState<boolean>(false);
 
   const {
     headReviewer,
@@ -52,7 +54,6 @@ function AdminStudentForm({ studentId }: Props) {
     validate: {
       basicInfo: {
         loginId: isNotEmpty("아이디를 입력해주세요."),
-        password: isNotEmpty("비밀번호를 입력해주세요."),
         name: isNotEmpty("이름을 입력해주세요."),
         email: (value) =>
           value
@@ -86,101 +87,104 @@ function AdminStudentForm({ studentId }: Props) {
     router.back();
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (values: AdminStudentFormInputs) => {
     try {
-      const basicInfo = {
-        ...form.values.basicInfo,
-        deptId: Number(form.values.basicInfo.deptId),
-        email: studentId
-          ? form.isDirty("email")
-            ? form.values.basicInfo.email
-            : null
-          : form.values.basicInfo.email,
-        phone: form.values.basicInfo.phone ?? null,
-      };
-      if (headReviewer && checkReviewersLength(advisors) && checkReviewersLength(committees)) {
-        if (!studentId) {
-          /** 학생 등록 */
-          const registerInputs = {
-            ...basicInfo,
-            stage: form.values.stage,
-            thesisTitle: form.values.thesisTitle,
-            headReviewerId: Number(headReviewer.profId),
-            advisorIds: advisors.map((advisor: SelectedProfessor) => Number(advisor.profId)),
-            committeeIds: committees.map((committee: SelectedProfessor) =>
-              Number(committee.profId)
-            ),
-          };
-          await ClientAxios.post(API_ROUTES.student.post(), registerInputs);
-          showNotificationSuccess({ message: "학생 등록이 완료되었습니다." });
-          router.push("/admin/students");
-        } else {
-          /** 학생 회원 정보 수정 */
-          await ClientAxios.put(API_ROUTES.student.put(studentId), basicInfo);
-
-          /** 심사위원장 교체 */
-          const prevHeadReviewer = prevReviewersRef.current?.headReviewer;
-          if (prevHeadReviewer !== Number(headReviewer.profId)) {
-            await ClientAxios.put(
-              API_ROUTES.student.putHeadReviewer(Number(studentId), Number(headReviewer.profId))
-            );
-          }
-
-          /** 배정 및 배정 취소된 지도교수 id */
-          const prevAdvisors = prevReviewersRef.current?.advisors;
-          const advisorIds = advisors.map((advisor) => Number(advisor.profId));
-          const deletedAdvisorIds = prevAdvisors
-            ? prevAdvisors.filter((prevAdvisor) => !advisorIds.includes(prevAdvisor))
-            : [];
-          const addedAdvisorIds = prevAdvisors
-            ? advisorIds.filter((advisorId) => !prevAdvisors.includes(advisorId))
-            : [];
-
-          /** 배정 및 배정 취소된 심사위원 id */
-          const prevCommittees = prevReviewersRef.current?.committees;
-          const committeeIds = committees.map((committee) => Number(committee.profId));
-          const deletedCommitteeIds = prevCommittees
-            ? prevCommittees.filter((prevAdvisor) => !advisorIds.includes(prevAdvisor))
-            : [];
-          const addedCommitteeIds = prevCommittees
-            ? committeeIds.filter((committeeId) => !prevCommittees.includes(committeeId))
-            : [];
-
-          /** 지도교수, 심사위원 배정 취소 */
-          const deletePromises = [
-            ...deletedAdvisorIds.map((deletedId) =>
-              ClientAxios.delete(API_ROUTES.student.deleteReviewer(Number(studentId), deletedId))
-            ),
-            ...deletedCommitteeIds.map((deletedId) =>
-              ClientAxios.delete(API_ROUTES.student.deleteReviewer(Number(studentId), deletedId))
-            ),
-          ];
-          await Promise.all(deletePromises);
-
-          /** 지도교수, 심사위원 배정 */
-          const postPromises = [
-            ...addedAdvisorIds.map((addedId) =>
-              ClientAxios.post(API_ROUTES.student.putReviewer(Number(studentId), addedId), {
-                role: "ADVISOR",
-              })
-            ),
-            ...addedCommitteeIds.map((addedId) =>
-              ClientAxios.post(API_ROUTES.student.putReviewer(Number(studentId), addedId), {
-                role: "COMMITTEE",
-              })
-            ),
-          ];
-          await Promise.all(postPromises);
-
-          showNotificationSuccess({ message: "학생 정보 수정이 완료되었습니다." });
-          router.push(`/admin/students/${studentId}`);
-        }
-      } else {
+      if (isPwEditing && values.basicInfo.password === "") {
         showNotificationError({
-          title: "교수 배정 정보가 올바르지 않습니다.",
-          message:
-            "심사위원장 배정이 되어있는지, 지도교수와 심사위원이 최소 한 명 이상 두 명 이하로 배정되었는지 확인해주세요.",
+          message: "수정할 비밀번호를 입력하거나, 수정 취소 버튼을 눌러주세요.",
         });
+      } else {
+        const basicInfo = {
+          ...values.basicInfo,
+          ...(!studentId || isPwEditing ? { password: values.basicInfo.password } : {}),
+          deptId: Number(values.basicInfo.deptId),
+          ...(form.values.basicInfo.email ? { email: values.basicInfo.email } : {}),
+          ...(form.values.basicInfo.phone ? { phone: values.basicInfo.phone } : {}),
+        };
+        if (headReviewer && checkReviewersLength(advisors) && checkReviewersLength(committees)) {
+          if (!studentId) {
+            /** 학생 등록 */
+            const registerInputs = {
+              ...basicInfo,
+              stage: values.stage,
+              thesisTitle: values.thesisTitle,
+              headReviewerId: Number(headReviewer.profId),
+              advisorIds: advisors.map((advisor: SelectedProfessor) => Number(advisor.profId)),
+              committeeIds: committees.map((committee: SelectedProfessor) =>
+                Number(committee.profId)
+              ),
+            };
+            await ClientAxios.post(API_ROUTES.student.post(), registerInputs);
+            showNotificationSuccess({ message: "학생 등록이 완료되었습니다." });
+            router.push("/admin/students");
+          } else {
+            /** 학생 회원 정보 수정 */
+            await ClientAxios.put(API_ROUTES.student.put(studentId), basicInfo);
+
+            /** 심사위원장 교체 */
+            const prevHeadReviewer = prevReviewersRef.current?.headReviewer;
+            if (prevHeadReviewer !== Number(headReviewer.profId)) {
+              await ClientAxios.put(
+                API_ROUTES.student.putHeadReviewer(Number(studentId), Number(headReviewer.profId))
+              );
+            }
+
+            /** 배정 및 배정 취소된 지도교수 id */
+            const prevAdvisors = prevReviewersRef.current?.advisors;
+            const advisorIds = advisors.map((advisor) => Number(advisor.profId));
+            const deletedAdvisorIds = prevAdvisors
+              ? prevAdvisors.filter((prevAdvisor) => !advisorIds.includes(prevAdvisor))
+              : [];
+            const addedAdvisorIds = prevAdvisors
+              ? advisorIds.filter((advisorId) => !prevAdvisors.includes(advisorId))
+              : [];
+
+            /** 배정 및 배정 취소된 심사위원 id */
+            const prevCommittees = prevReviewersRef.current?.committees;
+            const committeeIds = committees.map((committee) => Number(committee.profId));
+            const deletedCommitteeIds = prevCommittees
+              ? prevCommittees.filter((prevAdvisor) => !advisorIds.includes(prevAdvisor))
+              : [];
+            const addedCommitteeIds = prevCommittees
+              ? committeeIds.filter((committeeId) => !prevCommittees.includes(committeeId))
+              : [];
+
+            /** 지도교수, 심사위원 배정 취소 */
+            const deletePromises = [
+              ...deletedAdvisorIds.map((deletedId) =>
+                ClientAxios.delete(API_ROUTES.student.deleteReviewer(Number(studentId), deletedId))
+              ),
+              ...deletedCommitteeIds.map((deletedId) =>
+                ClientAxios.delete(API_ROUTES.student.deleteReviewer(Number(studentId), deletedId))
+              ),
+            ];
+            await Promise.all(deletePromises);
+
+            /** 지도교수, 심사위원 배정 */
+            const postPromises = [
+              ...addedAdvisorIds.map((addedId) =>
+                ClientAxios.post(API_ROUTES.student.putReviewer(Number(studentId), addedId), {
+                  role: "ADVISOR",
+                })
+              ),
+              ...addedCommitteeIds.map((addedId) =>
+                ClientAxios.post(API_ROUTES.student.putReviewer(Number(studentId), addedId), {
+                  role: "COMMITTEE",
+                })
+              ),
+            ];
+            await Promise.all(postPromises);
+
+            showNotificationSuccess({ message: "학생 정보 수정이 완료되었습니다." });
+            router.push(`/admin/students/${studentId}`);
+          }
+        } else {
+          showNotificationError({
+            title: "교수 배정 정보가 올바르지 않습니다.",
+            message:
+              "심사위원장 배정이 되어있는지, 지도교수와 심사위원이 최소 한 명 이상 두 명 이하로 배정되었는지 확인해주세요.",
+          });
+        }
       }
     } catch (error) {
       let message = "Unknown Error";
@@ -208,7 +212,12 @@ function AdminStudentForm({ studentId }: Props) {
             />
           </RowGroup>
         )}
-        <BasicInfoSection form={form} studentId={studentId} />
+        <BasicInfoSection
+          form={form}
+          studentId={studentId}
+          isPwEditing={isPwEditing}
+          handleIsPwEditing={setIsPwEditing}
+        />
         <AssignReviewerSection
           studentId={studentId}
           headReviewer={headReviewer}
