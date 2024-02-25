@@ -1,5 +1,3 @@
-import { Professor } from "@/api/_types/professors";
-
 export type Stage = "PRELIMINARY" | "MAIN";
 
 export interface AdminStudentFormInputs {
