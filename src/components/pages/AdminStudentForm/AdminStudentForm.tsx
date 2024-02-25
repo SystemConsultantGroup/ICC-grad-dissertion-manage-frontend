@@ -59,14 +59,19 @@ function AdminStudentForm({ studentId }: Props) {
             ? /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)
               ? null
               : "이메일 형식이 맞지 않습니다."
-            : "이메일을 입력해주세요.",
-        phone: undefined,
+            : undefined,
+        phone: (value) =>
+          value
+            ? /^d{2,3}-\d{3,4}-\d{4}$/.test(value)
+              ? null
+              : "전화번호 형식이 맞지 않습니다."
+            : undefined,
         deptId: isNotEmpty("소속 학과를 선택해주세요."),
       },
 
-      stage: isNotEmpty("예심/본심 단계를 선택해주세요."),
-
-      thesisTitle: isNotEmpty("논문 제목을 입력해주세요."),
+      // 등록시에만 validate 적용
+      stage: (value) => (studentId ? undefined : value ? "예심/본심 단계를 선택해주세요." : null),
+      thesisTitle: (value) => (studentId ? undefined : value ? "논문 제목을 입력해주세요." : null),
     },
   });
 
@@ -91,12 +96,8 @@ function AdminStudentForm({ studentId }: Props) {
       const basicInfo = {
         ...form.values.basicInfo,
         deptId: Number(form.values.basicInfo.deptId),
-        email: studentId
-          ? form.isDirty("email")
-            ? form.values.basicInfo.email
-            : null
-          : form.values.basicInfo.email,
-        phone: form.values.basicInfo.phone ?? null,
+        ...(form.values.basicInfo.email ? { email: form.values.basicInfo.email } : {}),
+        ...(form.values.basicInfo.phone ? { phone: form.values.basicInfo.phone } : {}),
       };
       if (headReviewer && checkReviewersLength(advisors) && checkReviewersLength(committees)) {
         if (!studentId) {
