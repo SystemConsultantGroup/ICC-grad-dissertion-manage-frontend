@@ -39,7 +39,7 @@ function BasicInfoSection({ form, studentId }: Props) {
             name: studentDetails.name,
             email: studentDetails.email,
             phone: studentDetails.phone,
-            deptId: String(studentDetails.department.id),
+            deptId: String(studentDetails.department),
           });
         }
       } catch (error) {
@@ -47,7 +47,7 @@ function BasicInfoSection({ form, studentId }: Props) {
       }
     };
     fetchStudentDetails();
-  }, [studentId, form]);
+  }, [studentId]);
 
   return (
     <Stack gap={0}>
@@ -109,7 +109,7 @@ function BasicInfoSection({ form, studentId }: Props) {
                     ]}
                   />
                 )}
-                <MainRegisterModal studentId={studentId} opened close={close} />
+                <MainRegisterModal studentId={studentId} opened={opened} close={close} />
               </>
             ) : (
               <Select

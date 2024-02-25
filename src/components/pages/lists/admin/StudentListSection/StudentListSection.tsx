@@ -96,7 +96,7 @@ function StudentListSection() {
       >
         <SectionHeader.Buttons>
           <Group>
-            <Button size="xs" leftSection={<IconPlus />} component={Link} href="student-register">
+            <Button size="xs" leftSection={<IconPlus />} component={Link} href="student_register">
               학생 추가
             </Button>
             <Popover width={200} position="bottom" withArrow shadow="md">

@@ -5,8 +5,16 @@ import AchievementForm, {
   AchievementFormInput,
 } from "@/components/pages/achievement/AchievementForm";
 import { TitleRow } from "@/components/common/rows";
+import { ClientAxios } from "@/api/ClientAxios";
+import { API_ROUTES } from "@/api/apiRoute";
+import { showNotificationSuccess } from "@/components/common/Notifications";
+import { useRouter } from "next/navigation";
+import { Achievement } from "@/api/_types/achievement";
+import { useAuth } from "@/components/common/AuthProvider";
 
 function AchievementRegisterSection() {
+  const { user } = useAuth();
+  const router = useRouter();
   const form = useForm<AchievementFormInput>({
     validate: {
       performance: isNotEmpty("논문 실적 구분을 입력하세요."),
@@ -18,12 +26,17 @@ function AchievementRegisterSection() {
     },
   });
 
-  const handleSubmit = (input: AchievementFormInput) => {
-    /**
-     * @TODO: POST API 연결
-     */
+  const handleSubmit = async (input: AchievementFormInput) => {
     const body = { ...input, ISSN: input.ISSN1 + input.ISSN2 };
-    console.log(body);
+    try {
+      const res = await ClientAxios.post<Achievement>(API_ROUTES.achievement.post(), body, {
+        params: { id: user?.id },
+      });
+      showNotificationSuccess({ message: "연구 실적이 등록되었습니다." });
+      router.push(`/student/achievement/${res.data.id}`);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

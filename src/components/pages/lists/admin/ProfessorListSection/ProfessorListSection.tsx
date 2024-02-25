@@ -96,7 +96,7 @@ function ProfessorListSection() {
       >
         <SectionHeader.Buttons>
           <Group>
-            <Button size="xs" leftSection={<IconPlus />} component={Link} href="prof-register">
+            <Button size="xs" leftSection={<IconPlus />} component={Link} href="prof_register">
               교수 추가
             </Button>
             <Popover width={200} position="bottom" withArrow shadow="md">
