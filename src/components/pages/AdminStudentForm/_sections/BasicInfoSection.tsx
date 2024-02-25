@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
-import { Stack, TextInput, PasswordInput, Select, Text, Button } from "@mantine/core";
+import { Stack, TextInput, PasswordInput, Select, Text, Button, Group } from "@mantine/core";
 import { RowGroup, BasicRow, TitleRow, NoticeRow, ButtonRow } from "@/components/common/rows";
 import { UseFormReturnType } from "@mantine/form";
 import { ClientAxios } from "@/api/ClientAxios";
@@ -13,9 +13,11 @@ import MainRegisterModal from "./MainRegisterModal";
 interface Props {
   form: UseFormReturnType<AdminStudentFormInputs>;
   studentId?: string | number;
+  isPwEditing: boolean;
+  handleIsPwEditing: Dispatch<SetStateAction<boolean>>;
 }
 
-function BasicInfoSection({ form, studentId }: Props) {
+function BasicInfoSection({ form, studentId, isPwEditing, handleIsPwEditing }: Props) {
   const [opened, { open, close }] = useDisclosure();
   const [phase, setPhase] = useState<Phase>();
 
@@ -35,7 +37,7 @@ function BasicInfoSection({ form, studentId }: Props) {
 
           form.setFieldValue("basicInfo", {
             loginId: studentDetails.loginId,
-            password: studentDetails.password,
+            password: "",
             name: studentDetails.name,
             email: studentDetails.email,
             phone: studentDetails.phone,
@@ -65,7 +67,30 @@ function BasicInfoSection({ form, studentId }: Props) {
         </RowGroup>
         <RowGroup>
           <BasicRow field="비밀번호">
-            <PasswordInput id="input-password" {...form.getInputProps("basicInfo.password")} />
+            {studentId ? (
+              <Group>
+                <PasswordInput
+                  id="input-password"
+                  {...form.getInputProps("basicInfo.password")}
+                  disabled={!isPwEditing}
+                />
+                {isPwEditing ? (
+                  <Button
+                    onClick={() => {
+                      form.setFieldValue("basicInfo.password", "");
+                      handleIsPwEditing(false);
+                    }}
+                    color="red"
+                  >
+                    취소
+                  </Button>
+                ) : (
+                  <Button onClick={() => handleIsPwEditing(true)}>수정하기</Button>
+                )}
+              </Group>
+            ) : (
+              <PasswordInput id="input-password" {...form.getInputProps("basicInfo.password")} />
+            )}
           </BasicRow>
         </RowGroup>
         <RowGroup>
