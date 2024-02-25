@@ -97,7 +97,7 @@ function AdminStudentForm({ studentId }: Props) {
         ...form.values.basicInfo,
         deptId: Number(form.values.basicInfo.deptId),
         ...(form.values.basicInfo.email ? { email: form.values.basicInfo.email } : {}),
-        ...(form.values.basicInfo.phone ? { email: form.values.basicInfo.phone } : {}),
+        ...(form.values.basicInfo.phone ? { phone: form.values.basicInfo.phone } : {}),
       };
       if (headReviewer && checkReviewersLength(advisors) && checkReviewersLength(committees)) {
         if (!studentId) {
