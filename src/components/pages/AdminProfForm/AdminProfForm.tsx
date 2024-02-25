@@ -89,7 +89,7 @@ function AdminProfForm({ professorId }: Props) {
         showNotificationSuccess({ message: "교수 등록이 완료되었습니다." });
         router.push("/admin/professors");
       } else {
-        await ClientAxios.post(API_ROUTES.professor.put(professorId), body);
+        await ClientAxios.put(API_ROUTES.professor.put(professorId), body);
         showNotificationSuccess({ message: "교수 정보 수정이 완료되었습니다." });
         router.push(`/admin/professors/${professorId}`);
       }
