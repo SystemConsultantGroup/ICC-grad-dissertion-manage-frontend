@@ -1,15 +1,15 @@
 "use client";
 
-import { Button, Stack, Space, TextInput, PasswordInput } from "@mantine/core";
-import { isEmail, isNotEmpty, useForm } from "@mantine/form";
+import { useState, useEffect } from "react";
+import { Button, Stack, Space, TextInput, PasswordInput, Group } from "@mantine/core";
+import { isNotEmpty, useForm } from "@mantine/form";
 import { API_ROUTES } from "@/api/apiRoute";
 import { useRouter } from "next/navigation";
 import { ClientAxios } from "@/api/ClientAxios";
 import { CommonApiResponse } from "@/api/_types/common";
 import { RowGroup, BasicRow, TitleRow, ButtonRow } from "@/components/common/rows";
-import { useEffect } from "react";
 import { useAuth } from "@/components/common/AuthProvider/AuthProvider";
-import { showNotificationSuccess } from "@/components/common/Notifications";
+import { showNotificationError, showNotificationSuccess } from "@/components/common/Notifications";
 import { DepartmentSelect } from "@/components/common/selects/DepartmentSelect";
 
 interface Props {
@@ -28,30 +28,31 @@ interface AdminProfFormInputs {
 function AdminProfForm({ professorId }: Props) {
   const router = useRouter();
   const { login } = useAuth();
+  const [isPwEditing, setIsPwEditing] = useState<boolean>(false);
 
-  const { onSubmit, getInputProps, setValues, isDirty } = useForm<AdminProfFormInputs>({
-    initialValues: {
-      loginId: "",
-      password: "",
-      name: "",
-      email: "",
-      phone: "",
-      deptId: "",
-    },
-    validate: {
-      loginId: isNotEmpty("아이디를 입력해주세요."),
-      password: isNotEmpty("비밀번호를 입력해주세요."),
-      name: isNotEmpty("이름을 입력해주세요."),
-      email: (value) =>
-        value
-          ? /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)
-            ? null
-            : "이메일 형식이 맞지 않습니다."
-          : undefined,
-      phone: undefined,
-      deptId: isNotEmpty("소속된 학과를 선택해주세요."),
-    },
-  });
+  const { onSubmit, getInputProps, setValues, isDirty, setFieldValue } =
+    useForm<AdminProfFormInputs>({
+      initialValues: {
+        loginId: "",
+        password: "",
+        name: "",
+        email: "",
+        phone: "",
+        deptId: "",
+      },
+      validate: {
+        loginId: isNotEmpty("아이디를 입력해주세요."),
+        name: isNotEmpty("이름을 입력해주세요."),
+        email: (value) =>
+          value
+            ? /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)
+              ? null
+              : "이메일 형식이 맞지 않습니다."
+            : undefined,
+        phone: undefined,
+        deptId: isNotEmpty("소속된 학과를 선택해주세요."),
+      },
+    });
 
   useEffect(() => {
     const fetchProfessorDetails = async () => {
@@ -78,20 +79,27 @@ function AdminProfForm({ professorId }: Props) {
 
   const handleSubmit = async (values: AdminProfFormInputs) => {
     try {
-      const body = {
-        ...values,
-        deptId: Number(values.deptId),
-        email: isDirty("email") ? values.email : null,
-        phone: values.phone ?? null,
-      };
-      if (!professorId) {
-        await ClientAxios.post(API_ROUTES.professor.post(), body);
-        showNotificationSuccess({ message: "교수 등록이 완료되었습니다." });
-        router.push("/admin/professors");
+      if (isPwEditing && values.password === "") {
+        showNotificationError({
+          message: "수정할 비밀번호를 입력하거나, 수정 취소 버튼을 눌러주세요.",
+        });
       } else {
-        await ClientAxios.put(API_ROUTES.professor.put(professorId), body);
-        showNotificationSuccess({ message: "교수 정보 수정이 완료되었습니다." });
-        router.push(`/admin/professors/${professorId}`);
+        const body = {
+          ...values,
+          ...(!professorId || isPwEditing ? { password: values.password } : {}),
+          deptId: Number(values.deptId),
+          ...(values.email ? { email: values.email } : {}),
+          ...(values.phone ? { phone: values.phone } : {}),
+        };
+        if (!professorId) {
+          await ClientAxios.post(API_ROUTES.professor.post(), body);
+          showNotificationSuccess({ message: "교수 등록이 완료되었습니다." });
+          router.push("/admin/professors");
+        } else {
+          await ClientAxios.put(API_ROUTES.professor.put(professorId), body);
+          showNotificationSuccess({ message: "교수 정보 수정이 완료되었습니다." });
+          router.push(`/admin/professors/${professorId}`);
+        }
       }
     } catch (err) {
       console.error(err);
@@ -143,7 +151,30 @@ function AdminProfForm({ professorId }: Props) {
           </RowGroup>
           <RowGroup>
             <BasicRow field="비밀번호">
-              <PasswordInput id="input-password" {...getInputProps("password")} />
+              {professorId ? (
+                <Group>
+                  <PasswordInput
+                    id="input-password"
+                    {...getInputProps("basicInfo.password")}
+                    disabled={!isPwEditing}
+                  />
+                  {isPwEditing ? (
+                    <Button
+                      onClick={() => {
+                        setFieldValue("basicInfo.password", "");
+                        setIsPwEditing(false);
+                      }}
+                      color="red"
+                    >
+                      취소
+                    </Button>
+                  ) : (
+                    <Button onClick={() => setIsPwEditing(true)}>수정하기</Button>
+                  )}
+                </Group>
+              ) : (
+                <PasswordInput id="input-password" {...getInputProps("basicInfo.password")} />
+              )}
             </BasicRow>
           </RowGroup>
           <RowGroup>
