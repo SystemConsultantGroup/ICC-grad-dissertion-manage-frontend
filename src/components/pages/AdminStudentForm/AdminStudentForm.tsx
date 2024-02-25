@@ -69,9 +69,9 @@ function AdminStudentForm({ studentId }: Props) {
         deptId: isNotEmpty("소속 학과를 선택해주세요."),
       },
 
-      stage: isNotEmpty("예심/본심 단계를 선택해주세요."),
-
-      thesisTitle: isNotEmpty("논문 제목을 입력해주세요."),
+      // 등록시에만 validate 적용
+      stage: (value) => (studentId ? undefined : value ? "예심/본심 단계를 선택해주세요." : null),
+      thesisTitle: (value) => (studentId ? undefined : value ? "논문 제목을 입력해주세요." : null),
     },
   });
 
