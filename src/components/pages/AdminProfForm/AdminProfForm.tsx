@@ -63,7 +63,7 @@ function AdminProfForm({ professorId }: Props) {
 
           setValues({
             loginId: professorDetails.loginId,
-            password: professorDetails.password,
+            password: "",
             name: professorDetails.name,
             email: professorDetails.email,
             phone: professorDetails.phone,
