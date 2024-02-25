@@ -87,27 +87,27 @@ function AdminStudentForm({ studentId }: Props) {
     router.back();
   };
 
-  const handleSubmit = async (values: AdminStudentFormInputs) => {
+  const handleSubmit = async () => {
     try {
-      if (isPwEditing && values.basicInfo.password === "") {
+      if (isPwEditing && form.values.basicInfo.password === "") {
         showNotificationError({
           message: "수정할 비밀번호를 입력하거나, 수정 취소 버튼을 눌러주세요.",
         });
       } else {
         const basicInfo = {
-          ...values.basicInfo,
-          ...(!studentId || isPwEditing ? { password: values.basicInfo.password } : {}),
-          deptId: Number(values.basicInfo.deptId),
-          ...(form.values.basicInfo.email ? { email: values.basicInfo.email } : {}),
-          ...(form.values.basicInfo.phone ? { phone: values.basicInfo.phone } : {}),
+          ...form.values.basicInfo,
+          ...(!studentId || isPwEditing ? { password: form.values.basicInfo.password } : {}),
+          deptId: Number(form.values.basicInfo.deptId),
+          ...(form.values.basicInfo.email ? { email: form.values.basicInfo.email } : {}),
+          ...(form.values.basicInfo.phone ? { phone: form.values.basicInfo.phone } : {}),
         };
         if (headReviewer && checkReviewersLength(advisors) && checkReviewersLength(committees)) {
           if (!studentId) {
             /** 학생 등록 */
             const registerInputs = {
               ...basicInfo,
-              stage: values.stage,
-              thesisTitle: values.thesisTitle,
+              stage: form.values.stage,
+              thesisTitle: form.values.thesisTitle,
               headReviewerId: Number(headReviewer.profId),
               advisorIds: advisors.map((advisor: SelectedProfessor) => Number(advisor.profId)),
               committeeIds: committees.map((committee: SelectedProfessor) =>
