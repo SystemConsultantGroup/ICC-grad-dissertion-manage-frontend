@@ -67,37 +67,32 @@ export function ProfessorReviewForm({ reviewId, thesisInfo, previous }: Professo
     task.onComplete(() => setCurrentState("submitted"));
 
     const isPending = input.thesis === "PENDING" || input.presentation === "PENDING";
-    try {
-      let fileUUID;
-      if ("previousUuid" in input.commentFile!) {
-        fileUUID = input.commentFile.previousUuid satisfies string;
-      } else {
-        fileUUID = (await uploadFile(input.commentFile!)).uuid;
-      }
-
-      await ClientAxios.put(API_ROUTES.review.put(reviewId), {
-        contentStatus: input.thesis,
-        presentationStatus: input.presentation,
-        comment: input.comment,
-        fileUUID,
-      } satisfies UpdateReviewRequestBody);
-
-      if (previous.reviewFile && !("previousUuid" in input.commentFile!)) {
-        await ClientAxios.delete(API_ROUTES.file.delete(previous.reviewFile.uuid));
-      }
-
-      showNotificationSuccess({
-        message: `${thesisInfo.studentInfo.name} 학생의 논문 심사결과를 ${
-          isPending ? "임시저장" : "저장"
-        }했습니다.`,
-      });
-
-      revalidatePath(`/prof/review/${reviewId}`);
-      router.push("../review");
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(e);
+    let fileUUID;
+    if ("previousUuid" in input.commentFile!) {
+      fileUUID = input.commentFile.previousUuid satisfies string;
+    } else {
+      fileUUID = (await uploadFile(input.commentFile!)).uuid;
     }
+
+    await ClientAxios.put(API_ROUTES.review.put(reviewId), {
+      contentStatus: input.thesis,
+      presentationStatus: input.presentation,
+      comment: input.comment,
+      fileUUID,
+    } satisfies UpdateReviewRequestBody);
+
+    if (previous.reviewFile && !("previousUuid" in input.commentFile!)) {
+      await ClientAxios.delete(API_ROUTES.file.delete(previous.reviewFile.uuid));
+    }
+
+    showNotificationSuccess({
+      message: `${thesisInfo.studentInfo.name} 학생의 논문 심사결과를 ${
+        isPending ? "임시저장" : "저장"
+      }했습니다.`,
+    });
+
+    revalidatePath(`/prof/review/${reviewId}`);
+    router.push("../review");
   });
 
   return (
