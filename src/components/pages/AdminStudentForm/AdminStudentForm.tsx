@@ -63,7 +63,7 @@ function AdminStudentForm({ studentId }: Props) {
             : undefined,
         phone: (value) =>
           value
-            ? /^d{2,3}-\d{3,4}-\d{4}$/.test(value)
+            ? /^\d{3}-\d{3,4}-\d{4}$/.test(value)
               ? null
               : "전화번호 형식이 맞지 않습니다."
             : undefined,
@@ -71,8 +71,8 @@ function AdminStudentForm({ studentId }: Props) {
       },
 
       // 등록시에만 validate 적용
-      stage: (value) => (studentId ? undefined : value ? "예심/본심 단계를 선택해주세요." : null),
-      thesisTitle: (value) => (studentId ? undefined : value ? "논문 제목을 입력해주세요." : null),
+      stage: (value) => (studentId ? undefined : value ? null : "예심/본심 단계를 선택해주세요."),
+      thesisTitle: (value) => (studentId ? undefined : value ? null : "논문 제목을 입력해주세요."),
     },
   });
 
