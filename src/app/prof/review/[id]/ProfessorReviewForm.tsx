@@ -82,6 +82,10 @@ export function ProfessorReviewForm({ reviewId, thesisInfo, previous }: Professo
         fileUUID,
       } satisfies UpdateReviewRequestBody);
 
+      if (previous.reviewFile && !("previousUuid" in input.commentFile!)) {
+        await ClientAxios.delete(API_ROUTES.file.delete(previous.reviewFile.uuid));
+      }
+
       showNotificationSuccess({
         message: `${thesisInfo.studentInfo.name} 학생의 논문 심사결과를 ${
           isPending ? "임시저장" : "저장"
