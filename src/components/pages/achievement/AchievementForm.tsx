@@ -27,9 +27,10 @@ interface Props<T> {
   form: UseFormReturnType<T>;
   handleSubmit: (input: T) => void;
   isEdit?: boolean;
+  isAdmin?: boolean;
 }
 
-function AchievementForm<T>({ form, handleSubmit, isEdit }: Props<T>) {
+function AchievementForm<T>({ form, handleSubmit, isEdit, isAdmin }: Props<T>) {
   const { onSubmit, getInputProps } = form;
 
   const transformedAchievementTypeList = Object.entries(ACHIEVEMENT_TYPE_LOOKUP_TABLE).map(
@@ -110,7 +111,12 @@ function AchievementForm<T>({ form, handleSubmit, isEdit }: Props<T>) {
               </Button>
             )}
           </Group>
-          <Button component="a" href="/student/achievement" variant="subtle" ml="auto">
+          <Button
+            component="a"
+            href={isAdmin ? "/admin/achievement" : "/student/achievement"}
+            variant="subtle"
+            ml="auto"
+          >
             목록으로
           </Button>
         </RowGroup>
