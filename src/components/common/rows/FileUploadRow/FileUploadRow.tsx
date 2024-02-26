@@ -1,10 +1,11 @@
 "use client";
 
-import { Button, FileInput, Group } from "@mantine/core";
-import { IconTrash } from "@tabler/icons-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import Row from "@/components/common/rows/_elements/Row/Row";
+import { Button, FileInput, Group } from "@mantine/core";
 import { UseFormReturnType } from "@mantine/form";
+import { IconTrash } from "@tabler/icons-react";
+import Row from "@/components/common/rows/_elements/Row/Row";
+import { File as ApiFile } from "@/api/_types/file";
 import { handleDownloadFile } from "@/api/_utils/handleDownloadFile";
 import { API_ROUTES } from "@/api/apiRoute";
 import classes from "./FileUploadRow.module.css";
@@ -13,6 +14,19 @@ declare module "@mantine/core" {
   interface FileInputProps {
     placeholder?: string;
   }
+}
+
+export function stubFile(apiFile: ApiFile): PreviousFile {
+  if (typeof File === "undefined") {
+    return {
+      previousUuid: apiFile.uuid,
+      name: apiFile.name,
+      type: apiFile.mimeType,
+    } as PreviousFile; // is this right?
+  }
+  const file: Partial<PreviousFile> = new File([], apiFile.name);
+  file.previousUuid = apiFile.uuid;
+  return file as PreviousFile;
 }
 
 export interface PreviousFile extends File {
