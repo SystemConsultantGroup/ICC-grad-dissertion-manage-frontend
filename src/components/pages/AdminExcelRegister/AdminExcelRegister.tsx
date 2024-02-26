@@ -26,13 +26,13 @@ function AdminExcelRegister({ isProf = false }: Props) {
   const handleExcelDownload = async () => {
     try {
       if (isProf) {
-        const fileLink = API_ROUTES.professor.excel.get();
+        const fileLink = API_ROUTES.file.excel.professor();
         handleDownloadFile({
           fileLink,
           fileName: "교수 일괄 업로드 양식.xlsx",
         });
       } else {
-        const fileLink = API_ROUTES.student.excel.get();
+        const fileLink = API_ROUTES.file.excel.student();
         handleDownloadFile({
           fileLink,
           fileName: "학생 일괄 업로드 양식.xlsx",
@@ -48,11 +48,20 @@ function AdminExcelRegister({ isProf = false }: Props) {
   const handleExcelUpload = async () => {
     try {
       if (file) {
-        const fileUUID = (await uploadFile(file)).uuid;
+        const formData = new FormData();
+        formData.append("file", file);
         if (isProf) {
-          await ClientAxios.post(API_ROUTES.professor.excel.post(), { fileUUID });
+          await ClientAxios({
+            url: API_ROUTES.professor.excel.post(),
+            method: "POST",
+            data: formData,
+          });
         } else {
-          await ClientAxios.post(API_ROUTES.student.excel.post(), { fileUUID });
+          await ClientAxios({
+            url: API_ROUTES.student.excel.post(),
+            method: "POST",
+            data: formData,
+          });
         }
       } else {
         showNotificationError({ message: "업로드할 파일을 선택해주세요." });

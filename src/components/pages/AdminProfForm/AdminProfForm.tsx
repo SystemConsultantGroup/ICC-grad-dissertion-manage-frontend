@@ -66,7 +66,7 @@ function AdminProfForm({ professorId }: Props) {
             name: professorDetails.name,
             email: professorDetails.email,
             phone: professorDetails.phone,
-            deptId: String(professorDetails.deptId.id),
+            deptId: String(professorDetails.deptId),
           });
         }
       } catch (err) {

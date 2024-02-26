@@ -10,9 +10,19 @@ interface Props {
   /* eslint-disable @typescript-eslint/no-explicit-any */
   form?: UseFormReturnType<any>;
   formKey?: string;
+  disabled?: boolean;
+  placeholder?: string;
 }
 
-function TextAreaRow({ field, content, onChange, form, formKey = "content" }: Props) {
+function TextAreaRow({
+  field,
+  content,
+  onChange,
+  form,
+  formKey = "content",
+  disabled = false,
+  placeholder,
+}: Props) {
   return (
     <Group gap={0} className={classes.wrapper}>
       <Text className={classes.fieldText}>{field}</Text>
@@ -26,6 +36,8 @@ function TextAreaRow({ field, content, onChange, form, formKey = "content" }: Pr
         }}
         onChange={onChange}
         {...form?.getInputProps(formKey)}
+        disabled={disabled}
+        placeholder={placeholder}
       />
     </Group>
   );
