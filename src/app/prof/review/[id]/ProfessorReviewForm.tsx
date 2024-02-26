@@ -15,7 +15,6 @@ import { PreviousFile, stubFile } from "@/components/common/rows/FileUploadRow/F
 import { useRouter } from "next/navigation";
 import { transactionTask } from "@/api/_utils/task";
 import { uploadFile } from "@/api/_utils/uploadFile";
-import { revalidatePath } from "next/cache";
 
 export interface ProfessorReviewProps {
   reviewId: string;
@@ -91,7 +90,9 @@ export function ProfessorReviewForm({ reviewId, thesisInfo, previous }: Professo
       }했습니다.`,
     });
 
-    revalidatePath(`/prof/review/${reviewId}`);
+    // TODO: 불필요한 fetch를 추가하긴 하지만, 이것 말고 적당한 방법이 있는지 모르겠음...
+    // https://github.com/vercel/next.js/discussions/54075 참고: 현재는 클라이언트측 Router Cache를 완전히 비활성화할 방법이 없음
+    router.refresh();
     router.push("../review");
   });
 
