@@ -155,13 +155,13 @@ function AdminProfForm({ professorId }: Props) {
                 <Group>
                   <PasswordInput
                     id="input-password"
-                    {...getInputProps("basicInfo.password")}
+                    {...getInputProps("password")}
                     disabled={!isPwEditing}
                   />
                   {isPwEditing ? (
                     <Button
                       onClick={() => {
-                        setFieldValue("basicInfo.password", "");
+                        setFieldValue("password", "");
                         setIsPwEditing(false);
                       }}
                       color="red"
@@ -173,7 +173,7 @@ function AdminProfForm({ professorId }: Props) {
                   )}
                 </Group>
               ) : (
-                <PasswordInput id="input-password" {...getInputProps("basicInfo.password")} />
+                <PasswordInput id="input-password" {...getInputProps("password")} />
               )}
             </BasicRow>
           </RowGroup>
