@@ -11,7 +11,7 @@ import { showNotificationSuccess } from "@/components/common/Notifications";
 import { FinalReview } from "@/components/pages/review/Review";
 import { ReviewConfirmModal } from "@/components/pages/review/ReviewConfirmModal";
 import { ThesisInfoData } from "@/components/pages/review/ThesisInfo/ThesisInfo";
-import { PreviousFile } from "@/components/common/rows/FileUploadRow/FileUploadRow";
+import { PreviousFile, stubFile } from "@/components/common/rows/FileUploadRow/FileUploadRow";
 import { useRouter } from "next/navigation";
 import { transactionTask } from "@/api/_utils/task";
 import { uploadFile } from "@/api/_utils/uploadFile";
@@ -30,13 +30,6 @@ interface FormInput {
   status: Status;
   comment: string;
   commentFile: File | PreviousFile | null;
-}
-
-function stubFile(apiFile: ApiFile) {
-  const file = new File([], apiFile.name);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (file as any).previousUuid = apiFile.uuid;
-  return file;
 }
 
 export function ProfessorFinalForm({ reviewId, thesisInfo, previous }: ProfessorFinalProps) {
@@ -78,12 +71,17 @@ export function ProfessorFinalForm({ reviewId, thesisInfo, previous }: Professor
       fileUUID,
     } satisfies UpdateReviewRequestBody);
 
+    if (previous.reviewFile && !("previousUuid" in input.commentFile!)) {
+      await ClientAxios.delete(API_ROUTES.file.delete(previous.reviewFile.uuid));
+    }
+
     showNotificationSuccess({
       message: `${thesisInfo.studentInfo.name} 학생의 논문 심사결과를 ${
         isPending ? "임시저장" : "저장"
       }했습니다.`,
     });
 
+    router.refresh();
     router.push("../final");
   });
 
