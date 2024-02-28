@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { ClientAxios } from "@/api/ClientAxios";
 import { Status } from "@/api/_types/common";
@@ -11,7 +11,6 @@ import { showNotificationSuccess } from "@/components/common/Notifications";
 import { FinalReview } from "@/components/pages/review/Review";
 import { ReviewConfirmModal } from "@/components/pages/review/ReviewConfirmModal";
 import { ThesisInfoData } from "@/components/pages/review/ThesisInfo/ThesisInfo";
-import { PreviousFile, stubFile } from "@/components/common/rows/FileUploadRow/FileUploadRow";
 import { useRouter } from "next/navigation";
 import { transactionTask } from "@/api/_utils/task";
 import { uploadFile } from "@/api/_utils/uploadFile";
@@ -29,7 +28,7 @@ export interface ProfessorFinalProps {
 interface FormInput {
   status: Status;
   comment: string;
-  commentFile: File | PreviousFile | null;
+  commentFile: File | undefined | null;
 }
 
 export function ProfessorFinalForm({ reviewId, thesisInfo, previous }: ProfessorFinalProps) {
@@ -38,10 +37,7 @@ export function ProfessorFinalForm({ reviewId, thesisInfo, previous }: Professor
     initialValues: {
       status: previous.status,
       comment: previous.comment ?? "",
-      commentFile: useMemo(
-        () => (previous.reviewFile ? stubFile(previous.reviewFile) : null),
-        [previous.reviewFile]
-      ),
+      commentFile: undefined,
     },
     validate: {
       status: (value) =>
@@ -59,16 +55,16 @@ export function ProfessorFinalForm({ reviewId, thesisInfo, previous }: Professor
 
     const isPending = input.status === "PENDING";
     let fileUUID;
-    if ("previousUuid" in input.commentFile!) {
-      fileUUID = input.commentFile.previousUuid satisfies string;
+    if (input.commentFile) {
+      fileUUID = (await uploadFile(input.commentFile)).uuid;
     } else {
-      fileUUID = (await uploadFile(input.commentFile!)).uuid;
+      fileUUID = previous.reviewFile?.uuid ?? null;
     }
 
     await ClientAxios.put(API_ROUTES.review.final.put(reviewId), {
       contentStatus: input.status,
       comment: input.comment,
-      fileUUID,
+      fileUUID: fileUUID ?? undefined,
     } satisfies UpdateReviewRequestBody);
 
     if (previous.reviewFile && !("previousUuid" in input.commentFile!)) {
@@ -95,7 +91,11 @@ export function ProfessorFinalForm({ reviewId, thesisInfo, previous }: Professor
         }
       })}
     >
-      <FinalReview form={form} currentState={currentState} />
+      <FinalReview
+        form={form}
+        previousCommentFile={previous.reviewFile ?? undefined}
+        currentState={currentState}
+      />
       <ReviewConfirmModal
         thesis={thesisInfo}
         review={{
