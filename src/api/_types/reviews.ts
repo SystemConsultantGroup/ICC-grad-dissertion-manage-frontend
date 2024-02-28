@@ -64,7 +64,7 @@ export interface UpdateReviewRequestBody {
   contentStatus: Status;
   presentationStatus?: Status | null;
   comment: string;
-  fileUUID: string;
+  fileUUID?: string;
 }
 
 export interface DetailedRevision extends Review {
