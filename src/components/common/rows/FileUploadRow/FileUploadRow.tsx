@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, FileInput, Group } from "@mantine/core";
 import { UseFormReturnType } from "@mantine/form";
 import { IconTrash } from "@tabler/icons-react";
@@ -16,54 +16,32 @@ declare module "@mantine/core" {
   }
 }
 
-export function stubFile(apiFile: ApiFile): PreviousFile {
-  if (typeof File === "undefined") {
-    return {
-      previousUuid: apiFile.uuid,
-      name: apiFile.name,
-      type: apiFile.mimeType,
-    } as PreviousFile; // is this right?
-  }
-  const file: Partial<PreviousFile> = new File([], apiFile.name);
-  file.previousUuid = apiFile.uuid;
-  return file as PreviousFile;
-}
-
-export interface PreviousFile extends File {
-  previousUuid: string;
-}
-
 interface Props {
   field: string;
   fieldSize?: "sm" | "md" | "lg" | "xl" | number;
-  onChange?: (file: File | PreviousFile | null) => void;
-  defaultFile?: File | PreviousFile;
+  onChange?: (file: File | null) => void;
+  previousFile?: ApiFile;
+  defaultFile?: File;
   /* eslint-disable @typescript-eslint/no-explicit-any */
   form?: UseFormReturnType<any>;
   formKey?: string;
 }
 
+/**
+ * 참고로, form으로 사용할 때 값이 undefined면 기존 파일 사용, null이면 기존 파일을 삭제하는 것으로 간주합니다.
+ * props 구조가 form, formKey로 되어 있으니 타입을 주기가 좀 복잡하네요...
+ */
 function FileUploadRow({
   field,
   onChange,
+  previousFile,
   defaultFile,
   form,
   formKey = "file",
   fieldSize = "md",
 }: Props) {
-  const [file, setFile] = useState<File | PreviousFile | null>(null);
-  const resetRef = useRef<() => void>(null);
-  let previousFile: PreviousFile | null;
-  const value: File | PreviousFile | null = form?.values?.[formKey];
-  if (!value) {
-    previousFile = null;
-  } else {
-    previousFile = "previousUuid" in value ? value : null;
-  }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const initialPreviousFile = useMemo(() => previousFile, []);
+  const [file, setFile] = useState<File | null>(null);
   const clearFile = () => {
-    resetRef.current?.();
     setFile(null);
     onChange?.(null);
   };
@@ -81,14 +59,10 @@ function FileUploadRow({
   return (
     <Row field={field} fieldSize={fieldSize}>
       <Group gap={16}>
-        {/* form API와 함께 사용시 예기치 못한 동작이 발생하여 주석처리 */}
-        {/* <FileButton onChange={handleFileChange} resetRef={resetRef}>
-          {(props) => <Button {...props}>파일 선택</Button>}
-        </FileButton> */}
         <FileInput
           style={{ width: 300 }}
           className={previousFile ? classes.previous : undefined}
-          value={form ? undefined : file}
+          value={file}
           onChange={handleFileChange}
           defaultValue={defaultFile}
           placeholder="파일 업로드..."
@@ -98,20 +72,20 @@ function FileUploadRow({
           color="red"
           variant="outline"
           leftSection={<IconTrash size={20} />}
-          disabled={form ? !form.values[formKey] : !file}
+          disabled={form ? form.values[formKey] === null : !file}
           onClick={form ? () => form.setFieldValue(formKey, null) : clearFile}
         >
           {previousFile ? "덮어쓰기" : "삭제"}
         </Button>
-        {initialPreviousFile &&
-          (previousFile ? (
+        {previousFile &&
+          (form?.values[formKey] ? (
             <Button
               color="gray"
               variant="outline"
               onClick={() => {
                 handleDownloadFile({
-                  fileLink: API_ROUTES.file.get(previousFile!.previousUuid),
-                  fileName: previousFile!.name,
+                  fileLink: API_ROUTES.file.get(previousFile.uuid),
+                  fileName: previousFile.name,
                 });
               }}
             >
@@ -121,7 +95,7 @@ function FileUploadRow({
             <Button
               color="gray"
               variant="outline"
-              onClick={() => form!.setFieldValue(formKey, initialPreviousFile)}
+              onClick={() => form!.setFieldValue(formKey, undefined)}
             >
               기존 파일 사용
             </Button>
