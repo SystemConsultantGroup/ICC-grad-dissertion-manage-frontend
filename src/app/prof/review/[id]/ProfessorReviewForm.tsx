@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { isNotEmpty, useForm } from "@mantine/form";
+import { useForm } from "@mantine/form";
 import { ClientAxios } from "@/api/ClientAxios";
 import { Status } from "@/api/_types/common";
 import { File as ApiFile } from "@/api/_types/file";
 import { UpdateReviewRequestBody } from "@/api/_types/reviews";
 import { API_ROUTES } from "@/api/apiRoute";
-import { showNotificationSuccess } from "@/components/common/Notifications";
+import { showNotificationError, showNotificationSuccess } from "@/components/common/Notifications";
 import { ProfessorReview } from "@/components/pages/review/Review";
 import { ReviewConfirmModal } from "@/components/pages/review/ReviewConfirmModal";
 import { ThesisInfoData } from "@/components/pages/review/ThesisInfo/ThesisInfo";
@@ -50,7 +50,6 @@ export function ProfessorReviewForm({ reviewId, thesisInfo, previous }: Professo
           ? (value) =>
               value && value !== "UNEXAMINED" ? null : "합격, 불합격, 보류 중 하나를 선택해주세요."
           : undefined,
-      commentFile: isNotEmpty("심사 의견 파일을 첨부해주세요."),
     },
   });
   const { values } = form;
@@ -64,19 +63,19 @@ export function ProfessorReviewForm({ reviewId, thesisInfo, previous }: Professo
     const isPending = input.thesis === "PENDING" || input.presentation === "PENDING";
     let fileUUID;
     if (input.commentFile) {
-      fileUUID = (await uploadFile(input.commentFile!)).uuid;
-    } else {
-      fileUUID = previous.reviewFile?.uuid ?? null;
+      fileUUID = (await uploadFile(input.commentFile)).uuid;
+    } else if (input.commentFile !== null) {
+      fileUUID = previous.reviewFile?.uuid ?? undefined;
     }
 
     await ClientAxios.put(API_ROUTES.review.put(reviewId), {
       contentStatus: input.thesis,
       presentationStatus: input.presentation,
       comment: input.comment,
-      fileUUID: fileUUID ?? undefined,
+      fileUUID,
     } satisfies UpdateReviewRequestBody);
 
-    if (previous.reviewFile && !("previousUuid" in input.commentFile!)) {
+    if (previous.reviewFile && input.commentFile !== undefined) {
       await ClientAxios.delete(API_ROUTES.file.delete(previous.reviewFile.uuid));
     }
 
@@ -98,6 +97,13 @@ export function ProfessorReviewForm({ reviewId, thesisInfo, previous }: Professo
         if (input.thesis === "PENDING" || input.presentation === "PENDING") {
           handleSubmit(input);
         } else {
+          const hasCommentFile = previous.reviewFile
+            ? values.commentFile === null
+            : !!values.commentFile;
+          if (values.comment === "" && hasCommentFile) {
+            showNotificationError({ message: <>심사 의견이나 심사 의견 파일을 첨부해주세요.</> });
+            return;
+          }
           setShowConfirmDialog(true);
         }
       })}
