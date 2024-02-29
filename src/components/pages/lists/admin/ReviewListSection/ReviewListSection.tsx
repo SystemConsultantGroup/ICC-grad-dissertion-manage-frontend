@@ -190,30 +190,32 @@ function ReviewListSection() {
           </Table.Data>
           <Table.Data>-</Table.Data>
         </Table.FilterRow>
-        {reviewStatus?.map((review, index) => (
-          <Table.Row
-            key={review.id}
-            onClick={() => {
-              push(`reviews/${review.id}`);
-            }}
-          >
-            <Table.Data>{index + 1 + (pageNumber - 1) * pageSizeNumber}</Table.Data>
-            <Table.Data>{review.stage === "MAIN" ? "본심" : "예심"}</Table.Data>
-            <Table.Data>{review.student}</Table.Data>
-            <Table.Data>{review.department}</Table.Data>
-            <Table.Data>{review.title}</Table.Data>
-            <Table.Data>
-              <Stack gap={0}>
-                {review.reviews.map((reviewInfo, i) => (
-                  <Text key={i} fw={600} style={{ whiteSpace: "nowrap" }}>
-                    {reviewInfo.reviewer.name} /{" "}
-                    {reviewInfo.contentStatus === "UNEXAMINED" ? "진행중" : "심사 완료"}
-                  </Text>
-                ))}
-              </Stack>
-            </Table.Data>
-          </Table.Row>
-        ))}
+        {reviewStatus
+          ?.filter((review) => review.stage !== "REVISION")
+          .map((review, index) => (
+            <Table.Row
+              key={review.id}
+              onClick={() => {
+                push(`reviews/${review.id}`);
+              }}
+            >
+              <Table.Data>{index + 1 + (pageNumber - 1) * pageSizeNumber}</Table.Data>
+              <Table.Data>{review.stage === "MAIN" ? "본심" : "예심"}</Table.Data>
+              <Table.Data>{review.student}</Table.Data>
+              <Table.Data>{review.department}</Table.Data>
+              <Table.Data>{review.title}</Table.Data>
+              <Table.Data>
+                <Stack gap={0}>
+                  {review.reviews.map((reviewInfo, i) => (
+                    <Text key={i} fw={600} style={{ whiteSpace: "nowrap" }}>
+                      {reviewInfo.reviewer.name} /{" "}
+                      {reviewInfo.contentStatus === "UNEXAMINED" ? "진행중" : "심사 완료"}
+                    </Text>
+                  ))}
+                </Stack>
+              </Table.Data>
+            </Table.Row>
+          ))}
       </Table>
       <Center>
         <Pagination
