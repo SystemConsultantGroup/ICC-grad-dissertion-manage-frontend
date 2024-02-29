@@ -1,17 +1,16 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { isNotEmpty, useForm } from "@mantine/form";
+import { useState } from "react";
+import { useForm } from "@mantine/form";
 import { ClientAxios } from "@/api/ClientAxios";
 import { Status } from "@/api/_types/common";
 import { File as ApiFile } from "@/api/_types/file";
 import { UpdateReviewRequestBody } from "@/api/_types/reviews";
 import { API_ROUTES } from "@/api/apiRoute";
-import { showNotificationSuccess } from "@/components/common/Notifications";
+import { showNotificationError, showNotificationSuccess } from "@/components/common/Notifications";
 import { FinalReview } from "@/components/pages/review/Review";
 import { ReviewConfirmModal } from "@/components/pages/review/ReviewConfirmModal";
 import { ThesisInfoData } from "@/components/pages/review/ThesisInfo/ThesisInfo";
-import { PreviousFile } from "@/components/common/rows/FileUploadRow/FileUploadRow";
 import { useRouter } from "next/navigation";
 import { transactionTask } from "@/api/_utils/task";
 import { uploadFile } from "@/api/_utils/uploadFile";
@@ -24,36 +23,31 @@ export interface ProfessorFinalProps {
     comment: string | null;
     reviewFile: ApiFile | null;
   };
+  within: boolean;
 }
 
 interface FormInput {
   status: Status;
   comment: string;
-  commentFile: File | PreviousFile | null;
+  commentFile: File | undefined | null;
 }
 
-function stubFile(apiFile: ApiFile) {
-  const file = new File([], apiFile.name);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (file as any).previousUuid = apiFile.uuid;
-  return file;
-}
-
-export function ProfessorFinalForm({ reviewId, thesisInfo, previous }: ProfessorFinalProps) {
+export function ProfessorFinalForm({
+  reviewId,
+  thesisInfo,
+  previous,
+  within,
+}: ProfessorFinalProps) {
   const router = useRouter();
   const form = useForm<FormInput>({
     initialValues: {
       status: previous.status,
       comment: previous.comment ?? "",
-      commentFile: useMemo(
-        () => (previous.reviewFile ? stubFile(previous.reviewFile) : null),
-        [previous.reviewFile]
-      ),
+      commentFile: undefined,
     },
     validate: {
       status: (value) =>
         value && value !== "UNEXAMINED" ? null : "합격, 불합격, 보류 중 하나를 선택해주세요.",
-      commentFile: isNotEmpty("심사 의견 파일을 첨부해주세요."),
     },
   });
   const { values } = form;
@@ -66,10 +60,10 @@ export function ProfessorFinalForm({ reviewId, thesisInfo, previous }: Professor
 
     const isPending = input.status === "PENDING";
     let fileUUID;
-    if ("previousUuid" in input.commentFile!) {
-      fileUUID = input.commentFile.previousUuid satisfies string;
-    } else {
-      fileUUID = (await uploadFile(input.commentFile!)).uuid;
+    if (input.commentFile) {
+      fileUUID = (await uploadFile(input.commentFile)).uuid;
+    } else if (input.commentFile !== null) {
+      fileUUID = previous.reviewFile?.uuid ?? undefined;
     }
 
     await ClientAxios.put(API_ROUTES.review.final.put(reviewId), {
@@ -78,26 +72,44 @@ export function ProfessorFinalForm({ reviewId, thesisInfo, previous }: Professor
       fileUUID,
     } satisfies UpdateReviewRequestBody);
 
+    if (previous.reviewFile && input.commentFile !== undefined) {
+      await ClientAxios.delete(API_ROUTES.file.delete(previous.reviewFile.uuid));
+    }
+
     showNotificationSuccess({
       message: `${thesisInfo.studentInfo.name} 학생의 논문 심사결과를 ${
         isPending ? "임시저장" : "저장"
       }했습니다.`,
     });
 
+    router.refresh();
     router.push("../final");
   });
 
   return (
     <form
       onSubmit={form.onSubmit((input) => {
-        if (input.status === "PENDING") {
+        if (!within) {
+          showNotificationError({ message: "최종 심사 기간이 아닙니다." });
+        } else if (input.status === "PENDING") {
           handleSubmit(input);
         } else {
+          const hasCommentFile = previous.reviewFile
+            ? values.commentFile === null
+            : !!values.commentFile;
+          if (values.comment === "" && hasCommentFile) {
+            showNotificationError({ message: <>심사 의견이나 심사 의견 파일을 첨부해주세요.</> });
+            return;
+          }
           setShowConfirmDialog(true);
         }
       })}
     >
-      <FinalReview form={form} currentState={currentState} />
+      <FinalReview
+        form={form}
+        previousCommentFile={previous.reviewFile ?? undefined}
+        currentState={currentState}
+      />
       <ReviewConfirmModal
         thesis={thesisInfo}
         review={{

@@ -1,5 +1,5 @@
 import { Badge, Stack } from "@mantine/core";
-import { ApiFileRow, BasicRow, RowGroup, TitleRow } from "@/components/common/rows";
+import { ApiFileRow, BasicRow, LongContentRow, RowGroup, TitleRow } from "@/components/common/rows";
 import { ThesisFile } from "@/api/_types/reviews";
 import { File } from "@/api/_types/file";
 
@@ -82,11 +82,7 @@ export function ThesisInfo({ thesis, isAdvisor, revision, simple = false }: Thes
               <BasicRow.Text>{thesis.studentInfo.department.name}</BasicRow.Text>
             </BasicRow>
           </RowGroup>
-          <RowGroup>
-            <BasicRow field="논문 초록" p="14 0 14 0">
-              <BasicRow.Text>{thesis.abstract}</BasicRow.Text>
-            </BasicRow>
-          </RowGroup>
+          <LongContentRow field="논문 초록" content={thesis ? thesis.abstract : "..."} />
           <RowGroup>
             <ApiFileRow field="논문 파일" file={thesis.thesisFile} />
           </RowGroup>

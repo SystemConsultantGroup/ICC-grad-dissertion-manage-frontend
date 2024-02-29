@@ -1,0 +1,6 @@
+.successIcon {
+  color: var(--mantine-color-blue-6);
+  border: 4px solid var(--mantine-color-blue-6);
+  border-radius: 50%;
+  padding: 10px;
+}

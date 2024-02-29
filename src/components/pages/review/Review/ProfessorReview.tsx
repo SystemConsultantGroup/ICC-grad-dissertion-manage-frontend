@@ -11,6 +11,7 @@ import {
   TitleRow,
 } from "@/components/common/rows";
 import { Status } from "@/api/_types/common";
+import { File as ApiFile } from "@/api/_types/file";
 import { Stage } from "../ThesisInfo/ThesisInfo";
 
 export interface ProfessorReviewProps {
@@ -19,12 +20,18 @@ export interface ProfessorReviewProps {
     thesis: Status;
     presentation: Status | null;
     comment: string;
-    commentFile: File | null;
+    commentFile: File | undefined | null;
   }>;
+  previousCommentFile: ApiFile | undefined;
   currentState: null | "pending" | "submitted";
 }
 
-export function ProfessorReview({ stage, form, currentState }: ProfessorReviewProps) {
+export function ProfessorReview({
+  stage,
+  form,
+  previousCommentFile,
+  currentState,
+}: ProfessorReviewProps) {
   const { thesis, presentation } = form.values;
   const hasPending = thesis === "PENDING" || presentation === "PENDING";
 
@@ -105,7 +112,12 @@ export function ProfessorReview({ stage, form, currentState }: ProfessorReviewPr
       )}
       <TextAreaRow field="심사 의견" form={form} formKey="comment" />
       <RowGroup>
-        <FileUploadRow field="심사 의견 파일" form={form} formKey="commentFile" />
+        <FileUploadRow
+          field="심사 의견 파일"
+          form={form}
+          previousFile={previousCommentFile}
+          formKey="commentFile"
+        />
       </RowGroup>
       <RowGroup withBorderBottom={false}>
         <ButtonRow

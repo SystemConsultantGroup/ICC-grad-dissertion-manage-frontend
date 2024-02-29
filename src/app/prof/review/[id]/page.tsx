@@ -6,6 +6,9 @@ import { API_ROUTES } from "@/api/apiRoute";
 import { ThesisInfoData } from "@/components/pages/review/ThesisInfo/ThesisInfo";
 import { fetcher } from "@/api/fetcher";
 import { AuthSSR } from "@/api/AuthSSR";
+import { withinPhase } from "@/api/_utils/withinPhase";
+import { formatTime } from "@/components/common/Clock/date/format";
+import { PhaseReadyAlertRow } from "@/components/pages/PhaseReady";
 import { ProfessorReviewForm } from "./ProfessorReviewForm";
 import { ProfessorReviewResult } from "./ProfessorReviewResult";
 
@@ -34,13 +37,26 @@ export default async function ProfessorReviewPage({
     (review.contentStatus === "PASS" || review.contentStatus === "FAIL") &&
     (review.presentationStatus === "PASS" || review.presentationStatus === "FAIL");
 
+  const { within, start, end } = await withinPhase({
+    title: thesisInfo.stage === "PRELIMINARY" ? "예심 심사" : "본심 심사",
+    token,
+  });
+
   return (
     <>
       <PageHeader title="논문 심사" />
       <ReviewCard>
+        {!within && (
+          <PhaseReadyAlertRow title="논문 심사" start={formatTime(start)} end={formatTime(end)} />
+        )}
         <ThesisInfo thesis={thesisInfo} isAdvisor />
         {!isPermanent ? (
-          <ProfessorReviewForm reviewId={reviewId} thesisInfo={thesisInfo} previous={review} />
+          <ProfessorReviewForm
+            reviewId={reviewId}
+            thesisInfo={thesisInfo}
+            previous={review}
+            within={within}
+          />
         ) : (
           <ProfessorReviewResult previous={review} />
         )}
