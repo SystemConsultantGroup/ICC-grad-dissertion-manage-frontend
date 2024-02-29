@@ -68,7 +68,7 @@ jobs:
           cat kustomization.yaml
       - name: Config Repo 변경사항 푸시
         run: |
-          cd config-repo
+          cd ice-grad-thesis-config
           git config --global user.email "wefwef12e@naver.com"
           git config --global user.name "hynseok"
           git commit -am "Update image tag"
