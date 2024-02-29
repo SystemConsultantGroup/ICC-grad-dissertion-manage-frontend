@@ -58,7 +58,20 @@ export interface DetailedReview extends Review {
   reviewFile: File | null;
 }
 
+export interface OtherReview {
+  name: string;
+  contentResult: Status;
+  presentationResult: Status;
+  comment: string;
+  file: File | null;
+}
+
 export interface DetailedReviewResponse extends CommonApiResponse, DetailedReview {}
+
+export interface FinalReviewResponse extends CommonApiResponse {
+  finalReview: DetailedReview;
+  otherReviews?: OtherReview[];
+}
 
 export interface UpdateReviewRequestBody {
   contentStatus: Status;
