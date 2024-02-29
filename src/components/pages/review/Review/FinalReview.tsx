@@ -11,17 +11,19 @@ import {
 } from "@/components/common/rows";
 import { IconCheck } from "@tabler/icons-react";
 import { Status } from "@/api/_types/common";
+import { File as ApiFile } from "@/api/_types/file";
 
 export interface FinalReviewProps {
   form: UseFormReturnType<{
     status: Status;
     comment: string;
-    commentFile: File | null;
+    commentFile: File | null | undefined;
   }>;
+  previousCommentFile: ApiFile | undefined;
   currentState: null | "pending" | "submitted";
 }
 
-export function FinalReview({ form, currentState }: FinalReviewProps) {
+export function FinalReview({ form, previousCommentFile, currentState }: FinalReviewProps) {
   const { status } = form.values;
   const hasPending = status === "PENDING";
 
@@ -65,7 +67,12 @@ export function FinalReview({ form, currentState }: FinalReviewProps) {
       </RowGroup>
       <TextAreaRow field="심사 의견" form={form} formKey="comment" />
       <RowGroup>
-        <FileUploadRow field="심사 의견 파일" form={form} formKey="commentFile" />
+        <FileUploadRow
+          field="심사 의견 파일"
+          form={form}
+          previousFile={previousCommentFile}
+          formKey="commentFile"
+        />
       </RowGroup>
       <RowGroup withBorderBottom={false}>
         <ButtonRow

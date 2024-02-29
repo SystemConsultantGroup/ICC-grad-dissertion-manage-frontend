@@ -90,7 +90,7 @@ function SystemSection() {
                   <Select
                     w={250}
                     data={DepartmentsData?.departments
-                      .filter((department) => !department.modificationFlag)
+                      .filter((department) => department.modificationFlag)
                       .map((department) => ({
                         label: department.name,
                         value: String(department.id),
@@ -111,7 +111,7 @@ function SystemSection() {
                   <Select
                     w={250}
                     data={DepartmentsData?.departments
-                      .filter((department) => department.modificationFlag)
+                      .filter((department) => !department.modificationFlag)
                       .map((department) => ({
                         label: department.name,
                         value: String(department.id),

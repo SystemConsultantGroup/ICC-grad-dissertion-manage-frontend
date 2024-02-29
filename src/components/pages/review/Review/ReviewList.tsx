@@ -4,13 +4,22 @@ import TableRow from "@/components/common/Table/_elements/TableRow";
 import TableData from "@/components/common/Table/_elements/TableData";
 import { ApiDownloadButton } from "@/components/common/Buttons";
 import { TitleRow } from "@/components/common/rows";
-import { ThesisReview } from "@/api/_types/reviews";
 import { Stage, Status } from "@/api/_types/common";
+import { File } from "@/api/_types/file";
 
 export interface ReviewListProps {
   title: string;
   stage: Stage;
-  reviews: ThesisReview[];
+  reviews: SimpleReview[];
+}
+
+export interface SimpleReview {
+  id: string | number;
+  reviewer: { name: string };
+  contentStatus: Status;
+  presentationStatus: Status;
+  comment: string;
+  file: File | null;
 }
 
 function nameForStatus(status: Status) {
