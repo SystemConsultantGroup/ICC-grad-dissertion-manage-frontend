@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { isNotEmpty, useForm } from "@mantine/form";
+import { useForm } from "@mantine/form";
 import { ClientAxios } from "@/api/ClientAxios";
 import { Status } from "@/api/_types/common";
 import { File as ApiFile } from "@/api/_types/file";
 import { UpdateReviewRequestBody } from "@/api/_types/reviews";
 import { API_ROUTES } from "@/api/apiRoute";
-import { showNotificationSuccess } from "@/components/common/Notifications";
+import { showNotificationError, showNotificationSuccess } from "@/components/common/Notifications";
 import { FinalReview } from "@/components/pages/review/Review";
 import { ReviewConfirmModal } from "@/components/pages/review/ReviewConfirmModal";
 import { ThesisInfoData } from "@/components/pages/review/ThesisInfo/ThesisInfo";
@@ -42,7 +42,6 @@ export function ProfessorFinalForm({ reviewId, thesisInfo, previous }: Professor
     validate: {
       status: (value) =>
         value && value !== "UNEXAMINED" ? null : "합격, 불합격, 보류 중 하나를 선택해주세요.",
-      commentFile: isNotEmpty("심사 의견 파일을 첨부해주세요."),
     },
   });
   const { values } = form;
@@ -57,17 +56,17 @@ export function ProfessorFinalForm({ reviewId, thesisInfo, previous }: Professor
     let fileUUID;
     if (input.commentFile) {
       fileUUID = (await uploadFile(input.commentFile)).uuid;
-    } else {
-      fileUUID = previous.reviewFile?.uuid ?? null;
+    } else if (input.commentFile !== null) {
+      fileUUID = previous.reviewFile?.uuid ?? undefined;
     }
 
     await ClientAxios.put(API_ROUTES.review.final.put(reviewId), {
       contentStatus: input.status,
       comment: input.comment,
-      fileUUID: fileUUID ?? undefined,
+      fileUUID,
     } satisfies UpdateReviewRequestBody);
 
-    if (previous.reviewFile && !("previousUuid" in input.commentFile!)) {
+    if (previous.reviewFile && input.commentFile !== undefined) {
       await ClientAxios.delete(API_ROUTES.file.delete(previous.reviewFile.uuid));
     }
 
@@ -87,6 +86,13 @@ export function ProfessorFinalForm({ reviewId, thesisInfo, previous }: Professor
         if (input.status === "PENDING") {
           handleSubmit(input);
         } else {
+          const hasCommentFile = previous.reviewFile
+            ? values.commentFile === null
+            : !!values.commentFile;
+          if (values.comment === "" && hasCommentFile) {
+            showNotificationError({ message: <>심사 의견이나 심사 의견 파일을 첨부해주세요.</> });
+            return;
+          }
           setShowConfirmDialog(true);
         }
       })}
