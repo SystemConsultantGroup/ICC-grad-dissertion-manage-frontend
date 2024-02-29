@@ -11,6 +11,7 @@ import { Button, Stack } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { useAuth } from "@/components/common/AuthProvider";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import classes from "@/components/pages/revision/RevisionSubmissionForm/RevisionSubmissionForm.module.css";
 import useThesis from "@/api/SWR/useThesis";
 import { uploadFile } from "@/api/_utils/uploadFile";
@@ -39,6 +40,7 @@ function RevisionSubmissionForm() {
   });
   const { onSubmit } = form;
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (values: RevisionSubmissionFormInputs) => {
     setIsSubmitting(true);
@@ -46,7 +48,7 @@ function RevisionSubmissionForm() {
       await transaction(async () => {
         const thesisFileUUID = (await uploadFile(values.thesisFile!)).uuid;
         const revisionReportFileUUID = (await uploadFile(values.revisionReportFile!)).uuid;
-        ClientAxios.put(API_ROUTES.student.putThesis(user!.id), {
+        await ClientAxios.put(API_ROUTES.student.putThesis(user!.id), {
           thesisFileUUID,
           revisionReportFileUUID,
         });
@@ -55,6 +57,7 @@ function RevisionSubmissionForm() {
         title: "수정사항 제출 완료",
         message: "수정사항이 제출되었습니다.",
       });
+      router.push("/student/revision/success");
     } catch (error) {
       // TODO: Notification & 에러 처리
     } finally {
