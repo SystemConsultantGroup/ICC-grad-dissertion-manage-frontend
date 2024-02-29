@@ -24,6 +24,7 @@ export interface ProfessorReviewProps {
     comment: string | null;
     reviewFile: ApiFile | null;
   };
+  within: boolean;
 }
 
 interface FormInput {
@@ -33,7 +34,12 @@ interface FormInput {
   commentFile: File | undefined | null;
 }
 
-export function ProfessorReviewForm({ reviewId, thesisInfo, previous }: ProfessorReviewProps) {
+export function ProfessorReviewForm({
+  reviewId,
+  thesisInfo,
+  previous,
+  within,
+}: ProfessorReviewProps) {
   const router = useRouter();
   const form = useForm<FormInput>({
     initialValues: {
@@ -94,7 +100,9 @@ export function ProfessorReviewForm({ reviewId, thesisInfo, previous }: Professo
   return (
     <form
       onSubmit={form.onSubmit((input) => {
-        if (input.thesis === "PENDING" || input.presentation === "PENDING") {
+        if (!within) {
+          showNotificationError({ message: "심사 기간이 아닙니다." });
+        } else if (input.thesis === "PENDING" || input.presentation === "PENDING") {
           handleSubmit(input);
         } else {
           const hasCommentFile = previous.reviewFile

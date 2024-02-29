@@ -3,7 +3,7 @@
 import { ClientAxios } from "@/api/ClientAxios";
 import { Status } from "@/api/_types/common";
 import { API_ROUTES } from "@/api/apiRoute";
-import { showNotificationSuccess } from "@/components/common/Notifications";
+import { showNotificationError, showNotificationSuccess } from "@/components/common/Notifications";
 import { RevisionCheck } from "@/components/pages/review/Review";
 import { ThesisInfoData } from "@/components/pages/review/ThesisInfo/ThesisInfo";
 import { useForm } from "@mantine/form";
@@ -18,10 +18,12 @@ export function RevisionCheckForm({
   revisionId,
   thesisInfo,
   previous,
+  within,
 }: {
   revisionId: string;
   thesisInfo: ThesisInfoData;
   previous: { contentStatus: Status };
+  within: boolean;
 }) {
   const router = useRouter();
   const form = useForm<FormInput>({
@@ -55,7 +57,13 @@ export function RevisionCheckForm({
   };
 
   return (
-    <form onSubmit={form.onSubmit(() => handleSubmit(form.values))}>
+    <form
+      onSubmit={form.onSubmit(() =>
+        within
+          ? handleSubmit(form.values)
+          : showNotificationError({ message: "수정사항 확인 기간이 아닙니다." })
+      )}
+    >
       <RevisionCheck form={form} isPending={isPending} />
     </form>
   );
