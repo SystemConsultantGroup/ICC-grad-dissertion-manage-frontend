@@ -6,6 +6,9 @@ import { AuthSSR } from "@/api/AuthSSR";
 import { fetcher } from "@/api/fetcher";
 import { API_ROUTES } from "@/api/apiRoute";
 import { DetailedRevisionResponse } from "@/api/_types/reviews";
+import { withinPhase } from "@/api/_utils/withinPhase";
+import { PhaseReadyAlertRow } from "@/components/pages/PhaseReady";
+import { formatTime } from "@/components/common/Clock/date/format";
 import { RevisionCheckForm } from "./RevisionCheckForm";
 
 export default async function ProfessorRevisionPage({
@@ -31,13 +34,26 @@ export default async function ProfessorRevisionPage({
   };
   // const isPermanent = revision.contentStatus === "PASS" || revision.contentStatus === "FAIL";
 
+  const { within, start, end } = await withinPhase({
+    title: "수정 지시 사항 확인",
+    token,
+  });
+
   return (
     <>
       <PageHeader title="수정사항 확인" />
       <ReviewCard>
+        {!within && (
+          <PhaseReadyAlertRow title="논문 심사" start={formatTime(start)} end={formatTime(end)} />
+        )}
         <ThesisInfo thesis={thesisInfo} revision={revision} isAdvisor />
         {/* {!isPermanent ? <RevisionCheckForm /> : <RevisionCheckResult />} */}
-        <RevisionCheckForm revisionId={reviewId} thesisInfo={thesisInfo} previous={revision} />
+        <RevisionCheckForm
+          revisionId={reviewId}
+          thesisInfo={thesisInfo}
+          previous={revision}
+          within={within}
+        />
       </ReviewCard>
     </>
   );
