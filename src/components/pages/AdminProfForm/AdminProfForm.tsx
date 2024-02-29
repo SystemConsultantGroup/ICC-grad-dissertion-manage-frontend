@@ -29,6 +29,7 @@ function AdminProfForm({ professorId }: Props) {
   const router = useRouter();
   const { login } = useAuth();
   const [isPwEditing, setIsPwEditing] = useState<boolean>(false);
+  const [defaultDepartmentId, setDefaultDepartmentId] = useState<string | null>(null);
 
   const { onSubmit, getInputProps, setValues, isDirty, setFieldValue } =
     useForm<AdminProfFormInputs>({
@@ -69,6 +70,7 @@ function AdminProfForm({ professorId }: Props) {
             phone: professorDetails.phone,
             deptId: String(professorDetails.deptId),
           });
+          setDefaultDepartmentId(String(professorDetails.deptId));
         }
       } catch (err) {
         console.error(err);
@@ -201,6 +203,7 @@ function AdminProfForm({ professorId }: Props) {
                     width: 300,
                   },
                 }}
+                defaultValue={defaultDepartmentId}
               />
             </BasicRow>
           </RowGroup>
