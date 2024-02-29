@@ -5,6 +5,7 @@ import { Button, Stack, TextInput } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { useAuth } from "@/components/common/AuthProvider";
 import { uploadFile } from "@/api/_utils/uploadFile";
+import { useRouter } from "next/navigation";
 import { ClientAxios } from "@/api/ClientAxios";
 import { API_ROUTES } from "@/api/apiRoute";
 import { useEffect, useState } from "react";
@@ -39,6 +40,7 @@ function PaperSubmissionForm() {
   });
   const { onSubmit, getInputProps } = form;
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (!isLoading) {
@@ -67,6 +69,7 @@ function PaperSubmissionForm() {
         title: "논문 투고 완료",
         message: "논문이 성공적으로 투고되었습니다.",
       });
+      router.push("/student/write/success");
     } catch (error) {
       // TODO: Notification & 에러 처리
     } finally {
