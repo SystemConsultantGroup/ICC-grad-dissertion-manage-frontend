@@ -2,7 +2,7 @@ name: Docker Image CI
 
 on:
   push:
-    branches: ["develop"]
+    branches: ["qa"]
 env:
   dockerimage_tag: ${{ github.sha }}
   dockerimage_name: registry.scg.skku.ac.kr/ice-gs-thesis-fe
