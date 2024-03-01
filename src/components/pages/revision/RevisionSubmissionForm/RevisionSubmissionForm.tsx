@@ -67,7 +67,6 @@ function RevisionSubmissionForm() {
 
   useEffect(() => {
     if (!isLoading) {
-      console.log(thesis);
       form.setValues({
         thesisFile: thesis?.thesisFile as unknown as File,
         revisionReportFile: thesis?.revisionReportFile as unknown as File,
