@@ -24,6 +24,7 @@ interface PaperSubmissionFormInputs {
 function PaperSubmissionForm() {
   const { user } = useAuth();
   const { data: thesis, isLoading } = useThesis(user?.id || 0, { type: "now" }, !!user);
+
   const form = useForm<PaperSubmissionFormInputs>({
     initialValues: {
       title: "",
@@ -47,6 +48,8 @@ function PaperSubmissionForm() {
       form.setValues({
         title: thesis?.title || "",
         abstract: thesis?.abstract || "",
+        thesisFile: thesis?.thesisFile as unknown as File,
+        presentationFile: thesis?.presentationFile as unknown as File,
       });
     }
   }, [isLoading]);
@@ -103,10 +106,20 @@ function PaperSubmissionForm() {
           placeholder={isLoading ? "로딩 중..." : ""}
         />
         <RowGroup>
-          <FileUploadRow field="논문 파일" form={form} formKey="thesisFile" />
+          <FileUploadRow
+            field="논문 파일"
+            form={form}
+            formKey="thesisFile"
+            previousFile={thesis?.thesisFile}
+          />
         </RowGroup>
         <RowGroup>
-          <FileUploadRow field="논문 발표 파일" form={form} formKey="presentationFile" />
+          <FileUploadRow
+            field="논문 발표 파일"
+            form={form}
+            formKey="presentationFile"
+            previousFile={thesis?.presentationFile}
+          />
         </RowGroup>
         <Button type="submit" className={classes.submitButton} loading={isSubmitting}>
           투고하기
