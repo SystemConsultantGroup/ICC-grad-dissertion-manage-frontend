@@ -7,7 +7,7 @@ type Params = {
   token: string;
 };
 
-export async function withinPhase({ title, token }: Params) {
+export async function checkPhase({ title, token }: Params) {
   const data = (await fetcher({ url: API_ROUTES.phase.get(), token })) as PhasesResponse;
 
   const targetPhase = data.phases.find((phase) => phase.title.includes(title));
@@ -16,6 +16,7 @@ export async function withinPhase({ title, token }: Params) {
   const start = new Date(targetPhase!.start);
   const end = new Date(targetPhase!.end);
   const within = start <= now && now <= end;
+  const after = end < now;
 
-  return { start, end, within };
+  return { start, end, within, after };
 }
