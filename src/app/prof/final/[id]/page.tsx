@@ -7,7 +7,7 @@ import { AuthSSR } from "@/api/AuthSSR";
 import { FinalReviewResponse } from "@/api/_types/reviews";
 import { API_ROUTES } from "@/api/apiRoute";
 import { fetcher } from "@/api/fetcher";
-import { withinPhase } from "@/api/_utils/withinPhase";
+import { checkPhase } from "@/api/_utils/checkPhase";
 import { PhaseReadyAlertRow } from "@/components/pages/PhaseReady";
 import { formatTime } from "@/components/common/Clock/date/format";
 import { ProfessorFinalForm } from "./ProfessorFinalForm";
@@ -37,7 +37,7 @@ export default async function ProfessorFinalPage({
   };
   const isPermanent = review.status === "PASS" || review.status === "FAIL";
 
-  const { within, start, end } = await withinPhase({
+  const { within, start, end } = await checkPhase({
     title: thesisInfo.stage === "PRELIMINARY" ? "예심 최종 심사" : "본심 최종 심사",
     token,
   });
