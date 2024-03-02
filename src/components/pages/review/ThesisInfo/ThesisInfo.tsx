@@ -40,7 +40,7 @@ export function ThesisInfo({ thesis, isAdvisor, revision, simple = false }: Thes
         badge={
           <>
             {isAdvisor && <Badge>지도 학생</Badge>}
-            {stage === "MAIN" ? (
+            {stage === "MAIN" || stage === "REVISION" ? (
               <Badge>본심</Badge>
             ) : stage === "PRELIMINARY" ? (
               <Badge>예심</Badge>
