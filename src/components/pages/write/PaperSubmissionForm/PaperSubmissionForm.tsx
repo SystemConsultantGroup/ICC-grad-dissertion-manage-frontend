@@ -48,8 +48,8 @@ function PaperSubmissionForm() {
       form.setValues({
         title: thesis?.title || "",
         abstract: thesis?.abstract || "",
-        thesisFile: undefined,
-        presentationFile: undefined,
+        thesisFile: thesis?.thesisFile ? undefined : null,
+        presentationFile: thesis?.presentationFile ? undefined : null,
       });
     }
   }, [isLoading]);
