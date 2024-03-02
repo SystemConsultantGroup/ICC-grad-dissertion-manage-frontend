@@ -10,7 +10,7 @@ import {
 import { Button, Stack } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { useAuth } from "@/components/common/AuthProvider";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import classes from "@/components/pages/revision/RevisionSubmissionForm/RevisionSubmissionForm.module.css";
 import useThesis from "@/api/SWR/useThesis";
@@ -27,7 +27,7 @@ interface RevisionSubmissionFormInputs {
 
 function RevisionSubmissionForm() {
   const { user } = useAuth();
-  const { data: thesis } = useThesis(user?.id || 0, { type: "now" }, !!user);
+  const { data: thesis, isLoading } = useThesis(user?.id || 0, { type: "now" }, !!user);
   const form = useForm<RevisionSubmissionFormInputs>({
     initialValues: {
       thesisFile: null,
@@ -65,6 +65,15 @@ function RevisionSubmissionForm() {
     }
   };
 
+  useEffect(() => {
+    if (!isLoading) {
+      form.setValues({
+        thesisFile: undefined,
+        revisionReportFile: undefined,
+      });
+    }
+  }, [isLoading]);
+
   return (
     <form onSubmit={onSubmit(handleSubmit)}>
       <Stack gap={0}>
@@ -81,7 +90,13 @@ function RevisionSubmissionForm() {
         </RowGroup>
         <LongContentRow field="논문 초록" content={thesis ? thesis.abstract : "..."} />
         <RowGroup>
-          <FileUploadRow field="수정 논문 파일" form={form} formKey="thesisFile" fieldSize={180} />
+          <FileUploadRow
+            field="수정 논문 파일"
+            form={form}
+            formKey="thesisFile"
+            fieldSize={180}
+            previousFile={thesis?.thesisFile}
+          />
         </RowGroup>
         <RowGroup>
           <FileUploadRow
@@ -89,6 +104,7 @@ function RevisionSubmissionForm() {
             form={form}
             formKey="revisionReportFile"
             fieldSize={180}
+            previousFile={thesis?.revisionReportFile}
           />
         </RowGroup>
         <Button type="submit" className={classes.submitButton} loading={isSubmitting}>

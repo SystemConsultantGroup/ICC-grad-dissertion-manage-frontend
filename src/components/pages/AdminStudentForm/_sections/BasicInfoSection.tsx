@@ -15,11 +15,12 @@ interface Props {
   studentId?: string | number;
   isPwEditing: boolean;
   handleIsPwEditing: Dispatch<SetStateAction<boolean>>;
+  open: () => void;
 }
 
-function BasicInfoSection({ form, studentId, isPwEditing, handleIsPwEditing }: Props) {
-  const [opened, { open, close }] = useDisclosure();
+function BasicInfoSection({ form, studentId, isPwEditing, handleIsPwEditing, open }: Props) {
   const [phase, setPhase] = useState<Phase>();
+  const [defaultDepartmentId, setDefaultDepartmentId] = useState<string | null>(null);
 
   useEffect(() => {
     // 학생 기본 정보 가져오기
@@ -43,6 +44,7 @@ function BasicInfoSection({ form, studentId, isPwEditing, handleIsPwEditing }: P
             phone: studentDetails.phone,
             deptId: String(studentDetails.department),
           });
+          setDefaultDepartmentId(String(studentDetails.department));
         }
       } catch (error) {
         console.error(error);
@@ -117,6 +119,7 @@ function BasicInfoSection({ form, studentId, isPwEditing, handleIsPwEditing }: P
                 },
               }}
               {...form.getInputProps("basicInfo.deptId")}
+              defaultValue={defaultDepartmentId}
             />
           </BasicRow>
         </RowGroup>
@@ -134,7 +137,6 @@ function BasicInfoSection({ form, studentId, isPwEditing, handleIsPwEditing }: P
                     ]}
                   />
                 )}
-                <MainRegisterModal studentId={studentId} opened={opened} close={close} />
               </>
             ) : (
               <Select
