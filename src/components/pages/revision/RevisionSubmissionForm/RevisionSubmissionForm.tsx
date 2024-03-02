@@ -32,15 +32,19 @@ function RevisionSubmissionForm() {
     { type: "main" },
     !!user
   );
-  const { data: thesis, isLoading } = useThesis(user?.id || 0, { type: "now" }, !!user);
+  const { data: thesis, isLoading } = useThesis(user?.id || 0, { type: "revision" }, !!user);
   const form = useForm<RevisionSubmissionFormInputs>({
     initialValues: {
       thesisFile: null,
       revisionReportFile: null,
     },
     validate: {
-      thesisFile: isNotEmpty("논문 파일을 첨부해주세요."),
-      revisionReportFile: isNotEmpty("논문 발표 파일을 첨부해주세요."),
+      thesisFile: thesis?.thesisFile
+        ? (value) => (value === null ? "수정 논문 파일을 첨부해주세요." : undefined)
+        : isNotEmpty("수정 논문 파일을 첨부해주세요."),
+      revisionReportFile: thesis?.revisionReportFile
+        ? (value) => (value === null ? "수정지시사항 결과보고서 파일을 첨부해주세요." : undefined)
+        : isNotEmpty("수정지시사항 결과보고서 파일을 첨부해주세요."),
     },
   });
   const { onSubmit } = form;
@@ -51,8 +55,12 @@ function RevisionSubmissionForm() {
     setIsSubmitting(true);
     try {
       await transaction(async () => {
-        const thesisFileUUID = (await uploadFile(values.thesisFile!)).uuid;
-        const revisionReportFileUUID = (await uploadFile(values.revisionReportFile!)).uuid;
+        const thesisFileUUID = values.thesisFile
+          ? (await uploadFile(values.thesisFile!)).uuid
+          : undefined;
+        const revisionReportFileUUID = values.revisionReportFile
+          ? (await uploadFile(values.revisionReportFile!)).uuid
+          : undefined;
         await ClientAxios.put(API_ROUTES.student.putThesis(user!.id), {
           thesisFileUUID,
           revisionReportFileUUID,
