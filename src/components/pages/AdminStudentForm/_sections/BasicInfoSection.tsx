@@ -38,7 +38,7 @@ function BasicInfoSection({ form, studentId, isPwEditing, handleIsPwEditing, ope
 
           form.setFieldValue("basicInfo", {
             loginId: studentDetails.loginId,
-            password: "",
+            password: undefined,
             name: studentDetails.name,
             email: studentDetails.email,
             phone: studentDetails.phone,
