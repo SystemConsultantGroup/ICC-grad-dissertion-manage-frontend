@@ -16,25 +16,19 @@ interface UserInfoEditFormInputs {
   password: string;
   email?: string;
   phone?: string;
+  signFile?: File | null;
 }
 
 function UserInfoEditSection() {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
   const [isPwEditing, setIsPwEditing] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
-  const [isFileUpdated, setIsFileUpdated] = useState(false);
 
-  const {
-    values: formValues,
-    onSubmit,
-    getInputProps,
-    setFieldValue,
-    isDirty,
-  } = useForm<UserInfoEditFormInputs>({
+  const form = useForm<UserInfoEditFormInputs>({
     initialValues: {
       password: "",
       email: user?.email,
       phone: user?.phone,
+      signFile: null,
     },
     validate: {
       password: (value, values) =>
@@ -43,34 +37,25 @@ function UserInfoEditSection() {
   });
 
   useEffect(() => {
-    formValues.phone = user?.phone;
-    formValues.email = user?.email;
-  }, [user]);
-
-  /**
-   * @todo add default file get
-   */
-  // useEffect(() => {
-  //   const fileResponse = await fetch(user?.signFile);
-  //   setFile(null);
-  // });
-
-  const handleFileChange = (newFile: File | null) => {
-    setIsFileUpdated(true);
-    setFile(newFile);
-  };
+    if (!isLoading) {
+      form.values.email = user?.email;
+      form.values.phone = user?.phone;
+      form.setValues({
+        signFile: user?.signFile ? undefined : null,
+      });
+    }
+  }, [isLoading]);
 
   const handleSubmit = async (values: UserInfoEditFormInputs) => {
     try {
-      let fileResponse;
-      if (isFileUpdated && file) {
-        fileResponse = await uploadFile({ file, sizeLimit: 10000000 });
-      }
+      const signFileUUID = values.signFile
+        ? (await uploadFile({ file: values.signFile! })).uuid
+        : undefined;
       const body = {
         password: isPwEditing ? values.password : undefined,
-        email: isDirty("email") ? values.email : undefined,
-        phone: isDirty("phone") ? values.phone : undefined,
-        signId: fileResponse ? fileResponse.uuid : undefined,
+        email: form.isDirty("email") ? values.email : undefined,
+        phone: form.isDirty("phone") ? values.phone : undefined,
+        signId: signFileUUID || undefined,
       };
       await ClientAxios.put(API_ROUTES.user.put(), body);
       showNotificationSuccess({ message: "회원 정보가 수정되었습니다." });
@@ -80,7 +65,7 @@ function UserInfoEditSection() {
   };
 
   return (
-    <form onSubmit={onSubmit(handleSubmit)}>
+    <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack gap={0}>
         <RowGroup>
           <BasicRow field="아이디">{user?.loginId}</BasicRow>
@@ -88,12 +73,12 @@ function UserInfoEditSection() {
         <RowGroup>
           <BasicRow field="비밀번호">
             <Group>
-              <PasswordInput {...getInputProps("password")} disabled={!isPwEditing} />
+              <PasswordInput {...form.getInputProps("password")} disabled={!isPwEditing} />
               {isPwEditing ? (
                 <Group>
                   <Button
                     onClick={() => {
-                      setFieldValue("password", "");
+                      form.setFieldValue("password", "");
                       setIsPwEditing(false);
                     }}
                     color="red"
@@ -116,12 +101,12 @@ function UserInfoEditSection() {
             </RowGroup>
             <RowGroup>
               <BasicRow field="이메일">
-                <TextInput {...getInputProps("email")} />
+                <TextInput {...form.getInputProps("email")} />
               </BasicRow>
             </RowGroup>
             <RowGroup>
               <BasicRow field="연락처">
-                <TextInput {...getInputProps("phone")} />
+                <TextInput {...form.getInputProps("phone")} />
               </BasicRow>
             </RowGroup>
             <RowGroup>
@@ -133,8 +118,9 @@ function UserInfoEditSection() {
           <RowGroup>
             <FileUploadRow
               field="서명 이미지"
-              onChange={handleFileChange}
-              defaultFile={file || undefined}
+              form={form}
+              formKey="signFile"
+              previousFile={user?.signFile}
             />
           </RowGroup>
         )}
