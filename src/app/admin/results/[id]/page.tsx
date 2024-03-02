@@ -38,7 +38,18 @@ export default async function AdminReviewResultPage({
     <>
       <PageHeader title="심사 결과" />
       <ReviewCard>
-        <ThesisInfo thesis={thesis} revision={data} />
+        <ThesisInfo
+          thesis={thesis}
+          revision={
+            data.stage === "REVISION"
+              ? {
+                  showPresentation: true,
+                  revisionReport: data.thesisFiles.find((file) => file.type === "REVISION_REPORT")
+                    ?.file,
+                }
+              : undefined
+          }
+        />
         <ReviewList
           title="심사 결과"
           stage={data.stage}

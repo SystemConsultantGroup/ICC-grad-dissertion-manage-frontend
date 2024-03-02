@@ -50,7 +50,14 @@ export default async function ProfessorRevisionPage({
             end={formatTime(end)}
           />
         )}
-        <ThesisInfo thesis={thesisInfo} revision={revision} isAdvisor />
+        <ThesisInfo
+          thesis={thesisInfo}
+          revision={{
+            revisionReport: revision.thesisFiles.find((file) => file.type === "REVISION_REPORT")
+              ?.file,
+          }}
+          isAdvisor
+        />
         {/* {!isPermanent ? <RevisionCheckForm /> : <RevisionCheckResult />} */}
         <RevisionCheckForm
           revisionId={reviewId}
