@@ -21,12 +21,17 @@ import { transaction } from "@/api/_utils/task";
 import { showNotificationSuccess } from "@/components/common/Notifications";
 
 interface RevisionSubmissionFormInputs {
-  thesisFile: File | null;
-  revisionReportFile: File | null;
+  thesisFile?: File | null;
+  revisionReportFile?: File | null;
 }
 
 function RevisionSubmissionForm() {
   const { user } = useAuth();
+  const { data: main, isLoading: isMainLoading } = useThesis(
+    user?.id || 0,
+    { type: "main" },
+    !!user
+  );
   const { data: thesis, isLoading } = useThesis(user?.id || 0, { type: "now" }, !!user);
   const form = useForm<RevisionSubmissionFormInputs>({
     initialValues: {
@@ -68,8 +73,8 @@ function RevisionSubmissionForm() {
   useEffect(() => {
     if (!isLoading) {
       form.setValues({
-        thesisFile: undefined,
-        revisionReportFile: undefined,
+        thesisFile: thesis?.thesisFile ? undefined : null,
+        revisionReportFile: thesis?.revisionReportFile ? undefined : null,
       });
     }
   }, [isLoading]);
@@ -85,10 +90,10 @@ function RevisionSubmissionForm() {
         </RowGroup>
         <RowGroup>
           <BasicRow field="논문 제목">
-            <BasicRow.Text>{thesis ? thesis.title : "..."}</BasicRow.Text>
+            <BasicRow.Text>{main ? main.title : "..."}</BasicRow.Text>
           </BasicRow>
         </RowGroup>
-        <LongContentRow field="논문 초록" content={thesis ? thesis.abstract : "..."} />
+        <LongContentRow field="논문 초록" content={main ? main.abstract : "..."} />
         <RowGroup>
           <FileUploadRow
             field="수정 논문 파일"
