@@ -1,5 +1,5 @@
 import { AuthSSR } from "@/api/AuthSSR";
-import { withinPhase } from "@/api/_utils/withinPhase";
+import { checkPhase } from "@/api/_utils/checkPhase";
 import { formatTime } from "@/components/common/Clock/date/format";
 import PageHeader from "@/components/common/PageHeader";
 import { Section } from "@/components/common/Section";
@@ -8,7 +8,7 @@ import AchievementRegisterSection from "@/components/pages/achievement/Achieveme
 
 async function StudentAchievementRegisterPage() {
   const { token } = await AuthSSR({ userType: "STUDENT" });
-  const { within, start, end } = await withinPhase({ title: "논문 실적 제출", token });
+  const { within, start, end } = await checkPhase({ title: "논문 실적 제출", token });
 
   return within ? (
     <>
@@ -18,7 +18,7 @@ async function StudentAchievementRegisterPage() {
       </Section>
     </>
   ) : (
-    <PhaseReady title="연구 실적 등록" start={formatTime(start)} end={formatTime(end)} />
+    <PhaseReady title="연구실적 등록" start={formatTime(start)} end={formatTime(end)} />
   );
 }
 

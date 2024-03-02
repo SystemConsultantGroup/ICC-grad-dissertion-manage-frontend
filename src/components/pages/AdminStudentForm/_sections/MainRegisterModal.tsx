@@ -8,10 +8,10 @@ import { RowGroup, ButtonRow } from "@/components/common/rows";
 import ThesisTitleSection from "./ThesisTitleSection";
 import AssignReviewerSection from "./AssignReviewerSection";
 import useReviewersAssign from "../_hooks/useReviewersAssign";
-import { AdminStudentFormInputs } from "../_types/AdminStudentForm";
+import { AdminStudentFormInputs, SelectedProfessor } from "../_types/AdminStudentForm";
 
 interface Props {
-  studentId: string | number;
+  studentId: string | number | undefined;
   opened: boolean;
   close: () => void;
 }
@@ -26,7 +26,13 @@ function MainRegisterModal({ studentId, opened, close }: Props) {
     try {
       if (studentId) {
         const { basicInfo, ...sysMainValues } = sysMainForm.values;
-        await ClientAxios.post(API_ROUTES.student.putSystem(Number(studentId)), sysMainValues);
+        const body = {
+          thesisTitle: sysMainValues.thesisTitle,
+          headReviewerId: Number(headReviewer?.profId),
+          advisorIds: advisors.map((advisor: SelectedProfessor) => Number(advisor.profId)),
+          committeeIds: committees.map((committee: SelectedProfessor) => Number(committee.profId)),
+        };
+        await ClientAxios.put(API_ROUTES.student.putSystem(Number(studentId)), body);
       }
     } catch (error) {
       console.error(error);
@@ -53,7 +59,13 @@ function MainRegisterModal({ studentId, opened, close }: Props) {
           />
           <ThesisTitleSection form={sysMainForm} />
           <RowGroup>
-            <ButtonRow buttons={[<Button key="mainRegister">등록하기</Button>]} />
+            <ButtonRow
+              buttons={[
+                <Button key="mainRegister" type="submit">
+                  등록하기
+                </Button>,
+              ]}
+            />
           </RowGroup>
         </Stack>
       </form>

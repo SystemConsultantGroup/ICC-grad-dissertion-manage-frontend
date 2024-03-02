@@ -3,7 +3,7 @@ import { ApiFileRow, BasicRow, LongContentRow, RowGroup, TitleRow } from "@/comp
 import { ThesisFile } from "@/api/_types/reviews";
 import { File } from "@/api/_types/file";
 
-export type Stage = "PRELIMINARY" | "MAIN";
+export type Stage = "PRELIMINARY" | "MAIN" | "REVISION";
 
 interface ThesisInfoProps {
   thesis: ThesisInfoData;

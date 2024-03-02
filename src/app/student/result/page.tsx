@@ -7,6 +7,9 @@ import { fetcher } from "@/api/fetcher";
 import { API_ROUTES } from "@/api/apiRoute";
 import { MyReviewResponse } from "@/api/_types/reviews";
 import { ThesisInfoData } from "@/components/pages/review/ThesisInfo/ThesisInfo";
+import { checkPhase } from "@/api/_utils/checkPhase";
+import { PhaseReady } from "@/components/pages/PhaseReady";
+import { formatTime } from "@/components/common/Clock/date/format";
 
 export default async function StudentResultPage() {
   const { token } = await AuthSSR({ userType: "STUDENT" });
@@ -26,7 +29,12 @@ export default async function StudentResultPage() {
     presentationFile: result.thesisFiles.find((file) => file.type === "PRESENTATION")?.file,
   };
 
-  return (
+  const { end, after } = await checkPhase({
+    title: thesisInfo.stage === "MAIN" ? "본심 심사" : "예심 심사",
+    token,
+  });
+
+  return after ? (
     <>
       <PageHeader title="심사 결과" />
       <ReviewCard>
@@ -42,5 +50,7 @@ export default async function StudentResultPage() {
         />
       </ReviewCard>
     </>
+  ) : (
+    <PhaseReady title="논문 심사" start="" end={formatTime(end)} after />
   );
 }

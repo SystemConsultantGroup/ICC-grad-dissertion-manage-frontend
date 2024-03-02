@@ -10,12 +10,14 @@ import { RowGroup, ButtonRow } from "@/components/common/rows";
 import { CommonApiResponse } from "@/api/_types/common";
 import { showNotificationError, showNotificationSuccess } from "@/components/common/Notifications";
 import { useAuth } from "@/components/common/AuthProvider/AuthProvider";
+import { useDisclosure } from "@mantine/hooks";
 import BasicInfoSection from "./_sections/BasicInfoSection";
 import AssignReviewerSection from "./_sections/AssignReviewerSection";
 import ThesisTitleSection from "./_sections/ThesisTitleSection";
 import ThesisInfoSection from "./_sections/ThesisInfoSection";
 import { AdminStudentFormInputs, SelectedProfessor } from "./_types/AdminStudentForm";
 import useReviewersAssign from "./_hooks/useReviewersAssign";
+import MainRegisterModal from "./_sections/MainRegisterModal";
 
 interface Props {
   studentId?: string | number;
@@ -25,7 +27,7 @@ function AdminStudentForm({ studentId }: Props) {
   const router = useRouter();
   const { login } = useAuth();
   const [isPwEditing, setIsPwEditing] = useState<boolean>(false);
-
+  const [opened, { open, close }] = useDisclosure();
   const {
     headReviewer,
     advisors,
@@ -83,6 +85,7 @@ function AdminStudentForm({ studentId }: Props) {
       } = await ClientAxios.get<CommonApiResponse & { accessToken: string }>(`/auth/${studentId}`);
       login(accessToken);
       router.push("/");
+      router.refresh();
     } catch (err) {
       console.error(err);
     }
@@ -201,63 +204,67 @@ function AdminStudentForm({ studentId }: Props) {
   const checkReviewersLength = (list: SelectedProfessor[]) => list.length >= 1 && list.length <= 2;
 
   return (
-    <form onSubmit={form.onSubmit(handleSubmit)}>
-      <Stack gap="xl">
-        {studentId && (
-          <RowGroup withBorderBottom={false}>
-            <ButtonRow
-              buttons={[
-                <Button key="login" onClick={handleLogin}>
-                  로그인하기
-                </Button>,
-                <Button key="goback" variant="outline" onClick={handleBack}>
-                  뒤로가기
-                </Button>,
-              ]}
-            />
-          </RowGroup>
-        )}
-        <BasicInfoSection
-          form={form}
-          studentId={studentId}
-          isPwEditing={isPwEditing}
-          handleIsPwEditing={setIsPwEditing}
-        />
-        <AssignReviewerSection
-          studentId={studentId}
-          headReviewer={headReviewer}
-          advisors={advisors}
-          committees={committees}
-          onChangeReviewerAdd={handleReviewerAdd}
-          onChangeReviewerCancle={handleReviewerCancel}
-          onChangeReviewersSet={handleReviewersSet}
-        />
-        {studentId ? (
-          <ThesisInfoSection studentId={studentId} />
-        ) : (
-          <ThesisTitleSection form={form} />
-        )}
-        <RowGroup>
-          {studentId ? (
-            <ButtonRow
-              buttons={[
-                <Button key="edit" type="submit">
-                  수정하기
-                </Button>,
-              ]}
-            />
-          ) : (
-            <ButtonRow
-              buttons={[
-                <Button key="register" type="submit">
-                  등록하기
-                </Button>,
-              ]}
-            />
+    <>
+      <MainRegisterModal studentId={studentId} opened={opened} close={close} />
+      <form onSubmit={form.onSubmit(handleSubmit)}>
+        <Stack gap="xl">
+          {studentId && (
+            <RowGroup withBorderBottom={false}>
+              <ButtonRow
+                buttons={[
+                  <Button key="login" onClick={handleLogin}>
+                    로그인하기
+                  </Button>,
+                  <Button key="goback" variant="outline" onClick={handleBack}>
+                    뒤로가기
+                  </Button>,
+                ]}
+              />
+            </RowGroup>
           )}
-        </RowGroup>
-      </Stack>
-    </form>
+          <BasicInfoSection
+            form={form}
+            studentId={studentId}
+            isPwEditing={isPwEditing}
+            handleIsPwEditing={setIsPwEditing}
+            open={open}
+          />
+          <AssignReviewerSection
+            studentId={studentId}
+            headReviewer={headReviewer}
+            advisors={advisors}
+            committees={committees}
+            onChangeReviewerAdd={handleReviewerAdd}
+            onChangeReviewerCancle={handleReviewerCancel}
+            onChangeReviewersSet={handleReviewersSet}
+          />
+          {studentId ? (
+            <ThesisInfoSection studentId={studentId} />
+          ) : (
+            <ThesisTitleSection form={form} />
+          )}
+          <RowGroup>
+            {studentId ? (
+              <ButtonRow
+                buttons={[
+                  <Button key="edit" type="submit">
+                    수정하기
+                  </Button>,
+                ]}
+              />
+            ) : (
+              <ButtonRow
+                buttons={[
+                  <Button key="register" type="submit">
+                    등록하기
+                  </Button>,
+                ]}
+              />
+            )}
+          </RowGroup>
+        </Stack>
+      </form>
+    </>
   );
 }
 
