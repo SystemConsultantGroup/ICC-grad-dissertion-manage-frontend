@@ -68,8 +68,8 @@ function RevisionSubmissionForm() {
   useEffect(() => {
     if (!isLoading) {
       form.setValues({
-        thesisFile: thesis?.thesisFile as unknown as File,
-        revisionReportFile: thesis?.revisionReportFile as unknown as File,
+        thesisFile: undefined,
+        revisionReportFile: undefined,
       });
     }
   }, [isLoading]);
