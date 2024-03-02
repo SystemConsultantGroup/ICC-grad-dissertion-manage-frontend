@@ -120,6 +120,7 @@ function AdminProfForm({ professorId }: Props) {
       console.error(err);
     } finally {
       router.push("/");
+      router.refresh();
     }
   };
 
