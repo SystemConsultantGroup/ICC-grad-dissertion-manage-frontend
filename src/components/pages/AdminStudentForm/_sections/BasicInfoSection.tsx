@@ -38,13 +38,13 @@ function BasicInfoSection({ form, studentId, isPwEditing, handleIsPwEditing, ope
 
           form.setFieldValue("basicInfo", {
             loginId: studentDetails.loginId,
-            password: "",
+            password: undefined,
             name: studentDetails.name,
             email: studentDetails.email,
             phone: studentDetails.phone,
-            deptId: String(studentDetails.department),
+            deptId: String(studentDetails.department.id),
           });
-          setDefaultDepartmentId(String(studentDetails.department));
+          setDefaultDepartmentId(String(studentDetails.department.id));
         }
       } catch (error) {
         console.error(error);
