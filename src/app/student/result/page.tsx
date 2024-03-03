@@ -30,7 +30,7 @@ export default async function StudentResultPage() {
   };
 
   const { end, after } = await checkPhase({
-    title: thesisInfo.stage === "MAIN" ? "본심 심사" : "예심 심사",
+    title: thesisInfo.stage === "MAIN" ? "본심 최종 심사" : "예심 최종 심사",
     token,
   });
 
