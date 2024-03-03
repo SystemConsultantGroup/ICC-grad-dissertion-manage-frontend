@@ -21,6 +21,7 @@ import { DATE_TIME_FORMAT_HYPHEN } from "@/constants/date";
 import { PagedReviewsRequestQuery } from "@/api/_types/reviews";
 import { useAdminReviewResult } from "@/api/SWR";
 import { PAGE_NUMBER_GET_ALL, PAGE_SIZE_GET_ALL } from "@/constants/pagination";
+import { STAGE_LOOKUP_TABLE } from "@/api/_types/common";
 import { REFRESH_DEFAULT_PAGE_NUMBER } from "../../_constants/page";
 import { TChangeQueryArg } from "../../_types/common";
 import { REVIEW_RESULT_TABLE_HEADERS } from "../../_constants/table";
@@ -180,6 +181,7 @@ function ReviewResultListSection() {
               data={[
                 { label: "예심", value: "PRELIMINARY" },
                 { label: "본심", value: "MAIN" },
+                { label: "수정 단계", value: "REVISION" },
               ]}
             />
           </Table.Data>
@@ -238,11 +240,19 @@ function ReviewResultListSection() {
             }}
           >
             <Table.Data>{index + 1 + (pageNumber - 1) * pageSizeNumber}</Table.Data>
-            <Table.Data>{reviewResult.stage === "MAIN" ? "본심" : "예심"}</Table.Data>
+            <Table.Data>{STAGE_LOOKUP_TABLE[reviewResult.stage]}</Table.Data>
             <Table.Data>{reviewResult.student}</Table.Data>
             <Table.Data>{reviewResult.department}</Table.Data>
             <Table.Data>{reviewResult.title}</Table.Data>
-            <Table.Data>{reviewResult.summary === "PASS" ? "합격" : "불합격"}</Table.Data>
+            <Table.Data>
+              {reviewResult.stage === "REVISION"
+                ? reviewResult.summary === "PASS"
+                  ? "확인 완료"
+                  : "미확인"
+                : reviewResult.summary === "PASS"
+                  ? "합격"
+                  : "불합격"}
+            </Table.Data>
           </Table.Row>
         ))}
       </Table>
