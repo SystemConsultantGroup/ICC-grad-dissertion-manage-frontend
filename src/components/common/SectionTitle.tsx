@@ -1,6 +1,8 @@
 import { Title, TitleProps } from "@mantine/core";
 
-interface Props extends TitleProps {}
+interface Props extends TitleProps {
+  component?: unknown;
+}
 
 function SectionTitle({ children, ...props }: Props) {
   return (

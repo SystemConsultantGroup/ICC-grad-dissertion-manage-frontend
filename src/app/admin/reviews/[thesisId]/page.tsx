@@ -3,12 +3,13 @@ import Link from "next/link";
 import PageHeader from "@/components/common/PageHeader";
 import { ButtonRow, RowGroup } from "@/components/common/rows";
 import { ThesisInfo, ThesisInfoData } from "@/components/pages/review/ThesisInfo/ThesisInfo";
-import { ReviewCard, ReviewList } from "@/components/pages/review/Review";
+import { ReviewCard } from "@/components/pages/review/Review";
 import { AuthSSR } from "@/api/AuthSSR";
 import { API_ROUTES } from "@/api/apiRoute";
 import { AdminReviewResponse } from "@/api/_types/reviews";
 import { fetcher } from "@/api/fetcher";
 import { AdminThesisInfo } from "@/components/pages/review/ThesisInfo/AdminThesisInfo";
+import { AdminReviewListContent } from "./AdminReviewListContent";
 
 export default async function AdminReviewPage({
   params: { thesisId },
@@ -42,11 +43,7 @@ export default async function AdminReviewPage({
         <AdminThesisInfo thesis={thesis}>
           <ThesisInfo thesis={thesis} />
         </AdminThesisInfo>
-        <ReviewList
-          title={data.stage === "REVISION" ? "수정지시사항 확인 현황" : "심사 현황"}
-          stage={data.stage}
-          reviews={data.reviews.filter((review) => !review.isFinal)}
-        />
+        <AdminReviewListContent data={data} />
         <RowGroup withBorderBottom={false}>
           <ButtonRow
             buttons={[
