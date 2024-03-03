@@ -11,6 +11,7 @@ import { RowGroup, BasicRow, TitleRow, ButtonRow } from "@/components/common/row
 import { useAuth } from "@/components/common/AuthProvider/AuthProvider";
 import { showNotificationError, showNotificationSuccess } from "@/components/common/Notifications";
 import { DepartmentSelect } from "@/components/common/selects/DepartmentSelect";
+import { User } from "@/api/_types/user";
 
 interface Props {
   professorId?: number | string;
@@ -30,6 +31,7 @@ function AdminProfForm({ professorId }: Props) {
   const { login } = useAuth();
   const [isPwEditing, setIsPwEditing] = useState<boolean>(false);
   const [defaultDepartmentId, setDefaultDepartmentId] = useState<string | null>(null);
+  const [previousProf, setPreviousProf] = useState<User | undefined>();
 
   const { onSubmit, getInputProps, setValues, isDirty, setFieldValue } =
     useForm<AdminProfFormInputs>({
@@ -61,16 +63,16 @@ function AdminProfForm({ professorId }: Props) {
         if (professorId) {
           const response = await ClientAxios.get(API_ROUTES.professor.get(professorId));
           const professorDetails = response.data;
-
+          setPreviousProf(professorDetails);
           setValues({
             loginId: professorDetails.loginId,
             password: "",
             name: professorDetails.name,
             email: professorDetails.email,
             phone: professorDetails.phone,
-            deptId: String(professorDetails.deptId),
+            deptId: String(professorDetails.department.id),
           });
-          setDefaultDepartmentId(String(professorDetails.deptId));
+          setDefaultDepartmentId(String(professorDetails.department.id));
         }
       } catch (err) {
         console.error(err);
@@ -86,13 +88,17 @@ function AdminProfForm({ professorId }: Props) {
           message: "수정할 비밀번호를 입력하거나, 수정 취소 버튼을 눌러주세요.",
         });
       } else {
-        const body = {
-          ...values,
-          ...(!professorId || isPwEditing ? { password: values.password } : {}),
-          deptId: Number(values.deptId),
-          ...(values.email ? { email: values.email } : {}),
-          ...(values.phone ? { phone: values.phone } : {}),
-        };
+        const body = professorId
+          ? {
+              ...(isPwEditing ? { password: values.password } : {}),
+              deptId:
+                previousProf!.department.id === Number(values.deptId)
+                  ? undefined
+                  : Number(values.deptId),
+              email: previousProf!.email === values.email ? undefined : values.email,
+              phone: previousProf!.phone === values.phone ? undefined : values.phone,
+            }
+          : { ...values };
         if (!professorId) {
           await ClientAxios.post(API_ROUTES.professor.post(), body);
           showNotificationSuccess({ message: "교수 등록이 완료되었습니다." });
