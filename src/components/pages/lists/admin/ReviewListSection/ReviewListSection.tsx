@@ -215,7 +215,13 @@ function ReviewListSection() {
                     ))
                   : review.reviews.map((reviewInfo, i) => (
                       <Text key={i} fw={600} style={{ whiteSpace: "nowrap" }}>
-                        {reviewInfo.reviewer.name} / {STATUS_LOOKUP_TABLE[reviewInfo.contentStatus]}
+                        {reviewInfo.isFinal
+                          ? `(최종판정)${reviewInfo.reviewer.name} / ${
+                              STATUS_LOOKUP_TABLE[reviewInfo.contentStatus]
+                            }`
+                          : `${reviewInfo.reviewer.name} / ${
+                              STATUS_LOOKUP_TABLE[reviewInfo.contentStatus]
+                            }`}
                       </Text>
                     ))}
               </Stack>
