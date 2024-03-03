@@ -82,6 +82,9 @@ export const API_ROUTES = {
       put: (revisionId: ApiId) => `/reviews/revision/${revisionId}`, // PUT: 수정지시사항 심사 등록/수정
     },
   },
+  thesis: {
+    put: (thesisId: ApiId) => `/thesis/${thesisId}`,
+  },
   achievement: {
     get: (achievementId?: ApiId) => `/achievements/${achievementId ?? ""}`,
     put: (achievementId: ApiId) => `/achievements/${achievementId}`,
