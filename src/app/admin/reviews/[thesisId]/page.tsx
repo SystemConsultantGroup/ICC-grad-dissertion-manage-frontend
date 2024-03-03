@@ -2,25 +2,28 @@ import { Button } from "@mantine/core";
 import Link from "next/link";
 import PageHeader from "@/components/common/PageHeader";
 import { ButtonRow, RowGroup } from "@/components/common/rows";
-import { ThesisInfo, ThesisInfoData } from "@/components/pages/review/ThesisInfo/ThesisInfo";
+import { ThesisInfoData } from "@/components/pages/review/ThesisInfo/ThesisInfo";
 import { ReviewCard, ReviewList } from "@/components/pages/review/Review";
 import { AuthSSR } from "@/api/AuthSSR";
 import { API_ROUTES } from "@/api/apiRoute";
 import { AdminReviewResponse } from "@/api/_types/reviews";
 import { fetcher } from "@/api/fetcher";
+import { AdminThesisInfo } from "@/components/pages/review/ThesisInfo/AdminThesisInfo";
 
 export default async function AdminReviewPage({
-  params: { id: reviewId },
+  params: { id: thesisId },
 }: {
   params: { id: string };
 }) {
   const { token } = await AuthSSR({ userType: "ADMIN" });
 
   const data = (await fetcher({
-    url: API_ROUTES.review.current.get(reviewId),
+    url: API_ROUTES.review.current.get(thesisId),
     token,
   })) as AdminReviewResponse;
-  const thesis: ThesisInfoData = {
+
+  const thesis: ThesisInfoData & { id: number } = {
+    id: data.id,
     title: data.title,
     stage: data.stage,
     studentInfo: {
@@ -36,7 +39,7 @@ export default async function AdminReviewPage({
     <>
       <PageHeader title="심사 현황" />
       <ReviewCard>
-        <ThesisInfo thesis={thesis} />
+        <AdminThesisInfo thesis={thesis} />
         <ReviewList
           title="심사 현황"
           stage={data.stage}
