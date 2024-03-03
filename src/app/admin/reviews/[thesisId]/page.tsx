@@ -11,9 +11,9 @@ import { fetcher } from "@/api/fetcher";
 import { AdminThesisInfo } from "@/components/pages/review/ThesisInfo/AdminThesisInfo";
 
 export default async function AdminReviewPage({
-  params: { id: thesisId },
+  params: { thesisId },
 }: {
-  params: { id: string };
+  params: { thesisId: string };
 }) {
   const { token } = await AuthSSR({ userType: "ADMIN" });
 
