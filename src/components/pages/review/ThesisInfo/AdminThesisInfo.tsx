@@ -36,20 +36,22 @@ interface FormInput {
 export function AdminThesisInfo({
   thesis,
   revision,
-  children,
+  children, // RSC를 지원하기 위해
 }: PropsWithChildren & AdminThesisInfoProps) {
   const [editing, setEditing] = useState(false);
   if (!editing) {
     return (
       <Stack gap={0}>
         {children}
-        <ButtonRow
-          buttons={[
-            <Button key="edit" onClick={() => setEditing(true)}>
-              논문 수정
-            </Button>,
-          ]}
-        />
+        <RowGroup withBorderBottom={false}>
+          <ButtonRow
+            buttons={[
+              <Button key="edit" onClick={() => setEditing(true)}>
+                논문 수정
+              </Button>,
+            ]}
+          />
+        </RowGroup>
       </Stack>
     );
   } else {
@@ -119,7 +121,7 @@ function AdminEditThesisInfo({
     >
       <Stack gap={0}>
         <TitleRow
-          title="논문 정보*"
+          title="논문 정보 수정"
           badge={
             <>
               {stage === "MAIN" || stage === "REVISION" ? (
@@ -154,6 +156,7 @@ function AdminEditThesisInfo({
             form={form}
             formKey="thesisFile"
             previousFile={thesis.thesisFile}
+            required
           />
         </RowGroup>
         <RowGroup>
@@ -162,6 +165,7 @@ function AdminEditThesisInfo({
             form={form}
             formKey="presentationFile"
             previousFile={thesis.presentationFile}
+            required
           />
         </RowGroup>
         {revision && (
@@ -171,25 +175,28 @@ function AdminEditThesisInfo({
               form={form}
               formKey="revisionReportFile"
               previousFile={revision.revisionReport}
+              required
             />
           </RowGroup>
         )}
-        <ButtonRow
-          buttons={[
-            <Button key="save" color="green" type="submit" loading={loading}>
-              저장하기
-            </Button>,
-            <Button
-              key="discard"
-              color="red"
-              variant="outline"
-              disabled={loading}
-              onClick={onDiscard}
-            >
-              취소
-            </Button>,
-          ]}
-        />
+        <RowGroup withBorderBottom={false}>
+          <ButtonRow
+            buttons={[
+              <Button key="save" color="green" type="submit" loading={loading}>
+                저장하기
+              </Button>,
+              <Button
+                key="discard"
+                color="red"
+                variant="outline"
+                disabled={loading}
+                onClick={onDiscard}
+              >
+                취소
+              </Button>,
+            ]}
+          />
+        </RowGroup>
       </Stack>
     </form>
   );
