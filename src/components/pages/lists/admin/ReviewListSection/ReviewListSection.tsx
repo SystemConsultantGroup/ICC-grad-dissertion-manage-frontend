@@ -31,6 +31,7 @@ import { DATE_TIME_FORMAT_HYPHEN } from "@/constants/date";
 import { PagedReviewsRequestQuery } from "@/api/_types/reviews";
 import { useAdminReviewStatus } from "@/api/SWR";
 import { PAGE_NUMBER_GET_ALL, PAGE_SIZE_GET_ALL } from "@/constants/pagination";
+import { STAGE_LOOKUP_TABLE, STATUS_LOOKUP_TABLE } from "@/api/_types/common";
 import { REFRESH_DEFAULT_PAGE_NUMBER } from "../../_constants/page";
 import { TChangeQueryArg } from "../../_types/common";
 import { REVIEW_RESULT_TABLE_HEADERS } from "../../_constants/table";
@@ -154,6 +155,7 @@ function ReviewListSection() {
               data={[
                 { label: "예심", value: "PRELIMINARY" },
                 { label: "본심", value: "MAIN" },
+                { label: "수정 단계", value: "REVISION" },
               ]}
             />
           </Table.Data>
@@ -190,32 +192,42 @@ function ReviewListSection() {
           </Table.Data>
           <Table.Data>-</Table.Data>
         </Table.FilterRow>
-        {reviewStatus
-          ?.filter((review) => review.stage !== "REVISION")
-          .map((review, index) => (
-            <Table.Row
-              key={review.id}
-              onClick={() => {
-                push(`reviews/${review.id}`);
-              }}
-            >
-              <Table.Data>{index + 1 + (pageNumber - 1) * pageSizeNumber}</Table.Data>
-              <Table.Data>{review.stage === "MAIN" ? "본심" : "예심"}</Table.Data>
-              <Table.Data>{review.student}</Table.Data>
-              <Table.Data>{review.department}</Table.Data>
-              <Table.Data>{review.title}</Table.Data>
-              <Table.Data>
-                <Stack gap={0}>
-                  {review.reviews.map((reviewInfo, i) => (
-                    <Text key={i} fw={600} style={{ whiteSpace: "nowrap" }}>
-                      {reviewInfo.reviewer.name} /{" "}
-                      {reviewInfo.contentStatus === "UNEXAMINED" ? "진행중" : "심사 완료"}
-                    </Text>
-                  ))}
-                </Stack>
-              </Table.Data>
-            </Table.Row>
-          ))}
+        {reviewStatus?.map((review, index) => (
+          <Table.Row
+            key={review.id}
+            onClick={() => {
+              push(`reviews/${review.id}`);
+            }}
+          >
+            <Table.Data>{index + 1 + (pageNumber - 1) * pageSizeNumber}</Table.Data>
+            <Table.Data>{STAGE_LOOKUP_TABLE[review.stage]}</Table.Data>
+            <Table.Data>{review.student}</Table.Data>
+            <Table.Data>{review.department}</Table.Data>
+            <Table.Data>{review.title}</Table.Data>
+            <Table.Data>
+              <Stack gap={0}>
+                {review.stage === "REVISION"
+                  ? review.reviews.map((reviewInfo, i) => (
+                      <Text key={i} fw={600} style={{ whiteSpace: "nowrap" }}>
+                        {reviewInfo.reviewer.name} /{" "}
+                        {reviewInfo.contentStatus === "PASS" ? "확인 완료" : "미확인"}
+                      </Text>
+                    ))
+                  : review.reviews.map((reviewInfo, i) => (
+                      <Text key={i} fw={600} style={{ whiteSpace: "nowrap" }}>
+                        {reviewInfo.isFinal
+                          ? `(최종판정)${reviewInfo.reviewer.name} / ${
+                              STATUS_LOOKUP_TABLE[reviewInfo.contentStatus]
+                            }`
+                          : `${reviewInfo.reviewer.name} / ${
+                              STATUS_LOOKUP_TABLE[reviewInfo.contentStatus]
+                            }`}
+                      </Text>
+                    ))}
+              </Stack>
+            </Table.Data>
+          </Table.Row>
+        ))}
       </Table>
       <Center>
         <Pagination

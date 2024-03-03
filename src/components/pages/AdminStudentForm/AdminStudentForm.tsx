@@ -42,7 +42,7 @@ function AdminStudentForm({ studentId }: Props) {
     initialValues: {
       basicInfo: {
         loginId: "",
-        password: "",
+        password: studentId ? undefined : "",
         name: "",
         email: "",
         phone: "",
@@ -97,18 +97,34 @@ function AdminStudentForm({ studentId }: Props) {
 
   const handleSubmit = async () => {
     try {
-      if (isPwEditing && form.values.basicInfo.password === "") {
+      if (isPwEditing && form.values.basicInfo.password === undefined) {
         showNotificationError({
           message: "수정할 비밀번호를 입력하거나, 수정 취소 버튼을 눌러주세요.",
         });
       } else {
-        const basicInfo = {
-          ...form.values.basicInfo,
-          ...(!studentId || isPwEditing ? { password: form.values.basicInfo.password } : {}),
-          deptId: Number(form.values.basicInfo.deptId),
-          ...(form.values.basicInfo.email ? { email: form.values.basicInfo.email } : {}),
-          ...(form.values.basicInfo.phone ? { phone: form.values.basicInfo.phone } : {}),
-        };
+        let previous;
+        if (studentId) {
+          previous = (await ClientAxios.get(API_ROUTES.student.get(studentId))).data;
+        }
+        const basicInfo = studentId
+          ? {
+              ...(isPwEditing ? { password: form.values.basicInfo.password } : {}),
+              deptId:
+                previous.deptId === form.values.basicInfo.deptId
+                  ? undefined
+                  : Number(form.values.basicInfo.deptId),
+              email:
+                previous.email === form.values.basicInfo.email
+                  ? undefined
+                  : form.values.basicInfo.email,
+              phone:
+                previous.phone === form.values.basicInfo.phone
+                  ? undefined
+                  : form.values.basicInfo.phone,
+            }
+          : {
+              ...form.values.basicInfo,
+            };
         if (headReviewer && checkReviewersLength(advisors) && checkReviewersLength(committees)) {
           if (!studentId) {
             /** 학생 등록 */
@@ -151,7 +167,7 @@ function AdminStudentForm({ studentId }: Props) {
             const prevCommittees = prevReviewersRef.current?.committees;
             const committeeIds = committees.map((committee) => Number(committee.profId));
             const deletedCommitteeIds = prevCommittees
-              ? prevCommittees.filter((prevAdvisor) => !advisorIds.includes(prevAdvisor))
+              ? prevCommittees.filter((prevAdvisor) => !committeeIds.includes(prevAdvisor))
               : [];
             const addedCommitteeIds = prevCommittees
               ? committeeIds.filter((committeeId) => !prevCommittees.includes(committeeId))
@@ -171,20 +187,21 @@ function AdminStudentForm({ studentId }: Props) {
             /** 지도교수, 심사위원 배정 */
             const postPromises = [
               ...addedAdvisorIds.map((addedId) =>
-                ClientAxios.post(API_ROUTES.student.putReviewer(Number(studentId), addedId), {
-                  role: "ADVISOR",
-                })
+                ClientAxios.post(
+                  `${API_ROUTES.student.putReviewer(Number(studentId), addedId)}?role=advisor`
+                )
               ),
               ...addedCommitteeIds.map((addedId) =>
-                ClientAxios.post(API_ROUTES.student.putReviewer(Number(studentId), addedId), {
-                  role: "COMMITTEE",
-                })
+                ClientAxios.post(
+                  `${API_ROUTES.student.putReviewer(Number(studentId), addedId)}?role=committee`
+                )
               ),
             ];
             await Promise.all(postPromises);
 
             showNotificationSuccess({ message: "학생 정보 수정이 완료되었습니다." });
             router.push(`/admin/students/${studentId}`);
+            router.refresh();
           }
         } else {
           showNotificationError({
@@ -205,7 +222,7 @@ function AdminStudentForm({ studentId }: Props) {
 
   return (
     <>
-      <MainRegisterModal studentId={studentId} opened={opened} close={close} />
+      {studentId && <MainRegisterModal studentId={studentId} opened={opened} close={close} />}
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack gap="xl">
           {studentId && (

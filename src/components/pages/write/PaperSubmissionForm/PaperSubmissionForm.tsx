@@ -35,8 +35,12 @@ function PaperSubmissionForm() {
     validate: {
       title: isNotEmpty("논문 제목을 입력해주세요."),
       abstract: isNotEmpty("논문 초록을 입력해주세요."),
-      thesisFile: isNotEmpty("논문 파일을 첨부해주세요."),
-      presentationFile: isNotEmpty("논문 발표 파일을 첨부해주세요."),
+      thesisFile: thesis?.thesisFile
+        ? (value) => (value === null ? "논문 파일을 첨부해 주세요." : undefined)
+        : isNotEmpty("논문 파일을 첨부해주세요."),
+      presentationFile: thesis?.presentationFile
+        ? (value) => (value === null ? "논문 발표 파일을 첨부해 주세요" : undefined)
+        : isNotEmpty("논문 발표 파일을 첨부해주세요."),
     },
   });
   const { onSubmit, getInputProps } = form;
@@ -48,8 +52,8 @@ function PaperSubmissionForm() {
       form.setValues({
         title: thesis?.title || "",
         abstract: thesis?.abstract || "",
-        thesisFile: undefined,
-        presentationFile: undefined,
+        thesisFile: thesis?.thesisFile ? undefined : null,
+        presentationFile: thesis?.presentationFile ? undefined : null,
       });
     }
   }, [isLoading]);
@@ -58,8 +62,12 @@ function PaperSubmissionForm() {
     setIsSubmitting(true);
     try {
       await transaction(async () => {
-        const thesisFileUUID = (await uploadFile(values.thesisFile!)).uuid;
-        const presentationFileUUID = (await uploadFile(values.presentationFile!)).uuid;
+        const thesisFileUUID = values.thesisFile
+          ? (await uploadFile(values.thesisFile!)).uuid
+          : undefined;
+        const presentationFileUUID = values.presentationFile
+          ? (await uploadFile(values.presentationFile!)).uuid
+          : undefined;
         const { title, abstract } = values;
         await ClientAxios.put(API_ROUTES.student.putThesis(user!.id), {
           title,
