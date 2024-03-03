@@ -3,7 +3,7 @@ export type Stage = "PRELIMINARY" | "MAIN";
 export interface AdminStudentFormInputs {
   basicInfo: {
     loginId: string;
-    password: string;
+    password?: string;
     name: string;
     email?: string;
     phone?: string;
