@@ -35,7 +35,7 @@ export const STAGE_LOOKUP_TABLE: StageLookupTable = {
 };
 
 export const STATUS_LOOKUP_TABLE: StatusLookupTable = {
-  UNEXAMINED: "심사 전",
+  UNEXAMINED: "진행중",
   PASS: "합격",
   FAIL: "불합격",
   PENDING: "보류",
