@@ -222,7 +222,7 @@ function AdminStudentForm({ studentId }: Props) {
 
   return (
     <>
-      <MainRegisterModal studentId={studentId} opened={opened} close={close} />
+      {studentId && <MainRegisterModal studentId={studentId} opened={opened} close={close} />}
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack gap="xl">
           {studentId && (
