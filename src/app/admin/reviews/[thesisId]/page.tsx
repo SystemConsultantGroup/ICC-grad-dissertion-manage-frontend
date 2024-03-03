@@ -2,7 +2,7 @@ import { Button } from "@mantine/core";
 import Link from "next/link";
 import PageHeader from "@/components/common/PageHeader";
 import { ButtonRow, RowGroup } from "@/components/common/rows";
-import { ThesisInfoData } from "@/components/pages/review/ThesisInfo/ThesisInfo";
+import { ThesisInfo, ThesisInfoData } from "@/components/pages/review/ThesisInfo/ThesisInfo";
 import { ReviewCard, ReviewList } from "@/components/pages/review/Review";
 import { AuthSSR } from "@/api/AuthSSR";
 import { API_ROUTES } from "@/api/apiRoute";
@@ -39,7 +39,9 @@ export default async function AdminReviewPage({
     <>
       <PageHeader title="심사 현황" />
       <ReviewCard>
-        <AdminThesisInfo thesis={thesis} />
+        <AdminThesisInfo thesis={thesis}>
+          <ThesisInfo thesis={thesis} />
+        </AdminThesisInfo>
         <ReviewList
           title={data.stage === "REVISION" ? "수정지시사항 확인 현황" : "심사 현황"}
           stage={data.stage}
