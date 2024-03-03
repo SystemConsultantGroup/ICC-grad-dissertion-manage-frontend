@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+// TODO: use something like AsyncLocalStorage; which is not available in browser...
 let currentTask: AtomicTask | null = null;
 
 export function transactionTask<Args extends unknown[]>(
