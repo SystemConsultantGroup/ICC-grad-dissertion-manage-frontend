@@ -33,43 +33,52 @@ function nameForStatus(status: Status) {
 }
 
 export function ReviewList({ title, stage, reviews }: ReviewListProps) {
+  const table =
+    stage === "REVISION" ? (
+      <Table headers={[{ label: "심사위원", widthPercentage: 12 }, { label: "확인 여부" }]}>
+        {reviews.map((review) => (
+          <TableRow key={review.id}>
+            <TableData>{review.reviewer.name}</TableData>
+            <TableData>{nameForStatus(review.contentStatus)}</TableData>
+          </TableRow>
+        ))}
+      </Table>
+    ) : (
+      <Table
+        headers={
+          stage === "MAIN"
+            ? [
+                { label: "심사위원", widthPercentage: 12 },
+                { label: "내용 심사 결과", widthPercentage: 10 },
+                { label: "구두 심사 결과", widthPercentage: 10 },
+                { label: "심사 의견", widthPercentage: 56 },
+                { label: "심사 의견 파일" },
+              ]
+            : [
+                { label: "심사위원", widthPercentage: 12 },
+                { label: "심사 결과", widthPercentage: 10 },
+                { label: "심사 의견", widthPercentage: 62 },
+                { label: "심사 의견 파일" },
+              ]
+        }
+      >
+        {reviews.map((review) => (
+          <TableRow key={review.id}>
+            <TableData>{review.reviewer.name}</TableData>
+            <TableData>{nameForStatus(review.contentStatus)}</TableData>
+            {stage === "MAIN" && <TableData>{nameForStatus(review.presentationStatus)}</TableData>}
+            <TableData>{review.comment}</TableData>
+            <TableData>
+              <ApiDownloadButton file={review.file} size="xs" />
+            </TableData>
+          </TableRow>
+        ))}
+      </Table>
+    );
   return (
     <Stack gap={0}>
       <TitleRow title={title} />
-      <Group pl={8}>
-        <Table
-          headers={
-            stage === "MAIN"
-              ? [
-                  { label: "심사위원", widthPercentage: 12 },
-                  { label: "내용 심사 결과", widthPercentage: 10 },
-                  { label: "구두 심사 결과", widthPercentage: 10 },
-                  { label: "심사 의견", widthPercentage: 56 },
-                  { label: "심사 의견 파일" },
-                ]
-              : [
-                  { label: "심사위원", widthPercentage: 12 },
-                  { label: "심사 결과", widthPercentage: 10 },
-                  { label: "심사 의견", widthPercentage: 62 },
-                  { label: "심사 의견 파일" },
-                ]
-          }
-        >
-          {reviews.map((review) => (
-            <TableRow key={review.id}>
-              <TableData>{review.reviewer.name}</TableData>
-              <TableData>{nameForStatus(review.contentStatus)}</TableData>
-              {stage === "MAIN" && (
-                <TableData>{nameForStatus(review.presentationStatus)}</TableData>
-              )}
-              <TableData>{review.comment}</TableData>
-              <TableData>
-                <ApiDownloadButton file={review.file} size="xs" />
-              </TableData>
-            </TableRow>
-          ))}
-        </Table>
-      </Group>
+      <Group pl={8}>{table}</Group>
     </Stack>
   );
 }

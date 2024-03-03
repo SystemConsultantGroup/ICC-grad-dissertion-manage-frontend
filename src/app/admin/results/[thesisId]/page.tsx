@@ -53,7 +53,8 @@ export default async function AdminReviewResultPage({
           }
         />
         <ReviewList
-          title="심사 결과"
+          // 아무리 봐도 result 페이지에서 이걸 표시하는 건 좀 아닌 것 같아요...
+          title={data.stage === "REVISION" ? "수정지시사항 확인 결과" : "심사 결과"}
           stage={data.stage}
           reviews={data.reviews.filter((review) => !review.isFinal)}
         />

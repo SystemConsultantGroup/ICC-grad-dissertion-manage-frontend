@@ -41,7 +41,7 @@ export default async function AdminReviewPage({
       <ReviewCard>
         <AdminThesisInfo thesis={thesis} />
         <ReviewList
-          title="심사 현황"
+          title={data.stage === "REVISION" ? "수정지시사항 확인 현황" : "심사 현황"}
           stage={data.stage}
           reviews={data.reviews.filter((review) => !review.isFinal)}
         />
