@@ -22,6 +22,7 @@ interface Props {
   onChange?: (file: File | null) => void;
   previousFile?: ApiFile;
   defaultFile?: File;
+  required?: boolean;
   /* eslint-disable @typescript-eslint/no-explicit-any */
   form?: UseFormReturnType<any>;
   formKey?: string;
@@ -38,6 +39,7 @@ function FileUploadRow({
   onChange,
   previousFile,
   defaultFile,
+  required,
   form,
   formKey = "file",
   fieldSize = "md",
@@ -68,21 +70,24 @@ function FileUploadRow({
         <FileInput
           style={{ width: 300 }}
           className={usePrevious ? classes.previous : undefined}
-          value={file}
           onChange={handleFileChange}
+          required={required}
           defaultValue={defaultFile}
           placeholder={usePrevious ? previousFile.name : "파일 업로드..."}
           {...form?.getInputProps(formKey)}
+          value={form ? formValue || null : file}
         />
-        <Button
-          color="red"
-          variant="outline"
-          leftSection={<IconTrash size={20} />}
-          disabled={form ? formValue === null : !file}
-          onClick={form ? () => form.setFieldValue(formKey, null) : clearFile}
-        >
-          {usePrevious ? "덮어쓰기" : "삭제"}
-        </Button>
+        {(!required || usePrevious) && (
+          <Button
+            color="red"
+            variant="outline"
+            leftSection={<IconTrash size={20} />}
+            disabled={form ? formValue === null : !file}
+            onClick={form ? () => form.setFieldValue(formKey, null) : clearFile}
+          >
+            {usePrevious ? "덮어쓰기" : "삭제"}
+          </Button>
+        )}
         {previousFile &&
           (formValue === undefined ? (
             <Button
