@@ -84,10 +84,11 @@ function AdminStudentForm({ studentId }: Props) {
         data: { accessToken },
       } = await ClientAxios.get<CommonApiResponse & { accessToken: string }>(`/auth/${studentId}`);
       login(accessToken);
-      router.push("/");
-      router.refresh();
     } catch (err) {
       console.error(err);
+    } finally {
+      router.push("/");
+      router.refresh();
     }
   };
 
