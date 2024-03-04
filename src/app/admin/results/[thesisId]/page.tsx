@@ -5,8 +5,7 @@ import {
   ThesisInfoData,
   ThesisRevisionInfoData,
 } from "@/components/pages/review/ThesisInfo/ThesisInfo";
-import { ReviewCard, ReviewList } from "@/components/pages/review/Review";
-import { ReviewReportAdmin } from "@/components/pages/review/Review/ReviewReport";
+import { ReviewCard } from "@/components/pages/review/Review";
 import { Button } from "@mantine/core";
 import Link from "next/link";
 import { AuthSSR } from "@/api/AuthSSR";
@@ -14,6 +13,7 @@ import { AdminReviewResponse } from "@/api/_types/reviews";
 import { API_ROUTES } from "@/api/apiRoute";
 import { fetcher } from "@/api/fetcher";
 import { AdminThesisInfo } from "@/components/pages/review/ThesisInfo/AdminThesisInfo";
+import { AdminReviewListContent, ReviewReportAdminEditable } from "./AdminReviewContent";
 
 export default async function AdminReviewResultPage({
   params: { thesisId },
@@ -54,13 +54,11 @@ export default async function AdminReviewResultPage({
         <AdminThesisInfo thesis={thesis} revision={revision}>
           <ThesisInfo thesis={thesis} revision={revision} />
         </AdminThesisInfo>
-        <ReviewList
-          // 아무리 봐도 result 페이지에서 이걸 표시하는 건 좀 아닌 것 같아요...
-          title={data.stage === "REVISION" ? "수정지시사항 확인 결과" : "심사 결과"}
-          stage={data.stage}
-          reviews={data.reviews.filter((review) => !review.isFinal)}
+        <AdminReviewListContent data={data} />
+        <ReviewReportAdminEditable
+          data={data}
+          review={data.reviews.find((review) => review.isFinal)}
         />
-        <ReviewReportAdmin review={data.reviews.find((review) => review.isFinal)} />
         <RowGroup withBorderBottom={false}>
           <ButtonRow
             buttons={[
