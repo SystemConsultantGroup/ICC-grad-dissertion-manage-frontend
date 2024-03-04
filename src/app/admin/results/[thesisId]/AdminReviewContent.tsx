@@ -1,9 +1,11 @@
 "use client";
 
 import { ClientAxios } from "@/api/ClientAxios";
+import { Status } from "@/api/_types/common";
 import { AdminReviewResponse, ThesisReview, UpdateReviewRequestBody } from "@/api/_types/reviews";
 import { transactionTask } from "@/api/_utils/task";
 import { API_ROUTES } from "@/api/apiRoute";
+import { ApiDownloadButton } from "@/components/common/Buttons";
 import { showNotificationSuccess } from "@/components/common/Notifications";
 import SectionTitle from "@/components/common/SectionTitle";
 import { BasicRow, ButtonRow, RowGroup, TitleRow } from "@/components/common/rows";
@@ -18,7 +20,7 @@ export function AdminReviewListContent({ data }: { data: AdminReviewResponse }) 
   return (
     <>
       <AdminReviewList
-        title={data.stage === "REVISION" ? "수정지시사항 확인 현황" : "심사 현황"}
+        title={data.stage === "REVISION" ? "수정지시사항 확인 결과" : "심사 결과 목록"}
         stage={data.stage}
         reviews={data.reviews.filter((review) => !review.isFinal)}
         onModify={(review) => {
@@ -50,6 +52,72 @@ export function AdminReviewListContent({ data }: { data: AdminReviewResponse }) 
   );
 }
 
+function nameForStatus(status: Status) {
+  return status === "PASS"
+    ? "합격"
+    : status === "FAIL"
+      ? "불합격"
+      : status === "PENDING"
+        ? "보류"
+        : "미완료";
+}
+
+export function ReviewReportAdminEditable({
+  data,
+  review,
+}: {
+  data: AdminReviewResponse;
+  review: ThesisReview | undefined;
+}) {
+  const [open, setOpen] = useState(false);
+  if (!review) {
+    return (
+      <Stack gap={0}>
+        <TitleRow title="심사 보고서" />
+        <RowGroup>
+          <BasicRow field="최종 심사 결과">
+            <BasicRow.Text>-</BasicRow.Text>
+          </BasicRow>
+        </RowGroup>
+      </Stack>
+    );
+  }
+  return (
+    <Stack gap={0}>
+      <TitleRow title="심사 보고서" />
+      <RowGroup>
+        <BasicRow field="심사위원장">
+          <BasicRow.Text>{review.reviewer.name}</BasicRow.Text>
+        </BasicRow>
+      </RowGroup>
+      <RowGroup>
+        <BasicRow field="최종 심사 결과">
+          <BasicRow.Text>{nameForStatus(review.contentStatus)}</BasicRow.Text>
+          <Space w="xl" />
+          <Button onClick={() => setOpen(true)}>수정하기</Button>
+        </BasicRow>
+      </RowGroup>
+      <RowGroup>
+        <BasicRow field="심사 보고서">
+          <ApiDownloadButton file={review.file} />
+        </BasicRow>
+      </RowGroup>
+
+      <Modal
+        opened={!!open}
+        onClose={() => setOpen(false)}
+        centered
+        size="lg"
+        padding="lg"
+        radius="lg"
+        withCloseButton={false}
+      >
+        <ModalContent open={open} setOpen={setOpen} data={data} current={review} />
+      </Modal>
+    </Stack>
+  );
+}
+
 interface ModalProps {
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -71,14 +139,21 @@ function ModalContent({ open, setOpen, data, current }: ModalProps) {
           setLoading(true);
           task.onComplete(() => setLoading(false));
 
-          await ClientAxios.put(API_ROUTES.review.put(current.id), {
-            comment: current.comment,
-            contentStatus: thesis,
-            presentationStatus: presentation,
-          } satisfies UpdateReviewRequestBody);
+          await ClientAxios.put(
+            current.isFinal
+              ? API_ROUTES.review.final.put(current.id)
+              : API_ROUTES.review.put(current.id),
+            {
+              comment: current.comment,
+              contentStatus: thesis,
+              presentationStatus: presentation,
+            } satisfies UpdateReviewRequestBody
+          );
 
           showNotificationSuccess({
-            message: `${current.reviewer.name} 교수의 심사를 수정했습니다.`,
+            message: current.isFinal
+              ? "최종심사 결과를 수정했습니다."
+              : `${current.reviewer.name} 교수의 심사를 수정했습니다.`,
           });
         })();
       }}
