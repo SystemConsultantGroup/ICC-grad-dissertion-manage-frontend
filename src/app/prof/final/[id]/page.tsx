@@ -52,7 +52,7 @@ export default async function ProfessorFinalPage({
         <ThesisInfo thesis={thesisInfo} isAdvisor />
         {final.otherReviews && (
           <ReviewList
-            title="심사 의견"
+            title={review.stage === "REVISION" ? "수정지시사항 확인 현황" : "심사 의견"}
             stage={review.stage}
             reviews={final.otherReviews.map((other, index) => ({
               id: index,
