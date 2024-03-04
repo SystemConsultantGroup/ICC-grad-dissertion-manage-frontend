@@ -16,8 +16,8 @@ export interface AchievementFormInput {
   performance: AchievementType;
   journalName: string;
   paperTitle: string;
-  ISSN1: string;
-  ISSN2: string;
+  ISSN1?: string;
+  ISSN2?: string;
   publicationDate: Date;
   authorType: AchievementAuthorType;
   authorNumbers: number;

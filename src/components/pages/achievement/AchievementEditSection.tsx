@@ -28,8 +28,8 @@ function AchievementEditSection({ id, isAdmin }: Props) {
   const transformedAchievement = data && {
     ...data,
     publicationDate: new Date(data.publicationDate),
-    ISSN1: data.ISSN.slice(0, 4),
-    ISSN2: data.ISSN.slice(-4),
+    ISSN1: data.ISSN?.slice(0, 4),
+    ISSN2: data.ISSN?.slice(-4),
   };
 
   const form = useForm<AchievementFormInput>({
@@ -49,14 +49,14 @@ function AchievementEditSection({ id, isAdmin }: Props) {
       form.setValues({
         ...data,
         publicationDate: new Date(data.publicationDate),
-        ISSN1: data.ISSN.slice(0, 4),
-        ISSN2: data.ISSN.slice(-4),
+        ISSN1: data.ISSN?.slice(0, 4),
+        ISSN2: data.ISSN?.slice(-4),
       });
     }
   }, [data]);
 
   const handleSubmit = async (input: AchievementFormInput) => {
-    const body = { ...input, ISSN: input.ISSN1 + input.ISSN2 };
+    const body = { ...input, ISSN: input.ISSN1 && input.ISSN1 && input.ISSN1 + input.ISSN2 };
     try {
       await ClientAxios.put(API_ROUTES.achievement.put(id), body);
       await mutate();
