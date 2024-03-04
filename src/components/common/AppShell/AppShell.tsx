@@ -22,7 +22,10 @@ function AppShell({ children }: Props) {
       styles={{ main: { background: "var(--mantine-color-main-background)" } }}
       disabled={disabledAppShell}
     >
-      <Navbar userType={user?.type} modificationFlag={user?.department.modificationFlag} />
+      <Navbar
+        userType={user?.type}
+        modificationFlag={user?.department.modificationFlag && user.currentPhase !== "PRELIMINARY"}
+      />
       <MantineAppShell.Main>{children}</MantineAppShell.Main>
     </MantineAppShell>
   );
