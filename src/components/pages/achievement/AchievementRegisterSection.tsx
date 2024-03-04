@@ -27,7 +27,7 @@ function AchievementRegisterSection() {
   });
 
   const handleSubmit = async (input: AchievementFormInput) => {
-    const body = { ...input, ISSN: input.ISSN1 + input.ISSN2 };
+    const body = { ...input, ISSN: input.ISSN1 && input.ISSN1 && input.ISSN1 + input.ISSN2 };
     try {
       const res = await ClientAxios.post<Achievement>(API_ROUTES.achievement.post(), body, {
         params: { id: user?.id },
