@@ -86,6 +86,7 @@ export const API_ROUTES = {
     get: (achievementId?: ApiId) => `/achievements/${achievementId ?? ""}`,
     put: (achievementId: ApiId) => `/achievements/${achievementId}`,
     post: () => "/achievements",
+    delete: (achievementId: ApiId) => `/achievements/${achievementId}`,
     excel: () => "/achievements/excel",
   },
 };
