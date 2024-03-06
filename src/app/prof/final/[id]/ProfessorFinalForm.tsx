@@ -66,11 +66,15 @@ export function ProfessorFinalForm({
       fileUUID = previous.reviewFile?.uuid ?? undefined;
     }
 
-    await ClientAxios.put(API_ROUTES.review.final.put(reviewId), {
-      contentStatus: input.status,
-      comment: input.comment,
-      fileUUID,
-    } satisfies UpdateReviewRequestBody);
+    await ClientAxios.put(
+      API_ROUTES.review.final.put(reviewId),
+      {
+        contentStatus: input.status,
+        comment: input.comment,
+        fileUUID,
+      } satisfies UpdateReviewRequestBody,
+      { baseURL: process.env.NEXT_PUBLIC_REVIEW_API_ENDPOINT }
+    );
 
     if (previous.reviewFile && input.commentFile !== undefined) {
       await ClientAxios.delete(API_ROUTES.file.delete(previous.reviewFile.uuid));
