@@ -1,6 +1,5 @@
 import { Badge, Stack } from "@mantine/core";
 import { ApiFileRow, BasicRow, LongContentRow, RowGroup, TitleRow } from "@/components/common/rows";
-import { ThesisFile } from "@/api/_types/reviews";
 import { File } from "@/api/_types/file";
 
 export type Stage = "PRELIMINARY" | "MAIN" | "REVISION";
@@ -27,7 +26,8 @@ export interface ThesisInfoData {
 }
 
 export interface ThesisRevisionInfoData {
-  thesisFiles: ThesisFile[];
+  showPresentation?: boolean;
+  revisionReport?: File;
 }
 
 export function ThesisInfo({ thesis, isAdvisor, revision, simple = false }: ThesisInfoProps) {
@@ -40,7 +40,7 @@ export function ThesisInfo({ thesis, isAdvisor, revision, simple = false }: Thes
         badge={
           <>
             {isAdvisor && <Badge>지도 학생</Badge>}
-            {stage === "MAIN" ? (
+            {stage === "MAIN" || stage === "REVISION" ? (
               <Badge>본심</Badge>
             ) : stage === "PRELIMINARY" ? (
               <Badge>예심</Badge>
@@ -84,30 +84,25 @@ export function ThesisInfo({ thesis, isAdvisor, revision, simple = false }: Thes
           </RowGroup>
           <LongContentRow field="논문 초록" content={thesis ? thesis.abstract : "..."} />
           <RowGroup>
-            <ApiFileRow field="논문 파일" file={thesis.thesisFile} />
+            <ApiFileRow
+              field={revision ? "수정 논문 파일" : "논문 파일"}
+              file={thesis.thesisFile}
+            />
           </RowGroup>
           <RowGroup>
             <ApiFileRow field="논문 발표 파일" file={thesis.presentationFile} />
           </RowGroup>
+          {revision && (
+            <RowGroup>
+              <ApiFileRow
+                field="수정지시사항 결과보고서"
+                file={revision.revisionReport}
+                fieldSize="lg"
+              />
+            </RowGroup>
+          )}
         </>
       )}
-      {revision && <Revisions revision={revision} />}
     </Stack>
-  );
-}
-
-function Revisions({ revision }: { revision: ThesisRevisionInfoData }) {
-  const thesis = revision.thesisFiles.find((file) => file.type === "THESIS");
-  const revision_report = revision.thesisFiles.find((file) => file.type === "REVISION_REPORT");
-
-  return (
-    <>
-      <RowGroup>
-        <ApiFileRow field="수정 논문 파일" file={thesis?.file} />
-      </RowGroup>
-      <RowGroup>
-        <ApiFileRow field="수정지시사항 결과보고서" file={revision_report?.file} />
-      </RowGroup>
-    </>
   );
 }

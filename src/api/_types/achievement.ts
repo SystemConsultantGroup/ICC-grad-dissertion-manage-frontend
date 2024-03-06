@@ -57,7 +57,7 @@ export interface Achievement {
   journalName: string;
   authorNumbers: number;
   authorType: AchievementAuthorType;
-  ISSN: string;
+  ISSN?: string;
   name: string;
   id: number;
   department: string;

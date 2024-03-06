@@ -10,6 +10,7 @@ import { isNotEmpty, useForm } from "@mantine/form";
 import { API_ROUTES } from "@/api/apiRoute";
 import { ClientAxios } from "@/api/ClientAxios";
 import { showNotificationSuccess } from "@/components/common/Notifications";
+import { useEffect } from "react";
 import PhaseEditFormRow from "./PhaseEditFormRow";
 
 interface ModificationEditFormInputs {
@@ -54,17 +55,21 @@ function SystemSection() {
     }
   };
 
+  useEffect(() => {
+    console.log(PhasesData);
+  });
+
   return (
     <Section>
       <Stack>
-        <Stack gap={0}>
+        {/* <Stack gap={0}>
           <TitleRow title="시스템 현재 시간" />
           <Stack style={{ padding: 20 }}>
             <Text size="lg" c="dimmed">
               <Clock />
             </Text>
           </Stack>
-        </Stack>
+        </Stack> */}
         <Stack gap={0}>
           <TitleRow
             title="시스템 일정 설정"
