@@ -71,11 +71,15 @@ function ModalContent({ open, setOpen, data, current }: ModalProps) {
           setLoading(true);
           task.onComplete(() => setLoading(false));
 
-          await ClientAxios.put(API_ROUTES.review.put(current.id), {
-            comment: current.comment,
-            contentStatus: thesis,
-            presentationStatus: presentation,
-          } satisfies UpdateReviewRequestBody);
+          await ClientAxios.put(
+            API_ROUTES.review.put(current.id),
+            {
+              comment: current.comment,
+              contentStatus: thesis,
+              presentationStatus: presentation,
+            } satisfies UpdateReviewRequestBody,
+            { baseURL: process.env.NEXT_PUBLIC_REVIEW_API_ENDPOINT }
+          );
 
           showNotificationSuccess({
             message: `${current.reviewer.name} 교수의 심사를 수정했습니다.`,
