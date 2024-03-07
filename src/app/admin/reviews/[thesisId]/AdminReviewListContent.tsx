@@ -81,7 +81,9 @@ function ModalContent({ open, setOpen, data, current }: ModalProps) {
           } satisfies UpdateReviewRequestBody);
 
           showNotificationSuccess({
-            message: `${current.reviewer.name} 교수의 심사를 수정했습니다.`,
+            message: `${current.reviewer.name} 교수의 ${
+              data.stage === "REVISION" ? "확인여부를" : "심사를"
+            } 수정했습니다.`,
           });
           setOpen(false);
           router.refresh();
@@ -108,13 +110,19 @@ function ModalContent({ open, setOpen, data, current }: ModalProps) {
         </RowGroup>
 
         <RowGroup>
-          <BasicRow field="내용심사 합격 여부">
-            <StatusButtons
-              options={{ pending: true, unexamined: true }}
-              value={thesis}
-              setValue={setThesis}
-            />
-          </BasicRow>
+          {data.stage === "REVISION" ? (
+            <BasicRow field="수정지시사항 확인 여부">
+              <StatusButtons options={{}} value={thesis} setValue={setThesis} />
+            </BasicRow>
+          ) : (
+            <BasicRow field="내용심사 합격 여부">
+              <StatusButtons
+                options={{ pending: true, unexamined: true }}
+                value={thesis}
+                setValue={setThesis}
+              />
+            </BasicRow>
+          )}
         </RowGroup>
 
         {!current.isFinal && data.stage === "MAIN" ? (
