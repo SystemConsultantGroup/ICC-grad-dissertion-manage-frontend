@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { ClientAxios } from "@/api/ClientAxios";
 import { Status } from "@/api/_types/common";
 import { AdminReviewResponse, ThesisReview, UpdateReviewRequestBody } from "@/api/_types/reviews";
@@ -12,7 +14,6 @@ import { BasicRow, ButtonRow, RowGroup, TitleRow } from "@/components/common/row
 import { AdminReviewList } from "@/components/pages/review/Review/ReviewList";
 import { StatusButtons } from "@/components/pages/review/Review/StatusButtons";
 import { Badge, Button, Modal, Space, Stack } from "@mantine/core";
-import { useState } from "react";
 
 export function AdminReviewListContent({ data }: { data: AdminReviewResponse }) {
   const [open, setOpen] = useState<boolean>(false);
@@ -130,6 +131,8 @@ function ModalContent({ open, setOpen, data, current }: ModalProps) {
   const [thesis, setThesis] = useState(current.contentStatus);
   const [presentation, setPresentation] = useState(current.presentationStatus);
 
+  const router = useRouter();
+
   return (
     <form
       onSubmit={(event) => {
@@ -153,9 +156,13 @@ function ModalContent({ open, setOpen, data, current }: ModalProps) {
 
           showNotificationSuccess({
             message: current.isFinal
-              ? "최종심사 결과를 수정했습니다."
-              : `${current.reviewer.name} 교수의 심사를 수정했습니다.`,
+              ? "최종심사 결과를 수정했습니다." // NOTE: 심사위원장은 수정지시사항 확인을 안한다고 가정
+              : `${current.reviewer.name} 교수의 ${
+                  data.stage === "REVISION" ? "확인여부를" : "심사를"
+                } 수정했습니다.`,
           });
+          setOpen(false);
+          router.refresh();
         })();
       }}
     >
@@ -178,7 +185,11 @@ function ModalContent({ open, setOpen, data, current }: ModalProps) {
           </BasicRow>
         </RowGroup>
 
-        <RowGroup>
+        {data.stage === "REVISION" ? (
+          <BasicRow field="수정지시사항 확인 여부">
+            <StatusButtons options={{}} value={thesis} setValue={setThesis} />
+          </BasicRow>
+        ) : (
           <BasicRow field="내용심사 합격 여부">
             <StatusButtons
               options={{ pending: true, unexamined: true }}
@@ -186,7 +197,7 @@ function ModalContent({ open, setOpen, data, current }: ModalProps) {
               setValue={setThesis}
             />
           </BasicRow>
-        </RowGroup>
+        )}
 
         {!current.isFinal && data.stage === "MAIN" ? (
           <RowGroup>
