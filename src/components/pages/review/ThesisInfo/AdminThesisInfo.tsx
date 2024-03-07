@@ -1,6 +1,7 @@
 "use client";
 
 import { PropsWithChildren, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Badge, Button, Stack, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { showNotificationSuccess } from "@/components/common/Notifications";
@@ -39,6 +40,8 @@ export function AdminThesisInfo({
   children, // RSC를 지원하기 위해
 }: PropsWithChildren & AdminThesisInfoProps) {
   const [editing, setEditing] = useState(false);
+  const router = useRouter();
+
   if (!editing) {
     return (
       <Stack gap={0}>
@@ -75,6 +78,8 @@ export function AdminThesisInfo({
           showNotificationSuccess({
             message: `${thesis.studentInfo.name} 학생의 논문정보를 수정했습니다.`,
           });
+          setEditing(false);
+          router.refresh();
         }}
         onDiscard={() => setEditing(false)}
       />
@@ -115,6 +120,10 @@ function AdminEditThesisInfo({
             form.isDirty(key) ? input[key] : undefined;
           await onSubmit({
             title: getIfDirty("title"),
+            abstract: getIfDirty("abstract"),
+            thesisFile: input.thesisFile,
+            presentationFile: input.presentationFile,
+            revisionReportFile: input.revisionReportFile,
           });
         })
       )}
