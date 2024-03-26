@@ -51,7 +51,7 @@ function BasicInfoSection({ form, studentId, isPwEditing, handleIsPwEditing, ope
       }
     };
     fetchStudentDetails();
-  }, [studentId]);
+  }, [form, studentId]);
 
   return (
     <Stack gap={0}>
