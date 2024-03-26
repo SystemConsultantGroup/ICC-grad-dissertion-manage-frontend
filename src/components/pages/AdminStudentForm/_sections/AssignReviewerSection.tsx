@@ -172,7 +172,7 @@ function AssignReviewerSection({
         ),
       })),
     ]);
-  }, [headReviewer, advisors, committees, assignedReviewerLabel]);
+  }, [advisors, assignedReviewerLabel, committees, headReviewer]);
 
   /** 배정 취소 */
   const handleCancle = () => {

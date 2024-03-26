@@ -59,7 +59,7 @@ function MainRegisterModal({ studentId, opened, close }: Props) {
       };
       fetchReviewer();
     }
-  });
+  }, []);
 
   return (
     <Modal
