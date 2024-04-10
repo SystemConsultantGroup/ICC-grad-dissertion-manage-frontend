@@ -10,7 +10,7 @@ import {
 import { Button, Stack } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { useAuth } from "@/components/common/AuthProvider";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import classes from "@/components/pages/revision/RevisionSubmissionForm/RevisionSubmissionForm.module.css";
 import useThesis from "@/api/SWR/useThesis";
@@ -21,21 +21,30 @@ import { transaction } from "@/api/_utils/task";
 import { showNotificationSuccess } from "@/components/common/Notifications";
 
 interface RevisionSubmissionFormInputs {
-  thesisFile: File | null;
-  revisionReportFile: File | null;
+  thesisFile?: File | null;
+  revisionReportFile?: File | null;
 }
 
 function RevisionSubmissionForm() {
   const { user } = useAuth();
-  const { data: thesis } = useThesis(user?.id || 0, { type: "now" }, !!user);
+  const { data: main, isLoading: isMainLoading } = useThesis(
+    user?.id || 0,
+    { type: "main" },
+    !!user
+  );
+  const { data: thesis, isLoading } = useThesis(user?.id || 0, { type: "revision" }, !!user);
   const form = useForm<RevisionSubmissionFormInputs>({
     initialValues: {
       thesisFile: null,
       revisionReportFile: null,
     },
     validate: {
-      thesisFile: isNotEmpty("논문 파일을 첨부해주세요."),
-      revisionReportFile: isNotEmpty("논문 발표 파일을 첨부해주세요."),
+      thesisFile: thesis?.thesisFile
+        ? (value) => (value === null ? "수정 논문 파일을 첨부해주세요." : undefined)
+        : isNotEmpty("수정 논문 파일을 첨부해주세요."),
+      revisionReportFile: thesis?.revisionReportFile
+        ? (value) => (value === null ? "수정지시사항 결과보고서 파일을 첨부해주세요." : undefined)
+        : isNotEmpty("수정지시사항 결과보고서 파일을 첨부해주세요."),
     },
   });
   const { onSubmit } = form;
@@ -46,8 +55,12 @@ function RevisionSubmissionForm() {
     setIsSubmitting(true);
     try {
       await transaction(async () => {
-        const thesisFileUUID = (await uploadFile(values.thesisFile!)).uuid;
-        const revisionReportFileUUID = (await uploadFile(values.revisionReportFile!)).uuid;
+        const thesisFileUUID = values.thesisFile
+          ? (await uploadFile(values.thesisFile!)).uuid
+          : undefined;
+        const revisionReportFileUUID = values.revisionReportFile
+          ? (await uploadFile(values.revisionReportFile!)).uuid
+          : undefined;
         await ClientAxios.put(API_ROUTES.student.putThesis(user!.id), {
           thesisFileUUID,
           revisionReportFileUUID,
@@ -65,6 +78,15 @@ function RevisionSubmissionForm() {
     }
   };
 
+  useEffect(() => {
+    if (!isLoading) {
+      form.setValues({
+        thesisFile: thesis?.thesisFile ? undefined : null,
+        revisionReportFile: thesis?.revisionReportFile ? undefined : null,
+      });
+    }
+  }, [isLoading]);
+
   return (
     <form onSubmit={onSubmit(handleSubmit)}>
       <Stack gap={0}>
@@ -76,12 +98,18 @@ function RevisionSubmissionForm() {
         </RowGroup>
         <RowGroup>
           <BasicRow field="논문 제목">
-            <BasicRow.Text>{thesis ? thesis.title : "..."}</BasicRow.Text>
+            <BasicRow.Text>{main ? main.title : "..."}</BasicRow.Text>
           </BasicRow>
         </RowGroup>
-        <LongContentRow field="논문 초록" content={thesis ? thesis.abstract : "..."} />
+        <LongContentRow field="논문 초록" content={main ? main.abstract : "..."} />
         <RowGroup>
-          <FileUploadRow field="수정 논문 파일" form={form} formKey="thesisFile" fieldSize={180} />
+          <FileUploadRow
+            field="수정 논문 파일"
+            form={form}
+            formKey="thesisFile"
+            fieldSize={180}
+            previousFile={thesis?.thesisFile}
+          />
         </RowGroup>
         <RowGroup>
           <FileUploadRow
@@ -89,6 +117,7 @@ function RevisionSubmissionForm() {
             form={form}
             formKey="revisionReportFile"
             fieldSize={180}
+            previousFile={thesis?.revisionReportFile}
           />
         </RowGroup>
         <Button type="submit" className={classes.submitButton} loading={isSubmitting}>

@@ -58,34 +58,45 @@ export const API_ROUTES = {
       `/students/${studentId}/reviewers/${reviewerId}`, // PUT: 학생 심사위원 배정 취소
   },
   review: {
-    get: (reviewId?: ApiId) => `/reviews/${reviewId ?? ""}`, // GET: 심사 대상 논문 목록 조회 및 상세 조회(교수)
+    // 학생 본인의 논문 조회
     getMe: () => "/reviews/me",
+
+    // 교수 심사 대상 조회: '논문 심사'
+    get: (reviewId?: ApiId) => `/reviews/${reviewId ?? ""}`, // GET: 심사 대상 논문 목록 조회 및 상세 조회(교수)
     put: (reviewId: ApiId) => `/reviews/${reviewId}`, // PUT: 논문 심사 등록/수정(교수)
     excel: () => "/reviews/excel", // GET: 심사 대상 논문 리스트 다운로드
+
     current: {
-      get: (reviewId?: ApiId) => `/reviews/current/${reviewId ?? ""}`, // GET: 현재 심사 대상 논문 목록 조회 및 상세 조회
-      put: (reviewId: ApiId) => `/reviews/current/${reviewId}`, // PUT: 현재 심사 등록/수정
-      excel: () => "/reviews/current/excel", // GET: 현재 심사 대상 논문 리스트 다운로드
+      // 관리자 논문 조회: '심사 현황'
+      get: (thesisId?: ApiId) => `/reviews/current/${thesisId ?? ""}`,
+      excel: () => "/reviews/current/excel",
     },
     final: {
-      get: (finalId?: ApiId) => `/reviews/final/${finalId ?? ""}`, // GET: 최종 심사 대상 논문 목록 조회 및 상세 조회
-      put: (finalId: ApiId) => `/reviews/final/${finalId}`, // PUT: 최종 심사 등록/수정
+      // 교수 심사 대상 조회: '최종 판정'
+      get: (reviewId?: ApiId) => `/reviews/final/${reviewId ?? ""}`, // GET: 최종 심사 대상 논문 목록 조회 및 상세 조회
+      put: (reviewId?: ApiId) => `/reviews/final/${reviewId ?? ""}`, // GET: 최종 심사 대상 논문 목록 조회 및 상세 조회
       excel: () => "/reviews/final/excel", // GET: 최종 심사 대상 논문 리스트 다운로드
     },
     result: {
-      get: (reviewId?: ApiId) => `/reviews/result/${reviewId ?? ""}`, // GET: 심사 결과 목록 조회
+      // 관리자 논문 조회: '심사 결과'
+      get: (thesisId?: ApiId) => `/reviews/result/${thesisId ?? ""}`, // GET: 심사 결과 목록 조회
       excel: () => "/reviews/result/excel", // GET: 심사 결과 엑셀 다운로드
       report: () => "/reviews/result/reports", // GET: 전체 심사보고서 다운로드
     },
     revision: {
-      get: (revisionId?: ApiId) => `/reviews/revision/${revisionId ?? ""}`, // GET: 수정지시사항 목록 조회 및 상세 조회
-      put: (revisionId: ApiId) => `/reviews/revision/${revisionId}`, // PUT: 수정지시사항 심사 등록/수정
+      // 교수 심사 대상 조회: '수정사항 확인'
+      get: (reviewId?: ApiId) => `/reviews/revision/${reviewId ?? ""}`, // GET: 수정지시사항 목록 조회 및 상세 조회
+      put: (reviewId: ApiId) => `/reviews/revision/${reviewId}`, // PUT: 수정지시사항 심사 등록/수정
     },
+  },
+  thesis: {
+    put: (thesisId: ApiId) => `/thesis/${thesisId}`,
   },
   achievement: {
     get: (achievementId?: ApiId) => `/achievements/${achievementId ?? ""}`,
     put: (achievementId: ApiId) => `/achievements/${achievementId}`,
     post: () => "/achievements",
+    delete: (achievementId: ApiId) => `/achievements/${achievementId}`,
     excel: () => "/achievements/excel",
   },
 };

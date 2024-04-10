@@ -7,7 +7,7 @@ import { AuthSSR } from "@/api/AuthSSR";
 import { FinalReviewResponse } from "@/api/_types/reviews";
 import { API_ROUTES } from "@/api/apiRoute";
 import { fetcher } from "@/api/fetcher";
-import { withinPhase } from "@/api/_utils/withinPhase";
+import { checkPhase } from "@/api/_utils/checkPhase";
 import { PhaseReadyAlertRow } from "@/components/pages/PhaseReady";
 import { formatTime } from "@/components/common/Clock/date/format";
 import { ProfessorFinalForm } from "./ProfessorFinalForm";
@@ -37,7 +37,7 @@ export default async function ProfessorFinalPage({
   };
   const isPermanent = review.status === "PASS" || review.status === "FAIL";
 
-  const { within, start, end } = await withinPhase({
+  const { within, start, end } = await checkPhase({
     title: thesisInfo.stage === "PRELIMINARY" ? "예심 최종 심사" : "본심 최종 심사",
     token,
   });
@@ -52,7 +52,7 @@ export default async function ProfessorFinalPage({
         <ThesisInfo thesis={thesisInfo} isAdvisor />
         {final.otherReviews && (
           <ReviewList
-            title="심사 의견"
+            title={review.stage === "REVISION" ? "수정지시사항 확인 현황" : "심사 의견"}
             stage={review.stage}
             reviews={final.otherReviews.map((other, index) => ({
               id: index,

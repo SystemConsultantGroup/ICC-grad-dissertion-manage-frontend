@@ -15,12 +15,13 @@ interface Props {
   studentId?: string | number;
   isPwEditing: boolean;
   handleIsPwEditing: Dispatch<SetStateAction<boolean>>;
+  open: () => void;
   token?: boolean;
 }
 
-function BasicInfoSection({ form, studentId, isPwEditing, handleIsPwEditing, token }: Props) {
-  const [opened, { open, close }] = useDisclosure();
+function BasicInfoSection({ form, studentId, isPwEditing, handleIsPwEditing, open, token }: Props) {
   const [phase, setPhase] = useState<Phase>();
+  const [defaultDepartmentId, setDefaultDepartmentId] = useState<string | null>(null);
 
   useEffect(() => {
     // 학생 기본 정보 가져오기
@@ -38,12 +39,13 @@ function BasicInfoSection({ form, studentId, isPwEditing, handleIsPwEditing, tok
 
           form.setFieldValue("basicInfo", {
             loginId: studentDetails.loginId,
-            password: "",
+            password: undefined,
             name: studentDetails.name,
             email: studentDetails.email,
             phone: studentDetails.phone,
-            deptId: String(studentDetails.department),
+            deptId: String(studentDetails.department.id),
           });
+          setDefaultDepartmentId(String(studentDetails.department.id));
         }
       } catch (error) {
         console.error(error);
@@ -111,14 +113,17 @@ function BasicInfoSection({ form, studentId, isPwEditing, handleIsPwEditing, tok
         </RowGroup>
         <RowGroup>
           <BasicRow field="학과">
-            <DepartmentSelect
-              styles={{
-                wrapper: {
-                  width: 300,
-                },
-              }}
-              {...form.getInputProps("basicInfo.deptId")}
-            />
+            {token && (
+              <DepartmentSelect
+                styles={{
+                  wrapper: {
+                    width: 300,
+                  },
+                }}
+                {...form.getInputProps("basicInfo.deptId")}
+                defaultValue={defaultDepartmentId}
+              />
+            )}
           </BasicRow>
         </RowGroup>
         <RowGroup>
@@ -135,7 +140,6 @@ function BasicInfoSection({ form, studentId, isPwEditing, handleIsPwEditing, tok
                     ]}
                   />
                 )}
-                <MainRegisterModal studentId={studentId} opened={opened} close={close} />
               </>
             ) : (
               <Select

@@ -28,7 +28,8 @@ function AdminInfoEditSection() {
       password: "",
     },
     validate: {
-      password: isNotEmpty("비밀번호를 입력해주세요."),
+      password: (value, values) =>
+        isPwEditing && !values.password ? "비밀번호를 입력하거나 수정을 취소해주세요." : null,
     },
   });
 

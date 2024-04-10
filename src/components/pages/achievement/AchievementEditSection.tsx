@@ -56,7 +56,7 @@ function AchievementEditSection({ id, isAdmin }: Props) {
   }, [data]);
 
   const handleSubmit = async (input: AchievementFormInput) => {
-    const body = { ...input, ISSN: input.ISSN1 + input.ISSN2 };
+    const body = { ...input, ISSN: input.ISSN1 && input.ISSN1 && input.ISSN1 + input.ISSN2 };
     try {
       await ClientAxios.put(API_ROUTES.achievement.put(id), body);
       await mutate();

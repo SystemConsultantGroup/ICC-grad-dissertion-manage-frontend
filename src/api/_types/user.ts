@@ -1,5 +1,5 @@
 import { File } from "@/api/_types/file";
-import { CommonApiResponse } from "./common";
+import { CommonApiResponse, Stage } from "./common";
 import { Department } from "./department";
 
 export type Role = "ADMIN" | "PROFESSOR" | "STUDENT";
@@ -13,6 +13,7 @@ export interface User {
   type: Role;
   department: Omit<Department, "userCount">;
   signFile?: File;
+  currentPhase?: Stage;
 }
 
 export interface UserResponse extends CommonApiResponse, User {
