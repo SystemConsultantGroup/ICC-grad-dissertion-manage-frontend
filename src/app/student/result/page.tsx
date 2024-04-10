@@ -7,27 +7,40 @@ import { fetcher } from "@/api/fetcher";
 import { API_ROUTES } from "@/api/apiRoute";
 import { MyReviewResponse } from "@/api/_types/reviews";
 import { ThesisInfoData } from "@/components/pages/review/ThesisInfo/ThesisInfo";
-import { checkPhase } from "@/api/_utils/checkPhase";
-import { PhaseReady } from "@/components/pages/PhaseReady";
-import { formatTime } from "@/components/common/Clock/date/format";
+import { UserResponse } from "@/api/_types/user";
 
 export default async function StudentResultPage() {
   const { token } = await AuthSSR({ userType: "STUDENT" });
-  const { "0": result } = (await fetcher({ url: API_ROUTES.review.getMe(), token })) as {
+  const user = (await fetcher({ url: API_ROUTES.user.get(), token })) as UserResponse;
+  const { "0": pre, "1": main } = (await fetcher({ url: API_ROUTES.review.getMe(), token })) as {
     "0": MyReviewResponse;
+    "1": MyReviewResponse;
   };
 
-  const thesisInfo: ThesisInfoData = {
-    title: result.title,
-    stage: result.stage,
-    studentInfo: {
-      name: result.student,
-      department: { name: result.department },
-    },
-    abstract: result.abstract,
-    thesisFile: result.thesisFiles.find((file) => file.type === "THESIS")?.file,
-    presentationFile: result.thesisFiles.find((file) => file.type === "PRESENTATION")?.file,
-  };
+  const thesisInfo: ThesisInfoData =
+    user.currentPhase === "PRELIMINARY"
+      ? {
+          title: pre.title,
+          stage: pre.stage,
+          studentInfo: {
+            name: pre.student,
+            department: { name: pre.department },
+          },
+          abstract: pre.abstract,
+          thesisFile: pre.thesisFiles.find((file) => file.type === "THESIS")?.file,
+          presentationFile: pre.thesisFiles.find((file) => file.type === "PRESENTATION")?.file,
+        }
+      : {
+          title: main.title,
+          stage: main.stage,
+          studentInfo: {
+            name: main.student,
+            department: { name: main.department },
+          },
+          abstract: main.abstract,
+          thesisFile: main.thesisFiles.find((file) => file.type === "THESIS")?.file,
+          presentationFile: main.thesisFiles.find((file) => file.type === "PRESENTATION")?.file,
+        };
 
   return (
     <>
@@ -35,13 +48,21 @@ export default async function StudentResultPage() {
       <ReviewCard>
         <ThesisInfo thesis={thesisInfo} />
         <StudentReviewResult
-          stage={result.stage}
-          review={result.reviews.find((review) => review.isFinal)}
+          stage={user.currentPhase === "PRELIMINARY" ? pre.stage : main.stage}
+          review={
+            user.currentPhase === "PRELIMINARY"
+              ? pre.reviews.find((review) => review.isFinal)
+              : main.reviews.find((review) => review.isFinal)
+          }
         />
         <ReviewList
           title="심사 의견"
-          stage={result.stage}
-          reviews={result.reviews.filter((review) => !review.isFinal)}
+          stage={user.currentPhase === "PRELIMINARY" ? pre.stage : main.stage}
+          reviews={
+            user.currentPhase === "PRELIMINARY"
+              ? pre.reviews.filter((review) => !review.isFinal)
+              : main.reviews.filter((review) => !review.isFinal)
+          }
         />
       </ReviewCard>
     </>
