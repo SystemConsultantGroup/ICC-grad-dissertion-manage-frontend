@@ -7,6 +7,7 @@ import { DownloadButton } from "@/components/common/Buttons";
 
 interface Props {
   studentId: string | number;
+  token?: boolean;
 }
 
 interface studentFile {
@@ -14,7 +15,7 @@ interface studentFile {
   link: string;
 }
 
-function ThesisInfoSection({ studentId }: Props) {
+function ThesisInfoSection({ studentId, token }: Props) {
   const [thesisTitle, setThesisTitle] = useState<string>("");
   const [thesisFile, setThesisFile] = useState<studentFile>({ name: "", link: "" });
   const [presentationFile, setPresentationFile] = useState<studentFile>({ name: "", link: "" });
@@ -23,7 +24,7 @@ function ThesisInfoSection({ studentId }: Props) {
     const fetchThesisInfo = async () => {
       // 학생 논문 정보 조회
       try {
-        if (studentId) {
+        if (studentId && token) {
           const response = await ClientAxios.get(API_ROUTES.student.getThesis(studentId), {
             params: { type: "now" },
           });
@@ -37,7 +38,7 @@ function ThesisInfoSection({ studentId }: Props) {
       }
     };
     fetchThesisInfo();
-  }, [studentId]);
+  }, [studentId, token]);
 
   return (
     <Stack gap={0}>

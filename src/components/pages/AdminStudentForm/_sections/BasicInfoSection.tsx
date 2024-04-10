@@ -15,9 +15,10 @@ interface Props {
   studentId?: string | number;
   isPwEditing: boolean;
   handleIsPwEditing: Dispatch<SetStateAction<boolean>>;
+  token?: boolean;
 }
 
-function BasicInfoSection({ form, studentId, isPwEditing, handleIsPwEditing }: Props) {
+function BasicInfoSection({ form, studentId, isPwEditing, handleIsPwEditing, token }: Props) {
   const [opened, { open, close }] = useDisclosure();
   const [phase, setPhase] = useState<Phase>();
 
@@ -25,7 +26,7 @@ function BasicInfoSection({ form, studentId, isPwEditing, handleIsPwEditing }: P
     // 학생 기본 정보 가져오기
     const fetchStudentDetails = async () => {
       try {
-        if (studentId) {
+        if (studentId && token) {
           // 기본 정보 조회
           const response = await ClientAxios.get(API_ROUTES.student.get(studentId));
           const studentDetails = response.data;
@@ -49,7 +50,7 @@ function BasicInfoSection({ form, studentId, isPwEditing, handleIsPwEditing }: P
       }
     };
     fetchStudentDetails();
-  }, [studentId]);
+  }, [studentId, token]);
 
   return (
     <Stack gap={0}>

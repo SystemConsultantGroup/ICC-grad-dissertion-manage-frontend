@@ -27,7 +27,7 @@ interface AdminProfFormInputs {
 
 function AdminProfForm({ professorId }: Props) {
   const router = useRouter();
-  const { login } = useAuth();
+  const { login, isLoading } = useAuth();
   const [isPwEditing, setIsPwEditing] = useState<boolean>(false);
 
   const { onSubmit, getInputProps, setValues, isDirty, setFieldValue } =
@@ -57,7 +57,7 @@ function AdminProfForm({ professorId }: Props) {
   useEffect(() => {
     const fetchProfessorDetails = async () => {
       try {
-        if (professorId) {
+        if (!isLoading && professorId) {
           const response = await ClientAxios.get(API_ROUTES.professor.get(professorId));
           const professorDetails = response.data;
 
@@ -75,7 +75,7 @@ function AdminProfForm({ professorId }: Props) {
       }
     };
     fetchProfessorDetails();
-  }, [professorId, setValues]);
+  }, [professorId, setValues, isLoading]);
 
   const handleSubmit = async (values: AdminProfFormInputs) => {
     try {
