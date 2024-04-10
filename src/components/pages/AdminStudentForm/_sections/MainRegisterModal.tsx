@@ -6,6 +6,8 @@ import { API_ROUTES } from "@/api/apiRoute";
 import { Stack, Button } from "@mantine/core";
 import { RowGroup, ButtonRow } from "@/components/common/rows";
 import { useEffect } from "react";
+import { showNotificationSuccess } from "@/components/common/Notifications/showNotificationSuccess";
+import { useRouter } from "next/navigation";
 import ThesisTitleSection from "./ThesisTitleSection";
 import useReviewersAssign from "../_hooks/useReviewersAssign";
 import { AdminStudentFormInputs, SelectedProfessor } from "../_types/AdminStudentForm";
@@ -19,6 +21,7 @@ interface Props {
 }
 function MainRegisterModal({ studentId, opened, close, token }: Props) {
   const sysMainForm = useForm<AdminStudentFormInputs>({});
+  const router = useRouter();
   /** 본심 심사위원장 / 심사위원 설정*/
   const {
     headReviewer,
@@ -41,6 +44,10 @@ function MainRegisterModal({ studentId, opened, close, token }: Props) {
           committeeIds: committees.map((committee: SelectedProfessor) => Number(committee.profId)),
         };
         await ClientAxios.put(API_ROUTES.student.putSystem(Number(studentId)), body);
+        showNotificationSuccess({ message: "본심 전환이 완료되었습니다." });
+        close();
+        router.push(`/admin/students/${studentId}`);
+        router.refresh();
       }
     } catch (error) {
       console.error(error);
@@ -79,6 +86,8 @@ function MainRegisterModal({ studentId, opened, close, token }: Props) {
             committees={committees}
             onChangeReviewerAdd={handleReviewerAdd}
             onChangeReviewerCancle={handleReviewerCancel}
+            onChangeReviewersSet={handleReviewersSet}
+            token={token}
           />
           <ThesisTitleSection form={sysMainForm} />
           <RowGroup>
