@@ -77,11 +77,9 @@ function AssignReviewerSection({
 
   /** 배정된 교수 목록 조회시 label 설정하는 함수 */
   const assignedReviewerLabel = (role: ReviewerRole, professorId: number) => {
-    if(!isLoadingProf){
+    if (!isLoadingProf) {
       const professor = professors?.find((prof) => prof.id === professorId) || ({} as Professor);
-      const name = professor.department
-        ? `${professor.name} (${professor.department.name})`
-        : "";
+      const name = professor.department ? `${professor.name} (${professor.department.name})` : "";
       switch (role) {
         case "HEAD":
           return `[심사위원장] ${name}`;
