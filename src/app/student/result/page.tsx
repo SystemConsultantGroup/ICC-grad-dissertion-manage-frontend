@@ -29,12 +29,7 @@ export default async function StudentResultPage() {
     presentationFile: result.thesisFiles.find((file) => file.type === "PRESENTATION")?.file,
   };
 
-  const { end, after } = await checkPhase({
-    title: thesisInfo.stage === "MAIN" ? "본심 최종 심사" : "예심 최종 심사",
-    token,
-  });
-
-  return after ? (
+  return (
     <>
       <PageHeader title="심사 결과" />
       <ReviewCard>
@@ -50,7 +45,5 @@ export default async function StudentResultPage() {
         />
       </ReviewCard>
     </>
-  ) : (
-    <PhaseReady title="논문 심사" start="" end={formatTime(end)} after />
   );
 }
