@@ -7,9 +7,9 @@ import { Stack, Button } from "@mantine/core";
 import { RowGroup, ButtonRow } from "@/components/common/rows";
 import { useEffect } from "react";
 import ThesisTitleSection from "./ThesisTitleSection";
-import AssignReviewerSection from "./AssignReviewerSection";
 import useReviewersAssign from "../_hooks/useReviewersAssign";
 import { AdminStudentFormInputs, SelectedProfessor } from "../_types/AdminStudentForm";
+import AssignReviewerSection from "./AssignReviewerSection";
 
 interface Props {
   studentId: string | number | undefined;
