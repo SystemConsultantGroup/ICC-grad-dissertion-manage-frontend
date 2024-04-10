@@ -23,7 +23,7 @@ interface Props {
 
 function AdminStudentForm({ studentId }: Props) {
   const router = useRouter();
-  const { login } = useAuth();
+  const { login, isLoading } = useAuth();
   const [isPwEditing, setIsPwEditing] = useState<boolean>(false);
 
   const {
@@ -42,8 +42,6 @@ function AdminStudentForm({ studentId }: Props) {
         loginId: "",
         password: "",
         name: "",
-        email: "",
-        phone: "",
         deptId: "",
       },
 
@@ -72,7 +70,6 @@ function AdminStudentForm({ studentId }: Props) {
 
       // 등록시에만 validate 적용
       stage: (value) => (studentId ? undefined : value ? null : "예심/본심 단계를 선택해주세요."),
-      thesisTitle: (value) => (studentId ? undefined : value ? null : "논문 제목을 입력해주세요."),
     },
   });
 
@@ -222,18 +219,20 @@ function AdminStudentForm({ studentId }: Props) {
           studentId={studentId}
           isPwEditing={isPwEditing}
           handleIsPwEditing={setIsPwEditing}
+          token={!isLoading}
         />
         <AssignReviewerSection
           studentId={studentId}
           headReviewer={headReviewer}
           advisors={advisors}
           committees={committees}
+          token={!isLoading}
           onChangeReviewerAdd={handleReviewerAdd}
           onChangeReviewerCancle={handleReviewerCancel}
           onChangeReviewersSet={handleReviewersSet}
         />
         {studentId ? (
-          <ThesisInfoSection studentId={studentId} />
+          <ThesisInfoSection studentId={studentId} token={!isLoading} />
         ) : (
           <ThesisTitleSection form={form} />
         )}

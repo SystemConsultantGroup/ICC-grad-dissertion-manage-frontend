@@ -30,21 +30,20 @@ const useReviewersAssign = () => {
 
   const handleReviewerAdd = (
     role: ReviewerRole,
-    deptId: string,
     profId: string,
     clearSelectedReviewer: (isCancle: boolean, role?: ReviewerRole) => void
   ) => {
     switch (role) {
       case "HEAD":
-        setHeadReviewer({ deptId, profId });
+        setHeadReviewer({ profId });
         clearSelectedReviewer(false, "HEAD");
         break;
       case "ADVISOR":
-        setAdvisors((prev) => [...prev, { deptId, profId }]);
+        setAdvisors((prev) => [...prev, { profId }]);
         clearSelectedReviewer(false, "ADVISOR");
         break;
       case "COMMITTEE":
-        setCommittees((prev) => [...prev, { deptId, profId }]);
+        setCommittees((prev) => [...prev, { profId }]);
         clearSelectedReviewer(false, "COMMITTEE");
         break;
     }
@@ -56,18 +55,15 @@ const useReviewersAssign = () => {
     _committees: Professor[]
   ) => {
     setHeadReviewer({
-      deptId: String(_headReviewer.department.id),
       profId: String(_headReviewer.id),
     });
     setAdvisors(
       _advisors.map((advisor: Professor) => ({
-        deptId: String(advisor.department.id),
         profId: String(advisor.id),
       }))
     );
     setCommittees(
       _committees.map((committee: Professor) => ({
-        deptId: String(committee.department.id),
         profId: String(committee.id),
       }))
     );
