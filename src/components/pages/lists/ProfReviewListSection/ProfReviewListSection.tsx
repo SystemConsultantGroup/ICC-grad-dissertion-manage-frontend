@@ -21,6 +21,7 @@ import useReviews from "@/api/SWR/useReviews";
 import { DATE_TIME_FORMAT_HYPHEN } from "@/constants/date";
 import { DepartmentSelect } from "@/components/common/selects/DepartmentSelect";
 import { PAGE_NUMBER_GET_ALL, PAGE_SIZE_GET_ALL } from "@/constants/pagination";
+import { STAGE_LOOKUP_TABLE } from "@/api/_types/common";
 import { REFRESH_DEFAULT_PAGE_NUMBER } from "../_constants/page";
 import { TChangeQueryArg } from "../_types/common";
 import { PROF_REVIEW_TABLE_HEADERS } from "../_constants/table";
@@ -210,7 +211,7 @@ function ProfReviewListSection({ isFinal }: Props) {
             }}
           >
             <Table.Data>{index + 1 + (pageNumber - 1) * pageSizeNumber}</Table.Data>
-            <Table.Data>{review.stage === "MAIN" ? "본심" : "예심"}</Table.Data>
+            <Table.Data>{STAGE_LOOKUP_TABLE[review.stage]}</Table.Data>
             <Table.Data>{review.student}</Table.Data>
             <Table.Data>{review.department}</Table.Data>
             <Table.Data>{review.title}</Table.Data>

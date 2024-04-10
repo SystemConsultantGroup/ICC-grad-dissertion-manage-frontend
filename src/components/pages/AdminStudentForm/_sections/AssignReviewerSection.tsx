@@ -1,11 +1,11 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { Stack, Select, Button, ComboboxData } from "@mantine/core";
 import { RowGroup, BasicRow, TitleRow } from "@/components/common/rows";
 import { ClientAxios } from "@/api/ClientAxios";
 import { API_ROUTES } from "@/api/apiRoute";
 import { PAGE_NUMBER_GET_ALL, PAGE_SIZE_GET_ALL } from "@/constants/pagination";
 import { Professor, ReviewerRole } from "@/api/_types/professors";
-import { useProfessors, useDepartments } from "@/api/SWR";
+import { useProfessors } from "@/api/SWR";
 import { showNotificationError } from "@/components/common/Notifications";
 import { SelectedProfessor } from "../_types/AdminStudentForm";
 
@@ -48,17 +48,16 @@ function AssignReviewerSection({
   advisors,
   committees,
   studentId,
-  token,
+  token = false,
 }: Props) {
   /** 교수 목록, 학과 목록 조회 */
   const {
     data: professors,
     isLoading: isLoadingProf,
     error: errorProf,
-  } = useProfessors({ pageNumber: PAGE_NUMBER_GET_ALL, pageSize: PAGE_SIZE_GET_ALL });
+  } = useProfessors({ pageNumber: PAGE_NUMBER_GET_ALL, pageSize: PAGE_SIZE_GET_ALL }, token);
 
   const [professorsSelectData, setProfessorsSelectData] = useState<ComboboxData>();
-  const { data: deptData, isLoading: isLoadingDept, error: errorDept } = useDepartments();
 
   /** Select 컴포넌트에서 선택된 심사위원  */
   const [cancleReviewerId, setCancleReviewerId] = useState<string | null>();
@@ -77,24 +76,22 @@ function AssignReviewerSection({
   const [cancleError, setCancleError] = useState<boolean>(false);
 
   /** 배정된 교수 목록 조회시 label 설정하는 함수 */
-  const assignedReviewerLabel = useMemo(
-    () => (role: ReviewerRole, professorId: number) => {
-      const professor = professors?.find((prof) => prof.id === professorId) || ({} as Professor);
-      const name = `${professor.name} (${professor.department.name})`;
-
-      switch (role) {
-        case "HEAD":
-          return `[심사위원장] ${name}`;
-        case "ADVISOR":
-          return `[지도교수] ${name}`;
-        case "COMMITTEE":
-          return `[심사위원] ${name}`;
-        default:
-          return "";
-      }
-    },
-    [professors, deptData]
-  );
+  const assignedReviewerLabel = (role: ReviewerRole, professorId: number) => {
+    const professor = professors?.find((prof) => prof.id === professorId) || ({} as Professor);
+    const name = professor.department.name
+      ? `${professor.name} (${professor.department.name})`
+      : "";
+    switch (role) {
+      case "HEAD":
+        return `[심사위원장] ${name}`;
+      case "ADVISOR":
+        return `[지도교수] ${name}`;
+      case "COMMITTEE":
+        return `[심사위원] ${name}`;
+      default:
+        return "";
+    }
+  };
 
   /** 선택 초기화 하는 함수 */
   const clearSelectedReviewer = (isCancle: boolean, role?: ReviewerRole) => {
@@ -175,7 +172,7 @@ function AssignReviewerSection({
         label: assignedReviewerLabel("COMMITTEE", Number(committee.profId)),
       })),
     ]);
-  }, [headReviewer, advisors, committees, assignedReviewerLabel]);
+  }, [advisors, committees, headReviewer]);
 
   /** 배정 취소 */
   const handleCancle = () => {

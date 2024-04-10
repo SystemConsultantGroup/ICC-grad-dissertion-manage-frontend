@@ -14,7 +14,7 @@ export interface ReviewResultProps {
 }
 
 export interface StudentReviewResultProps {
-  stage: Stage;
+  stage: Stage; // kept for historical reason
   review: ThesisReview | undefined;
 }
 
@@ -91,30 +91,18 @@ function nameForStudentStatus(status: Status) {
   return status === "PASS" ? "합격" : status === "FAIL" ? "불합격" : "대기중";
 }
 
-export function StudentReviewResult({ stage, review }: StudentReviewResultProps) {
+export function StudentReviewResult({ review }: StudentReviewResultProps) {
   if (!review) {
     return (
       <Stack>
         <Stack gap={0}>
           <TitleRow title="심사 결과" />
           <RowGroup>
-            {stage === "PRELIMINARY" && (
-              <BasicRow field="심사 결과">
-                <BasicRow.Text>
-                  <b>-</b>
-                </BasicRow.Text>
-              </BasicRow>
-            )}
-            {stage === "MAIN" && (
-              <>
-                <BasicRow field="내용 심사 결과">
-                  <BasicRow.Text>-</BasicRow.Text>
-                </BasicRow>
-                <BasicRow field="구두 심사 결과">
-                  <BasicRow.Text>-</BasicRow.Text>
-                </BasicRow>
-              </>
-            )}
+            <BasicRow field="심사 결과">
+              <BasicRow.Text>
+                <b>-</b>
+              </BasicRow.Text>
+            </BasicRow>
           </RowGroup>
         </Stack>
       </Stack>
@@ -125,27 +113,11 @@ export function StudentReviewResult({ stage, review }: StudentReviewResultProps)
       <Stack gap={0}>
         <TitleRow title="심사 결과" />
         <RowGroup>
-          {stage === "PRELIMINARY" && (
-            <BasicRow field="심사 결과">
-              <BasicRow.Text>
-                <b>{nameForStudentStatus(review.contentStatus)}</b>
-              </BasicRow.Text>
-            </BasicRow>
-          )}
-          {stage === "MAIN" && (
-            <>
-              <BasicRow field="내용 심사 결과">
-                <BasicRow.Text>
-                  <b>{nameForStudentStatus(review.contentStatus)}</b>
-                </BasicRow.Text>
-              </BasicRow>
-              <BasicRow field="구두 심사 결과">
-                <BasicRow.Text>
-                  <b>{nameForStudentStatus(review.presentationStatus)}</b>
-                </BasicRow.Text>
-              </BasicRow>
-            </>
-          )}
+          <BasicRow field="심사 결과">
+            <BasicRow.Text>
+              <b>{nameForStudentStatus(review.contentStatus)}</b>
+            </BasicRow.Text>
+          </BasicRow>
         </RowGroup>
       </Stack>
     </Stack>

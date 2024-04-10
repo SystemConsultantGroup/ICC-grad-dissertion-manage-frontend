@@ -22,25 +22,33 @@ interface Props {
   onChange?: (file: File | null) => void;
   previousFile?: ApiFile;
   defaultFile?: File;
+  required?: boolean;
   /* eslint-disable @typescript-eslint/no-explicit-any */
   form?: UseFormReturnType<any>;
   formKey?: string;
 }
 
 /**
- * 참고로, form으로 사용할 때 값이 undefined면 기존 파일 사용, null이면 기존 파일을 삭제하는 것으로 간주합니다.
- * props 구조가 form, formKey로 되어 있으니 타입을 주기가 좀 복잡하네요...
+ * previousFile이 있을 경우, `form.values[formKey]`의 값이
+ * - undefined일 경우, 기존 파일을 사용합니다. '덮어쓰기', '(기존 파일) 다운로드' 버튼이 표출됩니다.
+ * - null일 경우, 기존 파일을 삭제합니다. '삭제' 버튼은 비활성화되고, '기존 파일 사용' 버튼이 표출됩니다.
+ * - File일 경우, 기존 파일을 해당 파일로 덮어씁니다. '삭제', '기존 파일 사용' 버튼이 표출됩니다.
  */
 function FileUploadRow({
   field,
   onChange,
   previousFile,
   defaultFile,
+  required,
   form,
   formKey = "file",
   fieldSize = "md",
 }: Props) {
   const [file, setFile] = useState<File | null>(null);
+
+  const formValue = form?.values?.[formKey];
+  const usePrevious = previousFile && formValue === undefined;
+
   const clearFile = () => {
     setFile(null);
     onChange?.(null);
@@ -61,24 +69,27 @@ function FileUploadRow({
       <Group gap={16}>
         <FileInput
           style={{ width: 300 }}
-          className={previousFile ? classes.previous : undefined}
-          value={file}
+          className={usePrevious ? classes.previous : undefined}
           onChange={handleFileChange}
+          required={required}
           defaultValue={defaultFile}
-          placeholder="파일 업로드..."
+          placeholder={usePrevious ? previousFile.name : "파일 업로드..."}
           {...form?.getInputProps(formKey)}
+          value={form ? formValue || null : file}
         />
-        <Button
-          color="red"
-          variant="outline"
-          leftSection={<IconTrash size={20} />}
-          disabled={form ? form.values[formKey] === null : !file}
-          onClick={form ? () => form.setFieldValue(formKey, null) : clearFile}
-        >
-          {previousFile ? "덮어쓰기" : "삭제"}
-        </Button>
+        {(!required || usePrevious) && (
+          <Button
+            color="red"
+            variant="outline"
+            leftSection={<IconTrash size={20} />}
+            disabled={form ? formValue === null : !file}
+            onClick={form ? () => form.setFieldValue(formKey, null) : clearFile}
+          >
+            {usePrevious ? "덮어쓰기" : "삭제"}
+          </Button>
+        )}
         {previousFile &&
-          (form?.values[formKey] ? (
+          (formValue === undefined ? (
             <Button
               color="gray"
               variant="outline"

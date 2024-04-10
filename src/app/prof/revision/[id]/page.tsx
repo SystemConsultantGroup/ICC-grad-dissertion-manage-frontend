@@ -6,7 +6,7 @@ import { AuthSSR } from "@/api/AuthSSR";
 import { fetcher } from "@/api/fetcher";
 import { API_ROUTES } from "@/api/apiRoute";
 import { DetailedRevisionResponse } from "@/api/_types/reviews";
-import { withinPhase } from "@/api/_utils/withinPhase";
+import { checkPhase } from "@/api/_utils/checkPhase";
 import { PhaseReadyAlertRow } from "@/components/pages/PhaseReady";
 import { formatTime } from "@/components/common/Clock/date/format";
 import { RevisionCheckForm } from "./RevisionCheckForm";
@@ -34,7 +34,7 @@ export default async function ProfessorRevisionPage({
   };
   // const isPermanent = revision.contentStatus === "PASS" || revision.contentStatus === "FAIL";
 
-  const { within, start, end } = await withinPhase({
+  const { within, start, end } = await checkPhase({
     title: "수정 지시 사항 확인",
     token,
   });
@@ -44,9 +44,20 @@ export default async function ProfessorRevisionPage({
       <PageHeader title="수정사항 확인" />
       <ReviewCard>
         {!within && (
-          <PhaseReadyAlertRow title="논문 심사" start={formatTime(start)} end={formatTime(end)} />
+          <PhaseReadyAlertRow
+            title="수정사항 확인"
+            start={formatTime(start)}
+            end={formatTime(end)}
+          />
         )}
-        <ThesisInfo thesis={thesisInfo} revision={revision} isAdvisor />
+        <ThesisInfo
+          thesis={thesisInfo}
+          revision={{
+            revisionReport: revision.thesisFiles.find((file) => file.type === "REVISION_REPORT")
+              ?.file,
+          }}
+          isAdvisor
+        />
         {/* {!isPermanent ? <RevisionCheckForm /> : <RevisionCheckResult />} */}
         <RevisionCheckForm
           revisionId={reviewId}

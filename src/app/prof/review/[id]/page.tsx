@@ -6,7 +6,7 @@ import { API_ROUTES } from "@/api/apiRoute";
 import { ThesisInfoData } from "@/components/pages/review/ThesisInfo/ThesisInfo";
 import { fetcher } from "@/api/fetcher";
 import { AuthSSR } from "@/api/AuthSSR";
-import { withinPhase } from "@/api/_utils/withinPhase";
+import { checkPhase } from "@/api/_utils/checkPhase";
 import { formatTime } from "@/components/common/Clock/date/format";
 import { PhaseReadyAlertRow } from "@/components/pages/PhaseReady";
 import { ProfessorReviewForm } from "./ProfessorReviewForm";
@@ -37,7 +37,7 @@ export default async function ProfessorReviewPage({
     (review.contentStatus === "PASS" || review.contentStatus === "FAIL") &&
     (review.presentationStatus === "PASS" || review.presentationStatus === "FAIL");
 
-  const { within, start, end } = await withinPhase({
+  const { within, start, end } = await checkPhase({
     title: thesisInfo.stage === "PRELIMINARY" ? "예심 심사" : "본심 심사",
     token,
   });
