@@ -14,10 +14,13 @@ import {
 import useAchievements from "@/api/SWR/useAchievements";
 import { STUDENT_ACHIEVEMENT_TABLE_HEADERS } from "../_constants/table";
 
-export function formatISSN(issn: string) {
-  const firstFourDigits = issn.substring(0, 4);
-  const lastFourDigits = issn.substring(4, 8);
-  return `${firstFourDigits}-${lastFourDigits}`;
+export function formatISSN(issn?: string) {
+  if (issn) {
+    const firstFourDigits = issn.substring(0, 4);
+    const lastFourDigits = issn.substring(4, 8);
+    return `${firstFourDigits}-${lastFourDigits}`;
+  }
+  return "";
 }
 
 function StudentAchievementListSection() {

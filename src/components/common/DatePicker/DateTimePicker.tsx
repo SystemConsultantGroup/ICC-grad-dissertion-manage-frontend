@@ -7,7 +7,6 @@ import "dayjs/locale/ko";
 function DateTimePicker(props: DateTimePickerProps) {
   return (
     <MantineDateTimePicker
-      locale="ko"
       leftSection={<IconCalendar size={20} />}
       leftSectionPointerEvents="none"
       valueFormat={DATE_TIME_FORMAT_HYPHEN}
