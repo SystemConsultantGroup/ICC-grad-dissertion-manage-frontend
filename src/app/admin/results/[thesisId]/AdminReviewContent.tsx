@@ -13,6 +13,7 @@ import SectionTitle from "@/components/common/SectionTitle";
 import {
   BasicRow,
   ButtonRow,
+  CommentTypeRow,
   FileUploadRow,
   RowGroup,
   TextAreaRow,
@@ -140,6 +141,7 @@ function ModalContent({ open, setOpen, data, current }: ModalProps) {
   const [presentation, setPresentation] = useState(current.presentationStatus);
   const [comment, setComment] = useState(current.comment);
   const [reviewFile, setReviewFile] = useState<File | null>();
+  const [commentType, setCommentType] = useState<string>();
 
   const handleCommentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setComment(event.currentTarget.value);
@@ -170,10 +172,10 @@ function ModalContent({ open, setOpen, data, current }: ModalProps) {
                 ? API_ROUTES.review.revision.put(current.id)
                 : API_ROUTES.review.put(current.id),
             {
-              comment,
+              ...(commentType === "심사 의견" ? { comment } : {}),
               contentStatus: thesis,
               ...(current.isFinal ? {} : { presentationStatus: presentation }),
-              fileUUID,
+              ...(commentType === "심사 의견 파일" ? { fileUUID } : {}),
             } satisfies UpdateReviewRequestBody,
             { baseURL: process.env.NEXT_PUBLIC_REVIEW_API_ENDPOINT }
           );
@@ -236,16 +238,19 @@ function ModalContent({ open, setOpen, data, current }: ModalProps) {
         ) : null}
         {data.stage !== "REVISION" && (
           <>
+            <CommentTypeRow commentType={commentType} setCommentType={setCommentType} />
             <TextAreaRow
               field="심사 의견"
               content={current.comment}
               onChange={handleCommentChange}
+              disabled={commentType !== "심사 의견"}
             />
             <RowGroup>
               <FileUploadRow
                 field="심사 의견 파일"
                 previousFile={current.file}
                 onChange={(file) => setReviewFile(file)}
+                disabled={commentType !== "심사 의견 파일"}
               />
             </RowGroup>
           </>
