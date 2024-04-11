@@ -150,8 +150,7 @@ function ModalContent({ open, setOpen, data, current }: ModalProps) {
               comment: current.comment,
               contentStatus: thesis,
               presentationStatus: presentation,
-            } satisfies UpdateReviewRequestBody,
-            { baseURL: process.env.NEXT_PUBLIC_REVIEW_API_ENDPOINT }
+            } satisfies UpdateReviewRequestBody
           );
 
           showNotificationSuccess({
