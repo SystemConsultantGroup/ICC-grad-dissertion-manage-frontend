@@ -15,7 +15,7 @@ async function StudentAchievementPage({ params: { id } }: Props) {
     <>
       <PageHeader title="연구실적 상세보기" />
       <Section>
-        <AchievementEditSection id={id} />
+        <AchievementEditSection id={id} isAdmin={false} />
       </Section>
     </>
   );
