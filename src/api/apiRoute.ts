@@ -90,7 +90,7 @@ export const API_ROUTES = {
     },
   },
   thesis: {
-    put: (thesisId: ApiId) => `/thesis/${thesisId}`,
+    put: (thesisId: ApiId) => `/theses/${thesisId}`,
   },
   achievement: {
     get: (achievementId?: ApiId) => `/achievements/${achievementId ?? ""}`,
