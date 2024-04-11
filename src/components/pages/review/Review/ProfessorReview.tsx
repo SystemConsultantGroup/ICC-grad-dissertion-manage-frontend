@@ -1,7 +1,6 @@
 import Link from "next/link";
-import { Button, Group, Stack, Text } from "@mantine/core";
+import { Button, Stack, Text } from "@mantine/core";
 import { UseFormReturnType } from "@mantine/form";
-import { IconCheck } from "@tabler/icons-react";
 import {
   BasicRow,
   ButtonRow,
@@ -13,6 +12,7 @@ import {
 import { Status } from "@/api/_types/common";
 import { File as ApiFile } from "@/api/_types/file";
 import { Stage } from "../ThesisInfo/ThesisInfo";
+import { StatusButtons } from "./StatusButtons";
 
 export interface ProfessorReviewProps {
   stage: Stage;
@@ -40,73 +40,33 @@ export function ProfessorReview({
       <TitleRow title="심사하기" />
       <RowGroup>
         <BasicRow field={stage === "PRELIMINARY" ? "합격 여부" : "내용심사 합격 여부"}>
-          <Group>
-            <Button
-              leftSection={thesis === "PASS" && <IconCheck size={18} />}
-              variant={thesis === "PASS" ? "filled" : "outline"}
-              color="green"
-              onClick={() => form.setFieldValue("thesis", "PASS")}
-            >
-              합격
-            </Button>
-            <Button
-              leftSection={thesis === "FAIL" && <IconCheck size={18} />}
-              variant={thesis === "FAIL" ? "filled" : "outline"}
-              color="red"
-              onClick={() => form.setFieldValue("thesis", "FAIL")}
-            >
-              불합격
-            </Button>
-            <Button
-              leftSection={thesis === "PENDING" && <IconCheck size={18} />}
-              variant={thesis === "PENDING" ? "filled" : "outline"}
-              color="violet"
-              onClick={() => form.setFieldValue("thesis", "PENDING")}
-            >
-              보류
-            </Button>
+          <StatusButtons
+            options={{ pending: true }}
+            value={thesis}
+            setValue={(newValue) => form.setFieldValue("thesis", newValue)}
+          >
             {form?.errors?.thesis ? (
               <Text c="red" size="sm" ml={24}>
                 {form.errors.thesis}
               </Text>
             ) : null}
-          </Group>
+          </StatusButtons>
         </BasicRow>
       </RowGroup>
       {stage === "MAIN" && (
         <RowGroup>
           <BasicRow field="구두심사 합격 여부">
-            <Group>
-              <Button
-                leftSection={presentation === "PASS" && <IconCheck size={18} />}
-                variant={presentation === "PASS" ? "filled" : "outline"}
-                color="green"
-                onClick={() => form.setFieldValue("presentation", "PASS")}
-              >
-                합격
-              </Button>
-              <Button
-                leftSection={presentation === "FAIL" && <IconCheck size={18} />}
-                variant={presentation === "FAIL" ? "filled" : "outline"}
-                color="red"
-                onClick={() => form.setFieldValue("presentation", "FAIL")}
-              >
-                불합격
-              </Button>
-              <Button
-                leftSection={presentation === "PENDING" && <IconCheck size={18} />}
-                variant={presentation === "PENDING" ? "filled" : "outline"}
-                color="violet"
-                onClick={() => form.setFieldValue("presentation", "PENDING")}
-              >
-                보류
-              </Button>
+            <StatusButtons
+              options={{ pending: true }}
+              value={presentation ?? "UNEXAMINED"}
+              setValue={(newValue) => form.setFieldValue("presentation", newValue)}
+            >
               {form?.errors?.presentation ? (
                 <Text c="red" size="sm" ml={24}>
                   {form.errors.presentation}
                 </Text>
               ) : null}
-            </Group>
+            </StatusButtons>
           </BasicRow>
         </RowGroup>
       )}
