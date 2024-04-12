@@ -17,30 +17,18 @@ export default async function StudentResultPage() {
     "1": MyReviewResponse;
   };
 
-  const thesisInfo: ThesisInfoData =
-    user.currentPhase === "PRELIMINARY"
-      ? {
-          title: pre.title,
-          stage: pre.stage,
-          studentInfo: {
-            name: pre.student,
-            department: { name: pre.department },
-          },
-          abstract: pre.abstract,
-          thesisFile: pre.thesisFiles.find((file) => file.type === "THESIS")?.file,
-          presentationFile: pre.thesisFiles.find((file) => file.type === "PRESENTATION")?.file,
-        }
-      : {
-          title: main.title,
-          stage: main.stage,
-          studentInfo: {
-            name: main.student,
-            department: { name: main.department },
-          },
-          abstract: main.abstract,
-          thesisFile: main.thesisFiles.find((file) => file.type === "THESIS")?.file,
-          presentationFile: main.thesisFiles.find((file) => file.type === "PRESENTATION")?.file,
-        };
+  const thesisRes: MyReviewResponse = user.currentPhase === "PRELIMINARY" ? pre : main;
+  const thesisInfo: ThesisInfoData = {
+    title: thesisRes.title,
+    stage: thesisRes.stage,
+    studentInfo: {
+      name: thesisRes.student,
+      department: { name: thesisRes.department },
+    },
+    abstract: thesisRes.abstract,
+    thesisFile: thesisRes.thesisFiles.find((file) => file.type === "THESIS")?.file,
+    presentationFile: thesisRes.thesisFiles.find((file) => file.type === "PRESENTATION")?.file,
+  };
 
   return (
     <>
@@ -48,21 +36,13 @@ export default async function StudentResultPage() {
       <ReviewCard>
         <ThesisInfo thesis={thesisInfo} />
         <StudentReviewResult
-          stage={user.currentPhase === "PRELIMINARY" ? pre.stage : main.stage}
-          review={
-            user.currentPhase === "PRELIMINARY"
-              ? pre.reviews.find((review) => review.isFinal)
-              : main.reviews.find((review) => review.isFinal)
-          }
+          stage={thesisRes.stage}
+          review={thesisRes.reviews.find((review) => review.isFinal)}
         />
         <ReviewList
           title="심사 의견"
-          stage={user.currentPhase === "PRELIMINARY" ? pre.stage : main.stage}
-          reviews={
-            user.currentPhase === "PRELIMINARY"
-              ? pre.reviews.filter((review) => !review.isFinal)
-              : main.reviews.filter((review) => !review.isFinal)
-          }
+          stage={thesisRes.stage}
+          reviews={thesisRes.reviews.filter((review) => !review.isFinal)}
         />
       </ReviewCard>
     </>
