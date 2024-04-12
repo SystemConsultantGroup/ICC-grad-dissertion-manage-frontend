@@ -90,6 +90,7 @@ export const API_ROUTES = {
     },
   },
   thesis: {
+    // 백엔드 api 경로 오타로 theses로 설정
     put: (thesisId: ApiId) => `/theses/${thesisId}`,
   },
   achievement: {
