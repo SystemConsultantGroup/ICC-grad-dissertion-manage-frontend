@@ -4,6 +4,7 @@ import { UseFormReturnType } from "@mantine/form";
 import {
   BasicRow,
   ButtonRow,
+  CommentTypeRow,
   FileUploadRow,
   RowGroup,
   TextAreaRow,
@@ -11,6 +12,7 @@ import {
 } from "@/components/common/rows";
 import { Status } from "@/api/_types/common";
 import { File as ApiFile } from "@/api/_types/file";
+import { Dispatch, SetStateAction } from "react";
 import { Stage } from "../ThesisInfo/ThesisInfo";
 import { StatusButtons } from "./StatusButtons";
 
@@ -24,6 +26,8 @@ export interface ProfessorReviewProps {
   }>;
   previousCommentFile: ApiFile | undefined;
   currentState: null | "pending" | "submitted";
+  commentType?: string;
+  setCommentType: Dispatch<SetStateAction<string | undefined>>;
 }
 
 export function ProfessorReview({
@@ -31,6 +35,8 @@ export function ProfessorReview({
   form,
   previousCommentFile,
   currentState,
+  commentType,
+  setCommentType,
 }: ProfessorReviewProps) {
   const { thesis, presentation } = form.values;
   const hasPending = thesis === "PENDING" || presentation === "PENDING";
@@ -70,13 +76,20 @@ export function ProfessorReview({
           </BasicRow>
         </RowGroup>
       )}
-      <TextAreaRow field="심사 의견" form={form} formKey="comment" />
+      <CommentTypeRow commentType={commentType} setCommentType={setCommentType} />
+      <TextAreaRow
+        field="심사 의견"
+        form={form}
+        formKey="comment"
+        disabled={commentType !== "심사 의견"}
+      />
       <RowGroup>
         <FileUploadRow
           field="심사 의견 파일"
           form={form}
           previousFile={previousCommentFile}
           formKey="commentFile"
+          disabled={commentType !== "심사 의견 파일"}
         />
       </RowGroup>
       <RowGroup withBorderBottom={false}>

@@ -61,6 +61,7 @@ export function ProfessorReviewForm({
   const { values } = form;
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [currentState, setCurrentState] = useState<null | "pending" | "submitted">(null);
+  const [commentType, setCommentType] = useState<string>();
 
   const handleSubmit = transactionTask(async (task, input: FormInput) => {
     setCurrentState("pending");
@@ -74,12 +75,16 @@ export function ProfessorReviewForm({
       fileUUID = previous.reviewFile?.uuid ?? undefined;
     }
 
-    await ClientAxios.put(API_ROUTES.review.put(reviewId), {
-      contentStatus: input.thesis,
-      presentationStatus: input.presentation,
-      comment: input.comment,
-      fileUUID,
-    } satisfies UpdateReviewRequestBody);
+    await ClientAxios.put(
+      API_ROUTES.review.put(reviewId),
+      {
+        contentStatus: input.thesis,
+        presentationStatus: input.presentation,
+        ...(commentType === "심사 의견" ? { comment: input.comment } : {}),
+        ...(commentType === "심사 의견 파일" ? { fileUUID } : {}),
+      } satisfies UpdateReviewRequestBody,
+      { baseURL: process.env.NEXT_PUBLIC_REVIEW_API_ENDPOINT }
+    );
 
     if (previous.reviewFile && input.commentFile !== undefined) {
       await ClientAxios.delete(API_ROUTES.file.delete(previous.reviewFile.uuid));
@@ -121,6 +126,8 @@ export function ProfessorReviewForm({
         form={form}
         previousCommentFile={previous?.reviewFile ?? undefined}
         currentState={currentState}
+        commentType={commentType}
+        setCommentType={setCommentType}
       />
       <ReviewConfirmModal
         thesis={thesisInfo}
