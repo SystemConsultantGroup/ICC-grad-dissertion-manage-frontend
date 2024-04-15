@@ -26,6 +26,7 @@ interface Props {
   /* eslint-disable @typescript-eslint/no-explicit-any */
   form?: UseFormReturnType<any>;
   formKey?: string;
+  disabled?: boolean;
 }
 
 /**
@@ -43,6 +44,7 @@ function FileUploadRow({
   form,
   formKey = "file",
   fieldSize = "md",
+  disabled,
 }: Props) {
   const [file, setFile] = useState<File | null>(null);
 
@@ -76,6 +78,7 @@ function FileUploadRow({
           placeholder={usePrevious ? previousFile.name : "파일 업로드..."}
           {...form?.getInputProps(formKey)}
           value={form ? formValue || null : file}
+          disabled={disabled}
         />
         {(!required || usePrevious) && (
           <Button
