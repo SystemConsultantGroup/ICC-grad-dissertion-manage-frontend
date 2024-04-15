@@ -28,8 +28,8 @@ function AchievementEditSection({ id, isAdmin }: Props) {
   const transformedAchievement = data && {
     ...data,
     publicationDate: new Date(data.publicationDate),
-    ISSN1: data.ISSN?.slice(0, 4),
-    ISSN2: data.ISSN?.slice(-4),
+    ISSN1: data.ISSN ? data.ISSN.slice(0, 4) : "",
+    ISSN2: data.ISSN ? data.ISSN.slice(-4) : "",
   };
 
   const form = useForm<AchievementFormInput>({
@@ -49,8 +49,8 @@ function AchievementEditSection({ id, isAdmin }: Props) {
       form.setValues({
         ...data,
         publicationDate: new Date(data.publicationDate),
-        ISSN1: data.ISSN?.slice(0, 4),
-        ISSN2: data.ISSN?.slice(-4),
+        ISSN1: data.ISSN ? data.ISSN.slice(0, 4) : "",
+        ISSN2: data.ISSN ? data.ISSN.slice(-4) : "",
       });
     }
   }, [data]);
@@ -69,7 +69,7 @@ function AchievementEditSection({ id, isAdmin }: Props) {
   return (
     <>
       <TitleRow title="연구실적 상세보기" />
-      <AchievementForm form={form} handleSubmit={handleSubmit} isEdit isAdmin />
+      <AchievementForm form={form} handleSubmit={handleSubmit} isEdit isAdmin={isAdmin} />
     </>
   );
 }

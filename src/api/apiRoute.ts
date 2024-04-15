@@ -56,6 +56,7 @@ export const API_ROUTES = {
       `/students/${studentId}/headReviewer/${reviewerId}`, // PUT: 학생 심사위원장 배정
     deleteReviewer: (studentId: ApiId, reviewerId: ApiId) =>
       `/students/${studentId}/reviewers/${reviewerId}`, // PUT: 학생 심사위원 배정 취소
+    delete: () => "/students", // DELETE: 학생 삭제
   },
   review: {
     // 학생 본인의 논문 조회
@@ -90,7 +91,8 @@ export const API_ROUTES = {
     },
   },
   thesis: {
-    put: (thesisId: ApiId) => `/thesis/${thesisId}`,
+    // 백엔드 api 경로 오타로 theses로 설정
+    put: (thesisId: ApiId) => `/theses/${thesisId}`,
   },
   achievement: {
     get: (achievementId?: ApiId) => `/achievements/${achievementId ?? ""}`,

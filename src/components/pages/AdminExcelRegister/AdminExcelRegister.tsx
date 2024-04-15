@@ -63,13 +63,12 @@ function AdminExcelRegister({ isProf = false }: Props) {
             data: formData,
           });
         }
+        showNotificationSuccess({ message: "일괄 등록이 완료되었습니다." });
       } else {
         showNotificationError({ message: "업로드할 파일을 선택해주세요." });
       }
     } catch (error) {
-      console.error(error);
-    } finally {
-      showNotificationSuccess({ message: "일괄 등록이 완료되었습니다." });
+      // clientAxios에서 오류 출력
     }
   };
   return (

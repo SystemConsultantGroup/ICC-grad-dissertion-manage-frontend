@@ -9,3 +9,4 @@ export { default as HeaderRow } from "@/components/common/rows/HeaderRow/HeaderR
 export { default as FileUploadRow } from "@/components/common/rows/FileUploadRow/FileUploadRow";
 export { default as BasicRow } from "@/components/common/rows/BasicRow/BasicRow";
 export { NoticeRow } from "@/components/common/rows/NoticeRow/NoticeRow";
+export { default as CommentTypeRow } from "@/components/common/rows/CommentTypeRow/CommentTypeRow";
