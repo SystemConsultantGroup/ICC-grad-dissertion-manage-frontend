@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Stack, Button } from "@mantine/core";
 import { ClientAxios } from "@/api/ClientAxios";
 import { useRouter } from "next/navigation";
@@ -25,8 +25,9 @@ interface Props {
 
 function AdminStudentForm({ studentId }: Props) {
   const router = useRouter();
-  const { login } = useAuth();
+  const { login, isLoading, user } = useAuth();
   const [isPwEditing, setIsPwEditing] = useState<boolean>(false);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [opened, { open, close }] = useDisclosure();
   const {
     headReviewer,
@@ -44,8 +45,6 @@ function AdminStudentForm({ studentId }: Props) {
         loginId: "",
         password: studentId ? undefined : "",
         name: "",
-        email: "",
-        phone: "",
         deptId: "",
       },
 
@@ -74,7 +73,6 @@ function AdminStudentForm({ studentId }: Props) {
 
       // 등록시에만 validate 적용
       stage: (value) => (studentId ? undefined : value ? null : "예심/본심 단계를 선택해주세요."),
-      thesisTitle: (value) => (studentId ? undefined : value ? null : "논문 제목을 입력해주세요."),
     },
   });
 
@@ -83,12 +81,11 @@ function AdminStudentForm({ studentId }: Props) {
       const {
         data: { accessToken },
       } = await ClientAxios.get<CommonApiResponse & { accessToken: string }>(`/auth/${studentId}`);
+      setIsAdmin(false);
       login(accessToken);
+      router.push("/");
     } catch (err) {
       console.error(err);
-    } finally {
-      router.push("/");
-      router.refresh();
     }
   };
 
@@ -110,6 +107,14 @@ function AdminStudentForm({ studentId }: Props) {
         const basicInfo = studentId
           ? {
               ...(isPwEditing ? { password: form.values.basicInfo.password } : {}),
+              loginId:
+                previous.loginId === form.values.basicInfo.loginId
+                  ? undefined
+                  : form.values.basicInfo.loginId,
+              name:
+                previous.name === form.values.basicInfo.name
+                  ? undefined
+                  : form.values.basicInfo.name,
               deptId:
                 previous.deptId === form.values.basicInfo.deptId
                   ? undefined
@@ -221,9 +226,17 @@ function AdminStudentForm({ studentId }: Props) {
 
   const checkReviewersLength = (list: SelectedProfessor[]) => list.length >= 1 && list.length <= 2;
 
+  useEffect(() => {
+    if (!isLoading) {
+      setIsAdmin(user?.type === "ADMIN");
+    }
+  }, [isLoading]);
+
   return (
     <>
-      {studentId && <MainRegisterModal studentId={studentId} opened={opened} close={close} />}
+      {studentId && (
+        <MainRegisterModal studentId={studentId} opened={opened} close={close} token={isAdmin} />
+      )}
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack gap="xl">
           {studentId && (
@@ -246,6 +259,7 @@ function AdminStudentForm({ studentId }: Props) {
             isPwEditing={isPwEditing}
             handleIsPwEditing={setIsPwEditing}
             open={open}
+            token={isAdmin}
           />
           <AssignReviewerSection
             studentId={studentId}
@@ -255,9 +269,10 @@ function AdminStudentForm({ studentId }: Props) {
             onChangeReviewerAdd={handleReviewerAdd}
             onChangeReviewerCancle={handleReviewerCancel}
             onChangeReviewersSet={handleReviewersSet}
+            token={isAdmin}
           />
           {studentId ? (
-            <ThesisInfoSection studentId={studentId} />
+            <ThesisInfoSection studentId={studentId} token={isAdmin} />
           ) : (
             <ThesisTitleSection form={form} />
           )}

@@ -10,23 +10,36 @@ import { objectToQueryString } from "@/api/_utils/objectToUrl";
 import { API_ROUTES } from "@/api/apiRoute";
 import { DATE_TIME_FORMAT_HYPHEN } from "@/constants/date";
 import { PAGE_SIZES } from "@/constants/pageSize";
-import { useDebouncedState } from "@mantine/hooks";
+import { useDebouncedState, useDisclosure } from "@mantine/hooks";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
-import { ActionIcon, Button, Center, Group, Popover, Skeleton, Stack } from "@mantine/core";
+import {
+  ActionIcon,
+  Button,
+  Center,
+  Group,
+  Modal,
+  Popover,
+  Skeleton,
+  Stack,
+  Text,
+} from "@mantine/core";
 import { SectionHeader } from "@/components/common/SectionHeader";
-import { IconDownload, IconPlus } from "@tabler/icons-react";
+import { IconAlertTriangle, IconDownload, IconPlus, IconX } from "@tabler/icons-react";
 import Link from "next/link";
 import { Table } from "@/components/common/Table";
 import { DepartmentSelect } from "@/components/common/selects/DepartmentSelect";
 import Pagination from "@/components/common/Pagination";
+import { ClientAxios } from "@/api/ClientAxios";
+import { showNotificationSuccess } from "@/components/common/Notifications";
 import { PROF_TABLE_HEADERS } from "../../_constants/table";
 import { REFRESH_DEFAULT_PAGE_NUMBER } from "../../_constants/page";
 import { TChangeQueryArg } from "../../_types/common";
 
 function ProfessorListSection() {
   const { push } = useRouter();
+  const [opened, { open, close }] = useDisclosure(false);
   const [pageSize, setPageSize] = useState<string | null>(String(PAGE_SIZES[0]));
   const [pageNumber, setPageNumber] = useState(1);
   const pageSizeNumber = Number(pageSize);
@@ -83,8 +96,35 @@ function ProfessorListSection() {
     setPageNumber(REFRESH_DEFAULT_PAGE_NUMBER);
   }, [pageSize]);
 
+  const handleDelete = async () => {
+    try {
+      await ClientAxios.delete(API_ROUTES.professor.delete());
+      showNotificationSuccess({ message: "교수 일괄 삭제 완료" });
+      close();
+    } catch (error) {
+      /* empty */
+    }
+  };
+
   return (
     <Stack>
+      <Modal opened={opened} onClose={close} withCloseButton={false} centered radius="lg">
+        <Stack gap={36} align="center" p="lg">
+          <IconAlertTriangle color="red" />
+          <Group align="center" justify="center">
+            <Text fw={600}>주의! 전체 교수가 삭제됩니다.</Text>
+            <Text fw={600}>교수를 일괄 삭제하시겠습니까?</Text>
+          </Group>
+          <Group>
+            <Button key="cancel" variant="outline" onClick={close}>
+              취소
+            </Button>
+            <Button key="delete" color="red" onClick={handleDelete}>
+              전체 삭제
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
       <SectionHeader
         withPageSizeSelector
         pageSize={pageSize}
@@ -96,6 +136,9 @@ function ProfessorListSection() {
       >
         <SectionHeader.Buttons>
           <Group>
+            <Button size="xs" leftSection={<IconX />} bg="red" onClick={open}>
+              교수 삭제
+            </Button>
             <Button size="xs" leftSection={<IconPlus />} component={Link} href="prof_register">
               교수 추가
             </Button>

@@ -10,10 +10,19 @@ import { API_ROUTES } from "@/api/apiRoute";
 import { ApiDownloadButton } from "@/components/common/Buttons";
 import { showNotificationSuccess } from "@/components/common/Notifications";
 import SectionTitle from "@/components/common/SectionTitle";
-import { BasicRow, ButtonRow, RowGroup, TitleRow } from "@/components/common/rows";
+import {
+  BasicRow,
+  ButtonRow,
+  CommentTypeRow,
+  FileUploadRow,
+  RowGroup,
+  TextAreaRow,
+  TitleRow,
+} from "@/components/common/rows";
 import { AdminReviewList } from "@/components/pages/review/Review/ReviewList";
 import { StatusButtons } from "@/components/pages/review/Review/StatusButtons";
 import { Badge, Button, Modal, Space, Stack } from "@mantine/core";
+import { uploadFile } from "@/api/_utils/uploadFile";
 
 export function AdminReviewListContent({ data }: { data: AdminReviewResponse }) {
   const [open, setOpen] = useState<boolean>(false);
@@ -34,7 +43,7 @@ export function AdminReviewListContent({ data }: { data: AdminReviewResponse }) 
         opened={!!open}
         onClose={() => setOpen(false)}
         centered
-        size="lg"
+        size="xl"
         padding="lg"
         radius="lg"
         withCloseButton={false}
@@ -108,7 +117,7 @@ export function ReviewReportAdminEditable({
         opened={!!open}
         onClose={() => setOpen(false)}
         centered
-        size="lg"
+        size="xl"
         padding="lg"
         radius="lg"
         withCloseButton={false}
@@ -130,6 +139,13 @@ function ModalContent({ open, setOpen, data, current }: ModalProps) {
   const [loading, setLoading] = useState(false);
   const [thesis, setThesis] = useState(current.contentStatus);
   const [presentation, setPresentation] = useState(current.presentationStatus);
+  const [comment, setComment] = useState(current.comment);
+  const [reviewFile, setReviewFile] = useState<File | null>();
+  const [commentType, setCommentType] = useState<string>();
+
+  const handleCommentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setComment(event.currentTarget.value);
+  };
 
   const router = useRouter();
 
@@ -142,15 +158,26 @@ function ModalContent({ open, setOpen, data, current }: ModalProps) {
           setLoading(true);
           task.onComplete(() => setLoading(false));
 
+          let fileUUID;
+          if (reviewFile) {
+            fileUUID = (await uploadFile(reviewFile)).uuid;
+          } else if (current.file) {
+            fileUUID = current.file.uuid ?? undefined;
+          }
+
           await ClientAxios.put(
             current.isFinal
               ? API_ROUTES.review.final.put(current.id)
-              : API_ROUTES.review.put(current.id),
+              : data.stage === "REVISION"
+                ? API_ROUTES.review.revision.put(current.id)
+                : API_ROUTES.review.put(current.id),
             {
-              comment: current.comment,
+              ...(commentType === "심사 의견" ? { comment } : {}),
               contentStatus: thesis,
-              presentationStatus: presentation,
-            } satisfies UpdateReviewRequestBody
+              ...(current.isFinal ? {} : { presentationStatus: presentation }),
+              ...(commentType === "심사 의견 파일" ? { fileUUID } : {}),
+            } satisfies UpdateReviewRequestBody,
+            { baseURL: process.env.NEXT_PUBLIC_REVIEW_API_ENDPOINT }
           );
 
           showNotificationSuccess({
@@ -183,21 +210,21 @@ function ModalContent({ open, setOpen, data, current }: ModalProps) {
             <BasicRow.Text>{current.reviewer.name}</BasicRow.Text>
           </BasicRow>
         </RowGroup>
-
-        {data.stage === "REVISION" ? (
-          <BasicRow field="수정지시사항 확인 여부">
-            <StatusButtons options={{}} value={thesis} setValue={setThesis} />
-          </BasicRow>
-        ) : (
-          <BasicRow field="내용심사 합격 여부">
-            <StatusButtons
-              options={{ pending: true, unexamined: true }}
-              value={thesis}
-              setValue={setThesis}
-            />
-          </BasicRow>
-        )}
-
+        <RowGroup>
+          {data.stage === "REVISION" ? (
+            <BasicRow field="수정지시사항 확인 여부">
+              <StatusButtons options={{}} value={thesis} setValue={setThesis} />
+            </BasicRow>
+          ) : (
+            <BasicRow field="내용심사 합격 여부">
+              <StatusButtons
+                options={{ pending: true, unexamined: true }}
+                value={thesis}
+                setValue={setThesis}
+              />
+            </BasicRow>
+          )}
+        </RowGroup>
         {!current.isFinal && data.stage === "MAIN" ? (
           <RowGroup>
             <BasicRow field="구두심사 합격 여부">
@@ -209,7 +236,25 @@ function ModalContent({ open, setOpen, data, current }: ModalProps) {
             </BasicRow>
           </RowGroup>
         ) : null}
-
+        {data.stage !== "REVISION" && (
+          <>
+            <CommentTypeRow commentType={commentType} setCommentType={setCommentType} />
+            <TextAreaRow
+              field="심사 의견"
+              content={current.comment}
+              onChange={handleCommentChange}
+              disabled={commentType !== "심사 의견"}
+            />
+            <RowGroup>
+              <FileUploadRow
+                field="심사 의견 파일"
+                previousFile={current.file}
+                onChange={(file) => setReviewFile(file)}
+                disabled={commentType !== "심사 의견 파일"}
+              />
+            </RowGroup>
+          </>
+        )}
         <Space h="42px" />
 
         <RowGroup withBorderBottom={false}>
