@@ -17,7 +17,6 @@ export interface AdminStudentFormInputs {
 
 export interface SelectedProfessor {
   profId: string | null;
-  deptId: string | null;
 }
 
 export interface Reviewers {

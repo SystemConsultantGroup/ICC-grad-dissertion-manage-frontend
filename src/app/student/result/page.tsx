@@ -7,50 +7,44 @@ import { fetcher } from "@/api/fetcher";
 import { API_ROUTES } from "@/api/apiRoute";
 import { MyReviewResponse } from "@/api/_types/reviews";
 import { ThesisInfoData } from "@/components/pages/review/ThesisInfo/ThesisInfo";
-import { checkPhase } from "@/api/_utils/checkPhase";
-import { PhaseReady } from "@/components/pages/PhaseReady";
-import { formatTime } from "@/components/common/Clock/date/format";
+import { UserResponse } from "@/api/_types/user";
 
 export default async function StudentResultPage() {
   const { token } = await AuthSSR({ userType: "STUDENT" });
-  const { "0": result } = (await fetcher({ url: API_ROUTES.review.getMe(), token })) as {
+  const user = (await fetcher({ url: API_ROUTES.user.get(), token })) as UserResponse;
+  const { "0": pre, "1": main } = (await fetcher({ url: API_ROUTES.review.getMe(), token })) as {
     "0": MyReviewResponse;
+    "1": MyReviewResponse;
   };
 
+  const thesisRes: MyReviewResponse = user.currentPhase === "PRELIMINARY" ? pre : main;
   const thesisInfo: ThesisInfoData = {
-    title: result.title,
-    stage: result.stage,
+    title: thesisRes.title,
+    stage: thesisRes.stage,
     studentInfo: {
-      name: result.student,
-      department: { name: result.department },
+      name: thesisRes.student,
+      department: { name: thesisRes.department },
     },
-    abstract: result.abstract,
-    thesisFile: result.thesisFiles.find((file) => file.type === "THESIS")?.file,
-    presentationFile: result.thesisFiles.find((file) => file.type === "PRESENTATION")?.file,
+    abstract: thesisRes.abstract,
+    thesisFile: thesisRes.thesisFiles.find((file) => file.type === "THESIS")?.file,
+    presentationFile: thesisRes.thesisFiles.find((file) => file.type === "PRESENTATION")?.file,
   };
 
-  const { end, after } = await checkPhase({
-    title: thesisInfo.stage === "MAIN" ? "본심 최종 심사" : "예심 최종 심사",
-    token,
-  });
-
-  return after ? (
+  return (
     <>
       <PageHeader title="심사 결과" />
       <ReviewCard>
         <ThesisInfo thesis={thesisInfo} />
         <StudentReviewResult
-          stage={result.stage}
-          review={result.reviews.find((review) => review.isFinal)}
+          stage={thesisRes.stage}
+          review={thesisRes.reviews.find((review) => review.isFinal)}
         />
         <ReviewList
           title="심사 의견"
-          stage={result.stage}
-          reviews={result.reviews.filter((review) => !review.isFinal)}
+          stage={thesisRes.stage}
+          reviews={thesisRes.reviews.filter((review) => !review.isFinal)}
         />
       </ReviewCard>
     </>
-  ) : (
-    <PhaseReady title="논문 심사" start="" end={formatTime(end)} after />
   );
 }

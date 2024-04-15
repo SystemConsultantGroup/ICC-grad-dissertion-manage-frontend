@@ -16,9 +16,10 @@ interface Props {
   isPwEditing: boolean;
   handleIsPwEditing: Dispatch<SetStateAction<boolean>>;
   open: () => void;
+  token?: boolean;
 }
 
-function BasicInfoSection({ form, studentId, isPwEditing, handleIsPwEditing, open }: Props) {
+function BasicInfoSection({ form, studentId, isPwEditing, handleIsPwEditing, open, token }: Props) {
   const [phase, setPhase] = useState<Phase>();
   const [defaultDepartmentId, setDefaultDepartmentId] = useState<string | null>(null);
 
@@ -26,7 +27,7 @@ function BasicInfoSection({ form, studentId, isPwEditing, handleIsPwEditing, ope
     // 학생 기본 정보 가져오기
     const fetchStudentDetails = async () => {
       try {
-        if (studentId) {
+        if (studentId && token) {
           // 기본 정보 조회
           const response = await ClientAxios.get(API_ROUTES.student.get(studentId));
           const studentDetails = response.data;
@@ -51,7 +52,7 @@ function BasicInfoSection({ form, studentId, isPwEditing, handleIsPwEditing, ope
       }
     };
     fetchStudentDetails();
-  }, [form, studentId]);
+  }, [studentId, token]);
 
   return (
     <Stack gap={0}>
@@ -112,15 +113,17 @@ function BasicInfoSection({ form, studentId, isPwEditing, handleIsPwEditing, ope
         </RowGroup>
         <RowGroup>
           <BasicRow field="학과">
-            <DepartmentSelect
-              styles={{
-                wrapper: {
-                  width: 300,
-                },
-              }}
-              {...form.getInputProps("basicInfo.deptId")}
-              defaultValue={defaultDepartmentId}
-            />
+            {token && (
+              <DepartmentSelect
+                styles={{
+                  wrapper: {
+                    width: 300,
+                  },
+                }}
+                {...form.getInputProps("basicInfo.deptId")}
+                defaultValue={defaultDepartmentId}
+              />
+            )}
           </BasicRow>
         </RowGroup>
         <RowGroup>
