@@ -44,7 +44,10 @@ export default async function ProfessorReviewPage({
 
   return (
     <>
-      <PageHeader title="논문 심사" />
+      <PageHeader
+        title="논문 심사"
+        description="서명 파일 미 업로드 시 서명이 없는 보고서가 생성됩니다."
+      />
       <ReviewCard>
         {!within && (
           <PhaseReadyAlertRow title="논문 심사" start={formatTime(start)} end={formatTime(end)} />
