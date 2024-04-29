@@ -114,7 +114,7 @@ function LoginForm() {
               </Group>
               <Text fw={500} ml={74}>
                 {type === "student" && "아이디는 학번, 비밀번호는 생년월일입니다."}
-                {type === "professor" && "아이디와 비밀번호는 내선번호입니다."}
+                {type === "professor" && "아이디는 킹고아이디, 비밀번호는 생년월일입니다."}
                 {type === "admin" && "관리자 계정은 행정실에 문의해주세요."}
               </Text>
             </Stack>

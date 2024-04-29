@@ -11,6 +11,7 @@ import {
 } from "@/components/common/rows";
 import { Status } from "@/api/_types/common";
 import { File as ApiFile } from "@/api/_types/file";
+import { Dispatch, SetStateAction } from "react";
 import { StatusButtons } from "./StatusButtons";
 
 export interface FinalReviewProps {
@@ -21,9 +22,17 @@ export interface FinalReviewProps {
   }>;
   previousCommentFile: ApiFile | undefined;
   currentState: null | "pending" | "submitted";
+  commentType?: string;
+  setCommentType: Dispatch<SetStateAction<string | undefined>>;
 }
 
-export function FinalReview({ form, previousCommentFile, currentState }: FinalReviewProps) {
+export function FinalReview({
+  form,
+  previousCommentFile,
+  currentState,
+  commentType,
+  setCommentType,
+}: FinalReviewProps) {
   const { status } = form.values;
   const hasPending = status === "PENDING";
 
@@ -45,13 +54,19 @@ export function FinalReview({ form, previousCommentFile, currentState }: FinalRe
           </StatusButtons>
         </BasicRow>
       </RowGroup>
-      <TextAreaRow field="심사 의견" form={form} formKey="comment" />
+      <TextAreaRow
+        field="심사 의견"
+        form={form}
+        formKey="comment"
+        disabled={commentType !== "심사 의견"}
+      />
       <RowGroup>
         <FileUploadRow
           field="심사 의견 파일"
           form={form}
           previousFile={previousCommentFile}
           formKey="commentFile"
+          disabled={commentType !== "심사 의견 파일"}
         />
       </RowGroup>
       <RowGroup withBorderBottom={false}>

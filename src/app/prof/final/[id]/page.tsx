@@ -44,7 +44,10 @@ export default async function ProfessorFinalPage({
 
   return (
     <>
-      <PageHeader title="최종 판정" />
+      <PageHeader
+        title="최종 판정"
+        description="서명 파일 미 업로드 시 서명이 없는 보고서가 생성됩니다."
+      />
       <ReviewCard>
         {!within && (
           <PhaseReadyAlertRow title="최종 판정" start={formatTime(start)} end={formatTime(end)} />
