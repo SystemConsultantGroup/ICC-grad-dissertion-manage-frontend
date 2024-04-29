@@ -1,7 +1,7 @@
 "use client";
 
 import { BasicRow, FileUploadRow, RowGroup, TextAreaRow, TitleRow } from "@/components/common/rows";
-import { Button, Stack, TextInput } from "@mantine/core";
+import { Badge, Button, Stack, TextInput } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { useAuth } from "@/components/common/AuthProvider";
 import { uploadFile } from "@/api/_utils/uploadFile";
@@ -91,7 +91,20 @@ function PaperSubmissionForm() {
   return (
     <form onSubmit={onSubmit(handleSubmit)}>
       <Stack gap={0}>
-        <TitleRow title="논문 투고" />
+        <TitleRow
+          title="논문 투고"
+          badge={
+            <>
+              {user?.currentPhase === "MAIN" || user?.currentPhase === "REVISION" ? (
+                <Badge>본심</Badge>
+              ) : user?.currentPhase === "PRELIMINARY" ? (
+                <Badge>예심</Badge>
+              ) : (
+                <></>
+              )}
+            </>
+          }
+        />
         <RowGroup>
           <BasicRow field="저자">
             <BasicRow.Text>{user?.name}</BasicRow.Text>

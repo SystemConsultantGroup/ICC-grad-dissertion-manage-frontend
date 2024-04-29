@@ -6,18 +6,22 @@ import { API_ROUTES } from "@/api/apiRoute";
 import { Stack, Button } from "@mantine/core";
 import { RowGroup, ButtonRow } from "@/components/common/rows";
 import { useEffect } from "react";
+import { showNotificationSuccess } from "@/components/common/Notifications/showNotificationSuccess";
+import { useRouter } from "next/navigation";
 import ThesisTitleSection from "./ThesisTitleSection";
-import AssignReviewerSection from "./AssignReviewerSection";
 import useReviewersAssign from "../_hooks/useReviewersAssign";
 import { AdminStudentFormInputs, SelectedProfessor } from "../_types/AdminStudentForm";
+import AssignReviewerSection from "./AssignReviewerSection";
 
 interface Props {
   studentId: string | number | undefined;
   opened: boolean;
   close: () => void;
+  token?: boolean;
 }
-function MainRegisterModal({ studentId, opened, close }: Props) {
+function MainRegisterModal({ studentId, opened, close, token }: Props) {
   const sysMainForm = useForm<AdminStudentFormInputs>({});
+  const router = useRouter();
   /** 본심 심사위원장 / 심사위원 설정*/
   const {
     headReviewer,
@@ -40,6 +44,10 @@ function MainRegisterModal({ studentId, opened, close }: Props) {
           committeeIds: committees.map((committee: SelectedProfessor) => Number(committee.profId)),
         };
         await ClientAxios.put(API_ROUTES.student.putSystem(Number(studentId)), body);
+        showNotificationSuccess({ message: "본심 전환이 완료되었습니다." });
+        close();
+        router.push(`/admin/students/${studentId}`);
+        router.refresh();
       }
     } catch (error) {
       console.error(error);
@@ -47,7 +55,7 @@ function MainRegisterModal({ studentId, opened, close }: Props) {
   };
 
   useEffect(() => {
-    if (studentId) {
+    if (studentId && token) {
       const fetchReviewer = async () => {
         const response = await ClientAxios.get(API_ROUTES.student.getReviewer(Number(studentId)));
         const reviewerDetails = response.data;
@@ -59,7 +67,7 @@ function MainRegisterModal({ studentId, opened, close }: Props) {
       };
       fetchReviewer();
     }
-  });
+  }, [studentId, token]);
 
   return (
     <Modal
@@ -78,6 +86,8 @@ function MainRegisterModal({ studentId, opened, close }: Props) {
             committees={committees}
             onChangeReviewerAdd={handleReviewerAdd}
             onChangeReviewerCancle={handleReviewerCancel}
+            onChangeReviewersSet={handleReviewersSet}
+            token={token}
           />
           <ThesisTitleSection form={sysMainForm} />
           <RowGroup>

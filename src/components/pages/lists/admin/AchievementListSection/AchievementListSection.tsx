@@ -212,7 +212,7 @@ function AchievementListSection() {
             <Table.Data>{achievement.paperTitle}</Table.Data>
             <Table.Data>{ACHIEVEMENT_TYPE_LOOKUP_TABLE[achievement.performance]}</Table.Data>
             <Table.Data>{achievement.journalName}</Table.Data>
-            <Table.Data>{formatISSN(achievement.ISSN)}</Table.Data>
+            <Table.Data>{achievement.ISSN ? formatISSN(achievement.ISSN) : ""}</Table.Data>
             <Table.Data>
               {new Date(achievement.publicationDate).toLocaleDateString("ko-KR")}
             </Table.Data>

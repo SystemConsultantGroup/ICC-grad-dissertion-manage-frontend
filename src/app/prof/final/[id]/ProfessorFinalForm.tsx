@@ -53,6 +53,7 @@ export function ProfessorFinalForm({
   const { values } = form;
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [currentState, setCurrentState] = useState<null | "pending" | "submitted">(null);
+  const [commentType, setCommentType] = useState<string>();
 
   const handleSubmit = transactionTask(async (task, input: FormInput) => {
     setCurrentState("pending");
@@ -70,8 +71,8 @@ export function ProfessorFinalForm({
       API_ROUTES.review.final.put(reviewId),
       {
         contentStatus: input.status,
-        comment: input.comment,
-        fileUUID,
+        ...(commentType === "심사 의견" ? { comment: input.comment } : {}),
+        ...(commentType === "심사 의견 파일" ? { fileUUID } : {}),
       } satisfies UpdateReviewRequestBody,
       { baseURL: process.env.NEXT_PUBLIC_REVIEW_API_ENDPOINT }
     );
@@ -113,6 +114,8 @@ export function ProfessorFinalForm({
         form={form}
         previousCommentFile={previous.reviewFile ?? undefined}
         currentState={currentState}
+        commentType={commentType}
+        setCommentType={setCommentType}
       />
       <ReviewConfirmModal
         thesis={thesisInfo}

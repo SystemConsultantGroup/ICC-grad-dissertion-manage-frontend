@@ -7,6 +7,7 @@ import { TitleRow } from "@/components/common/rows";
 import { Stage, Status } from "@/api/_types/common";
 import { File } from "@/api/_types/file";
 import { TableHeaderProps } from "@/components/common/Table/_elements/TableHeader";
+import { ReactNode } from "react";
 
 export interface ReviewListProps {
   title: string;
@@ -87,35 +88,49 @@ export function ReviewList({ title, stage, reviews }: ReviewListProps) {
 }
 
 export function AdminReviewList({ title, stage, reviews, onModify }: AdminReviewListProps) {
-  const headers: TableHeaderProps[] =
-    stage === "MAIN"
-      ? [
+  let table: ReactNode;
+  if (stage === "REVISION") {
+    table = (
+      <Table
+        headers={[
           { label: "심사위원", widthPercentage: 12 },
-          { label: "내용 심사 결과", widthPercentage: 10 },
-          { label: "구두 심사 결과", widthPercentage: 10 },
-          { label: "심사 의견", widthPercentage: 56 },
-          { label: "심사 의견 파일" },
-          { label: "심사 수정" },
-        ]
-      : [
-          { label: "심사위원", widthPercentage: 12 },
-          { label: "심사 결과", widthPercentage: 10 },
-          { label: "심사 의견", widthPercentage: 62 },
-          { label: "심사 의견 파일" },
-          { label: "심사 수정" },
-        ];
-
-  const table =
-    stage === "REVISION" ? (
-      <Table headers={[{ label: "심사위원", widthPercentage: 12 }, { label: "확인 여부" }]}>
+          { label: "확인 여부" },
+          { label: "확인여부 수정" },
+        ]}
+      >
         {reviews.map((review) => (
           <TableRow key={review.id}>
             <TableData>{review.reviewer.name}</TableData>
             <TableData>{nameForStatus(review.contentStatus)}</TableData>
+            <TableData>
+              <Button size="xs" onClick={() => onModify(review)}>
+                수정하기
+              </Button>
+            </TableData>
           </TableRow>
         ))}
       </Table>
-    ) : (
+    );
+  } else {
+    const headers: TableHeaderProps[] =
+      stage === "MAIN"
+        ? [
+            { label: "심사위원", widthPercentage: 12 },
+            { label: "내용 심사 결과", widthPercentage: 10 },
+            { label: "구두 심사 결과", widthPercentage: 10 },
+            { label: "심사 의견", widthPercentage: 56 },
+            { label: "심사 의견 파일" },
+            { label: "심사 수정" },
+          ]
+        : [
+            { label: "심사위원", widthPercentage: 12 },
+            { label: "심사 결과", widthPercentage: 10 },
+            { label: "심사 의견", widthPercentage: 62 },
+            { label: "심사 의견 파일" },
+            { label: "심사 수정" },
+          ];
+
+    table = (
       <Table headers={headers}>
         {reviews.map((review) => (
           <TableRow key={review.id}>
@@ -135,6 +150,7 @@ export function AdminReviewList({ title, stage, reviews, onModify }: AdminReview
         ))}
       </Table>
     );
+  }
   return (
     <Stack gap={0}>
       <TitleRow title={title} />

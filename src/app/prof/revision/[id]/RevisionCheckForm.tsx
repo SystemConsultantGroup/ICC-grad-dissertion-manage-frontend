@@ -37,13 +37,9 @@ export function RevisionCheckForm({
   const handleSubmit = async (input: FormInput) => {
     setPending(true);
     try {
-      await ClientAxios.put(
-        API_ROUTES.review.revision.put(revisionId),
-        {
-          contentStatus: input.checked ? "PASS" : "FAIL",
-        } satisfies { contentStatus: Status },
-        { baseURL: process.env.NEXT_PUBLIC_REVIEW_API_ENDPOINT }
-      );
+      await ClientAxios.put(API_ROUTES.review.revision.put(revisionId), {
+        contentStatus: input.checked ? "PASS" : "FAIL",
+      } satisfies { contentStatus: Status });
 
       showNotificationSuccess({
         message: input.checked

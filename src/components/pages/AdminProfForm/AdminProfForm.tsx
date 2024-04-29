@@ -23,12 +23,12 @@ interface AdminProfFormInputs {
   name: string;
   email?: string;
   phone?: string;
-  deptId: string;
+  deptId?: string;
 }
 
 function AdminProfForm({ professorId }: Props) {
   const router = useRouter();
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const [isPwEditing, setIsPwEditing] = useState<boolean>(false);
   const [defaultDepartmentId, setDefaultDepartmentId] = useState<string | null>(null);
   const [previousProf, setPreviousProf] = useState<User | undefined>();
@@ -39,9 +39,6 @@ function AdminProfForm({ professorId }: Props) {
         loginId: "",
         password: "",
         name: "",
-        email: "",
-        phone: "",
-        deptId: "",
       },
       validate: {
         loginId: isNotEmpty("아이디를 입력해주세요."),
@@ -53,14 +50,13 @@ function AdminProfForm({ professorId }: Props) {
               : "이메일 형식이 맞지 않습니다."
             : undefined,
         phone: undefined,
-        deptId: isNotEmpty("소속된 학과를 선택해주세요."),
       },
     });
 
   useEffect(() => {
     const fetchProfessorDetails = async () => {
       try {
-        if (professorId) {
+        if (user?.type === "ADMIN" && professorId) {
           const response = await ClientAxios.get(API_ROUTES.professor.get(professorId));
           const professorDetails = response.data;
           setPreviousProf(professorDetails);
@@ -79,7 +75,7 @@ function AdminProfForm({ professorId }: Props) {
       }
     };
     fetchProfessorDetails();
-  }, [professorId, setValues]);
+  }, [professorId, setValues, user]);
 
   const handleSubmit = async (values: AdminProfFormInputs) => {
     try {
@@ -91,6 +87,8 @@ function AdminProfForm({ professorId }: Props) {
         const body = professorId
           ? {
               ...(isPwEditing ? { password: values.password } : {}),
+              loginId: previousProf!.loginId === values.loginId ? undefined : values.loginId,
+              name: previousProf!.name === values.name ? undefined : values.name,
               deptId:
                 previousProf!.department.id === Number(values.deptId)
                   ? undefined
@@ -122,11 +120,9 @@ function AdminProfForm({ professorId }: Props) {
         `/auth/${professorId}`
       );
       login(accessToken);
+      router.push("/");
     } catch (err) {
       console.error(err);
-    } finally {
-      router.push("/");
-      router.refresh();
     }
   };
 
