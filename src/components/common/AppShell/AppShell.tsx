@@ -14,7 +14,10 @@ function AppShell({ children }: Props) {
   const { user } = useAuth();
   const pathname = usePathname();
   const disabledAppShell = user?.type === null || pathname === "/login";
-
+  const modificationFlag =
+    user?.type === "STUDENT"
+      ? user?.department.modificationFlag && user.currentPhase !== "PRELIMINARY"
+      : false;
   return (
     <MantineAppShell
       padding={40}
@@ -22,10 +25,7 @@ function AppShell({ children }: Props) {
       styles={{ main: { background: "var(--mantine-color-main-background)" } }}
       disabled={disabledAppShell}
     >
-      <Navbar
-        userType={user?.type}
-        modificationFlag={user?.department.modificationFlag && user.currentPhase !== "PRELIMINARY"}
-      />
+      <Navbar userType={user?.type} modificationFlag={modificationFlag} />
       <MantineAppShell.Main>{children}</MantineAppShell.Main>
     </MantineAppShell>
   );

@@ -11,13 +11,13 @@ import {
 
 interface Props {
   userType: Role;
-  modificationFlag: boolean;
+  modificationFlag?: boolean;
 }
 
 const USER_TYPE_NAVBAR_LIST = {
   ADMIN: ADMIN_NAVBAR_LIST,
   PROFESSOR: PROF_NAVBAR_LIST,
-  STUDENT: (modificationFlag: boolean) => STUDENT_NAVBAR_LIST(modificationFlag),
+  STUDENT: (modificationFlag?: boolean) => STUDENT_NAVBAR_LIST(modificationFlag),
 };
 
 function NavbarList({ userType, modificationFlag }: Props) {
