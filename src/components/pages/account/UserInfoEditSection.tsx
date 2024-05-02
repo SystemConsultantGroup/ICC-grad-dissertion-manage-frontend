@@ -110,7 +110,7 @@ function UserInfoEditSection() {
               </BasicRow>
             </RowGroup>
             <RowGroup>
-              <BasicRow field="소속">{user?.department.name}</BasicRow>
+              <BasicRow field="소속">{user?.department?.name}</BasicRow>
             </RowGroup>
           </>
         )}
