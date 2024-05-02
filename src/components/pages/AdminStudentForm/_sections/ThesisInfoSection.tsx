@@ -33,9 +33,9 @@ function ThesisInfoSection({ studentId, token }: Props) {
           const thesisDetail = response.data as ThesisInfo;
           setThesisTitle(thesisDetail.title);
           if (thesisDetail) {
-            setThesisFile({ name: thesisDetail.thesisFile.name, file: thesisDetail.thesisFile });
+            setThesisFile({ name: thesisDetail.thesisFile?.name, file: thesisDetail?.thesisFile });
             setPresentationFile({
-              name: thesisDetail.presentationFile.name,
+              name: thesisDetail.presentationFile?.name,
               file: thesisDetail.presentationFile,
             });
           }
