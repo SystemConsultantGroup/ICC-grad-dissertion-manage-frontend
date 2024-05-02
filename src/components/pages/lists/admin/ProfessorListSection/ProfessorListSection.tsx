@@ -235,7 +235,7 @@ function ProfessorListSection() {
             <Table.Data>{professor.name}</Table.Data>
             <Table.Data>{professor.email}</Table.Data>
             <Table.Data>{professor.phone}</Table.Data>
-            <Table.Data>{professor.department.name}</Table.Data>
+            <Table.Data>{professor.department?.name}</Table.Data>
           </Table.Row>
         ))}
       </Table>
