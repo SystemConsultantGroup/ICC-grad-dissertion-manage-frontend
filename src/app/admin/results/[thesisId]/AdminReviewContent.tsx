@@ -8,7 +8,7 @@ import { AdminReviewResponse, ThesisReview, UpdateReviewRequestBody } from "@/ap
 import { transactionTask } from "@/api/_utils/task";
 import { API_ROUTES } from "@/api/apiRoute";
 import { ApiDownloadButton } from "@/components/common/Buttons";
-import { showNotificationSuccess } from "@/components/common/Notifications";
+import { showNotificationError, showNotificationSuccess } from "@/components/common/Notifications";
 import SectionTitle from "@/components/common/SectionTitle";
 import {
   BasicRow,
@@ -159,10 +159,18 @@ function ModalContent({ open, setOpen, data, current }: ModalProps) {
           task.onComplete(() => setLoading(false));
 
           let fileUUID;
-          if (reviewFile) {
+          if (reviewFile && commentType === "심사 의견 파일") {
             fileUUID = (await uploadFile(reviewFile)).uuid;
           } else if (current.file) {
             fileUUID = current.file.uuid ?? undefined;
+          }
+
+          if (
+            (commentType === "심사 의견" && (comment === undefined || !comment)) ||
+            (commentType === "심사 의견 파일" && fileUUID === undefined)
+          ) {
+            showNotificationError({ message: "심사 의견이나 심사 의견 파일을 첨부해주세요." });
+            return;
           }
 
           await ClientAxios.put(
