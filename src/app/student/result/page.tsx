@@ -12,12 +12,24 @@ import { UserResponse } from "@/api/_types/user";
 export default async function StudentResultPage() {
   const { token } = await AuthSSR({ userType: "STUDENT" });
   const user = (await fetcher({ url: API_ROUTES.user.get(), token })) as UserResponse;
-  const { "0": pre, "1": main } = (await fetcher({ url: API_ROUTES.review.getMe(), token })) as {
-    "0": MyReviewResponse;
-    "1": MyReviewResponse;
+
+  const response = (await fetcher({ url: API_ROUTES.review.getMe(), token })) as {
+    [key: string]: MyReviewResponse;
   };
 
-  const thesisRes: MyReviewResponse = user.currentPhase === "PRELIMINARY" ? pre : main;
+  let main: MyReviewResponse;
+  let pre: MyReviewResponse;
+
+  for (let i = 0; i < 3; i += 1) {
+    if (response[i.toString()]?.stage === "MAIN") {
+      main = response[i.toString()];
+    } else if (response[i.toString()]?.stage === "PRELIMINARY") {
+      pre = response[i.toString()];
+    }
+  }
+
+  const thesisRes: MyReviewResponse = user.currentPhase === "PRELIMINARY" ? pre! : main!;
+                      
   const thesisInfo: ThesisInfoData = {
     title: thesisRes.title,
     stage: thesisRes.stage,

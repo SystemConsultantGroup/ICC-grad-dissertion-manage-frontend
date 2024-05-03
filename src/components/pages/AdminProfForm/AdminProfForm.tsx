@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button, Stack, Space, TextInput, PasswordInput, Group } from "@mantine/core";
+import { Button, Stack, Space, TextInput, PasswordInput, Group, Modal, Text } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { API_ROUTES } from "@/api/apiRoute";
 import { useRouter } from "next/navigation";
@@ -12,6 +12,8 @@ import { useAuth } from "@/components/common/AuthProvider/AuthProvider";
 import { showNotificationError, showNotificationSuccess } from "@/components/common/Notifications";
 import { DepartmentSelect } from "@/components/common/selects/DepartmentSelect";
 import { User } from "@/api/_types/user";
+import { useDisclosure } from "@mantine/hooks";
+import { IconAlertTriangle } from "@tabler/icons-react";
 
 interface Props {
   professorId?: number | string;
@@ -32,26 +34,33 @@ function AdminProfForm({ professorId }: Props) {
   const [isPwEditing, setIsPwEditing] = useState<boolean>(false);
   const [defaultDepartmentId, setDefaultDepartmentId] = useState<string | null>(null);
   const [previousProf, setPreviousProf] = useState<User | undefined>();
+  const [deleteOpened, { open: deleteOpen, close: deleteClose }] = useDisclosure(false);
 
-  const { onSubmit, getInputProps, setValues, isDirty, setFieldValue } =
-    useForm<AdminProfFormInputs>({
-      initialValues: {
-        loginId: "",
-        password: "",
-        name: "",
-      },
-      validate: {
-        loginId: isNotEmpty("아이디를 입력해주세요."),
-        name: isNotEmpty("이름을 입력해주세요."),
-        email: (value) =>
-          value
-            ? /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)
-              ? null
-              : "이메일 형식이 맞지 않습니다."
-            : undefined,
-        phone: undefined,
-      },
-    });
+  const {
+    onSubmit,
+    getInputProps,
+    setValues,
+    isDirty,
+    setFieldValue,
+    values: profValues,
+  } = useForm<AdminProfFormInputs>({
+    initialValues: {
+      loginId: "",
+      password: "",
+      name: "",
+    },
+    validate: {
+      loginId: isNotEmpty("아이디를 입력해주세요."),
+      name: isNotEmpty("이름을 입력해주세요."),
+      email: (value) =>
+        value
+          ? /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)
+            ? null
+            : "이메일 형식이 맞지 않습니다."
+          : undefined,
+      phone: undefined,
+    },
+  });
 
   useEffect(() => {
     const fetchProfessorDetails = async () => {
@@ -66,9 +75,9 @@ function AdminProfForm({ professorId }: Props) {
             name: professorDetails.name,
             email: professorDetails.email,
             phone: professorDetails.phone,
-            deptId: String(professorDetails.department.id),
+            deptId: String(professorDetails.department?.id),
           });
-          setDefaultDepartmentId(String(professorDetails.department.id));
+          setDefaultDepartmentId(String(professorDetails.department?.id));
         }
       } catch (err) {
         console.error(err);
@@ -121,6 +130,8 @@ function AdminProfForm({ professorId }: Props) {
       );
       login(accessToken);
       router.push("/");
+      router.refresh();
+
     } catch (err) {
       console.error(err);
     }
@@ -130,12 +141,48 @@ function AdminProfForm({ professorId }: Props) {
     router.back();
   };
 
+  const handleDelete = async () => {
+    try {
+      await ClientAxios.delete(API_ROUTES.professor.delete(professorId));
+      showNotificationSuccess({ message: "교수 삭제 완료" });
+      deleteClose();
+      router.push("/admin/professors");
+    } catch (error) {
+      /* empty */
+    }
+  };
+
   return (
     <Stack gap={0}>
+      <Modal
+        opened={deleteOpened}
+        onClose={deleteClose}
+        withCloseButton={false}
+        centered
+        radius="lg"
+      >
+        <Stack gap={36} align="center" p="lg">
+          <IconAlertTriangle color="red" />
+          <Group align="center" justify="center">
+            <Text fw={600}>{profValues.name} 교수를 삭제하시겠습니까?</Text>
+          </Group>
+          <Group>
+            <Button key="cancel" variant="outline" onClick={deleteClose}>
+              취소
+            </Button>
+            <Button key="delete" color="red" onClick={handleDelete}>
+              삭제
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
       {professorId && (
         <RowGroup>
           <ButtonRow
             buttons={[
+              <Button key="delete" color="red" onClick={deleteOpen}>
+                교수 삭제
+              </Button>,
               <Button key="login" onClick={() => handleLogin()}>
                 로그인하기
               </Button>,
