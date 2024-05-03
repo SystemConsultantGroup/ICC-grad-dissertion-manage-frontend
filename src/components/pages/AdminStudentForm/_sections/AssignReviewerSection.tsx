@@ -79,7 +79,9 @@ function AssignReviewerSection({
   const assignedReviewerLabel = (role: ReviewerRole, professorId: number) => {
     if (!isLoadingProf) {
       const professor = professors?.find((prof) => prof.id === professorId) || ({} as Professor);
-      const name = professor.department ? `${professor.name} (${professor.department.name})` : "";
+      const name = professor.department
+        ? `${professor.name} (${professor.department.name})`
+        : `${professor.name}`;
       switch (role) {
         case "HEAD":
           return `[심사위원장] ${name}`;
@@ -129,7 +131,9 @@ function AssignReviewerSection({
       if (!isLoadingProf) {
         data = professors
           ? professors.map((professor) => ({
-              label: `${professor.name}(${professor.department.name})`,
+              label: professor.department
+                ? `${professor.name} (${professor.department.name})`
+                : `${professor.name}`,
               value: String(professor.id),
             }))
           : [];

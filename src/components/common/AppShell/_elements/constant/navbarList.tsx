@@ -78,7 +78,7 @@ export const ADMIN_NAVBAR_LIST: Props[] = [
     icon: <IconSettings size="24" stroke={1} />,
   },
 ];
-export const STUDENT_NAVBAR_LIST = (modificationFlag: boolean) => {
+export const STUDENT_NAVBAR_LIST = (modificationFlag?: boolean) => {
   const navbarList: Props[] = [
     { label: "메인", href: "/", icon: <IconHome size="24" stroke={1} /> },
     { label: "논문 투고", href: "/student/write", icon: <IconFileText size="24" stroke={1} /> },

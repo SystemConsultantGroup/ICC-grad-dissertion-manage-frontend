@@ -69,10 +69,18 @@ export function ProfessorReviewForm({
 
     const isPending = input.thesis === "PENDING" || input.presentation === "PENDING";
     let fileUUID;
-    if (input.commentFile) {
+    if (input.commentFile && commentType === "심사 의견 파일") {
       fileUUID = (await uploadFile(input.commentFile)).uuid;
     } else if (input.commentFile !== null) {
       fileUUID = previous.reviewFile?.uuid ?? undefined;
+    }
+
+    if (
+      (commentType === "심사 의견" && !input.comment) ||
+      (commentType === "심사 의견 파일" && fileUUID === undefined)
+    ) {
+      showNotificationError({ message: "심사 의견이나 심사 의견 파일을 첨부해주세요." });
+      return;
     }
 
     await ClientAxios.put(
@@ -98,8 +106,8 @@ export function ProfessorReviewForm({
 
     // TODO: 불필요한 fetch를 추가하긴 하지만, 이것 말고 적당한 방법이 있는지 모르겠음...
     // https://github.com/vercel/next.js/discussions/54075 참고: 현재는 클라이언트측 Router Cache를 완전히 비활성화할 방법이 없음
+    router.push("/prof/review");
     router.refresh();
-    router.push("../review");
   });
 
   return (
@@ -111,10 +119,10 @@ export function ProfessorReviewForm({
           handleSubmit(input);
         } else {
           const hasCommentFile = previous.reviewFile
-            ? values.commentFile === null
+            ? values.commentFile !== null
             : !!values.commentFile;
-          if (values.comment === "" && hasCommentFile) {
-            showNotificationError({ message: <>심사 의견이나 심사 의견 파일을 첨부해주세요.</> });
+          if (!values.comment && !hasCommentFile) {
+            showNotificationError({ message: "심사 의견이나 심사 의견 파일을 첨부해주세요." });
             return;
           }
           setShowConfirmDialog(true);
@@ -134,8 +142,8 @@ export function ProfessorReviewForm({
         review={{
           thesis: values.thesis,
           presentation: values.presentation,
-          comment: values.comment,
-          commentFile: values.commentFile?.name ?? null,
+          comment: commentType === "심사 의견" ? values.comment : "",
+          commentFile: commentType === "심사 의견 파일" ? values.commentFile?.name ?? null : null,
         }}
         opened={showConfirmDialog}
         onConfirm={() => handleSubmit(values)}
