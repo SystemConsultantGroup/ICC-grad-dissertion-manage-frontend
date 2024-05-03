@@ -87,8 +87,8 @@ export function ProfessorFinalForm({
       }했습니다.`,
     });
 
+    router.push("/prof/final");
     router.refresh();
-    router.push("../final");
   });
 
   return (

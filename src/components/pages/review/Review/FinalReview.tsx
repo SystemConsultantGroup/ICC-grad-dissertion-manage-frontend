@@ -4,6 +4,7 @@ import { UseFormReturnType } from "@mantine/form";
 import {
   BasicRow,
   ButtonRow,
+  CommentTypeRow,
   FileUploadRow,
   RowGroup,
   TextAreaRow,
@@ -54,6 +55,7 @@ export function FinalReview({
           </StatusButtons>
         </BasicRow>
       </RowGroup>
+      <CommentTypeRow commentType={commentType} setCommentType={setCommentType} />
       <TextAreaRow
         field="심사 의견"
         form={form}
