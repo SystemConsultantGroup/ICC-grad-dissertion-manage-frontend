@@ -15,9 +15,9 @@ export default function PhaseReadyAlertRow({ title, start, end }: PhaseReadyAler
         <Group>
           <IconAlertTriangle />
           <Text>{title} 기간이 아닙니다.</Text>
-          <Text>
+          {/*<Text>
             (기간: {start} ~ {end})
-          </Text>
+            </Text>*/}
         </Group>
       </Box>
     </RowGroup>
