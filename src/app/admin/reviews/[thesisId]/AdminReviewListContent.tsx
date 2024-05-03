@@ -97,7 +97,13 @@ function ModalContent({ open, setOpen, data, current }: ModalProps) {
             fileUUID = current.file.uuid ?? undefined;
           }
 
+          if (thesis === "UNEXAMINED" || presentation === "UNEXAMINED") {
+            showNotificationError({ message: "합격 여부를 선택해주세요." });
+            return;
+          }
+
           if (
+            commentType === undefined ||
             (commentType === "심사 의견" && (comment === undefined || !comment)) ||
             (commentType === "심사 의견 파일" && fileUUID === undefined)
           ) {
