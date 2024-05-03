@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Stack, Button } from "@mantine/core";
+import { Stack, Button, Modal, Group, Text } from "@mantine/core";
 import { ClientAxios } from "@/api/ClientAxios";
 import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/api/apiRoute";
@@ -11,6 +11,7 @@ import { CommonApiResponse } from "@/api/_types/common";
 import { showNotificationError, showNotificationSuccess } from "@/components/common/Notifications";
 import { useAuth } from "@/components/common/AuthProvider/AuthProvider";
 import { useDisclosure } from "@mantine/hooks";
+import { IconAlertTriangle } from "@tabler/icons-react";
 import BasicInfoSection from "./_sections/BasicInfoSection";
 import AssignReviewerSection from "./_sections/AssignReviewerSection";
 import ThesisTitleSection from "./_sections/ThesisTitleSection";
@@ -29,6 +30,7 @@ function AdminStudentForm({ studentId }: Props) {
   const [isPwEditing, setIsPwEditing] = useState<boolean>(false);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [opened, { open, close }] = useDisclosure();
+  const [deleteOpened, { open: deleteOpen, close: deleteClose }] = useDisclosure(false);
   const {
     headReviewer,
     advisors,
@@ -84,6 +86,7 @@ function AdminStudentForm({ studentId }: Props) {
       setIsAdmin(false);
       login(accessToken);
       router.push("/");
+      router.refresh();
     } catch (err) {
       console.error(err);
     }
@@ -91,6 +94,17 @@ function AdminStudentForm({ studentId }: Props) {
 
   const handleBack = () => {
     router.back();
+  };
+
+  const handleDelete = async () => {
+    try {
+      await ClientAxios.delete(API_ROUTES.student.delete(studentId));
+      showNotificationSuccess({ message: "학생 삭제 완료" });
+      deleteClose();
+      router.push("/admin/students");
+    } catch (error) {
+      /* empty */
+    }
   };
 
   const handleSubmit = async () => {
@@ -234,6 +248,28 @@ function AdminStudentForm({ studentId }: Props) {
 
   return (
     <>
+      <Modal
+        opened={deleteOpened}
+        onClose={deleteClose}
+        withCloseButton={false}
+        centered
+        radius="lg"
+      >
+        <Stack gap={36} align="center" p="lg">
+          <IconAlertTriangle color="red" />
+          <Group align="center" justify="center">
+            <Text fw={600}>{form.values.basicInfo.name} 학생을 삭제하시겠습니까?</Text>
+          </Group>
+          <Group>
+            <Button key="cancel" variant="outline" onClick={deleteClose}>
+              취소
+            </Button>
+            <Button key="delete" color="red" onClick={handleDelete}>
+              삭제
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
       {studentId && (
         <MainRegisterModal studentId={studentId} opened={opened} close={close} token={isAdmin} />
       )}
@@ -243,6 +279,9 @@ function AdminStudentForm({ studentId }: Props) {
             <RowGroup withBorderBottom={false}>
               <ButtonRow
                 buttons={[
+                  <Button key="delete" color="red" onClick={deleteOpen}>
+                    학생 삭제
+                  </Button>,
                   <Button key="login" onClick={handleLogin}>
                     로그인하기
                   </Button>,

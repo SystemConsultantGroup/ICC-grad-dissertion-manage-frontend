@@ -75,7 +75,13 @@ function AdminExcelRegister({ isProf = false }: Props) {
     <Stack gap={0}>
       <TitleRow
         title={isProf ? "교수 기본 정보" : "학생 기본 정보"}
-        subString="* 이미 등록된 중복 아이디의 경우 데이터가 수정됩니다."
+        subString={
+          <>
+            <>* 이미 등록된 중복 아이디의 경우 데이터가 수정됩니다.</>
+            <br />
+            <>* 한 번에 많은 사용자를 업로드할 시 로딩 시간이 길어질 수 있습니다.</>
+          </>
+        }
       />
       <RowGroup>
         <NoticeRow text="첨부파일 우측 상단의 안내사항을 참고하시기 바랍니다." />

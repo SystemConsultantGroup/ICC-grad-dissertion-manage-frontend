@@ -87,7 +87,7 @@ function LoginForm() {
           </Radio.Group>
 
           <form onSubmit={onSubmit(handleSubmit)}>
-            <Stack gap={0} mb={36}>
+            <Stack gap={0} mb={36} w="420px" justify="center" align="center">
               <Group gap={30} mb={18}>
                 <label style={{ fontWeight: 500 }} htmlFor="input-id">
                   아이디
@@ -100,7 +100,7 @@ function LoginForm() {
                   {...getInputProps("loginId")}
                 />
               </Group>
-              <Group mb={8}>
+              <Group mb={16}>
                 <label style={{ fontWeight: 500 }} htmlFor="input-password">
                   비밀번호
                 </label>
@@ -112,9 +112,9 @@ function LoginForm() {
                   {...getInputProps("password")}
                 />
               </Group>
-              <Text fw={500} ml={74}>
-                {type === "student" && "아이디는 학번, 비밀번호는 생년월일입니다."}
-                {type === "professor" && "아이디는 킹고아이디, 비밀번호는 생년월일입니다."}
+              <Text fw={500}>
+                {type === "student" && "아이디는 학번, 초기 비밀번호는 생년월일입니다."}
+                {type === "professor" && "아이디는 킹고아이디, 초기 비밀번호는 생년월일입니다."}
                 {type === "admin" && "관리자 계정은 행정실에 문의해주세요."}
               </Text>
             </Stack>
