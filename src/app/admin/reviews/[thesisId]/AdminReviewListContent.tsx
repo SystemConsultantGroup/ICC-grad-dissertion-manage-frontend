@@ -91,6 +91,7 @@ function ModalContent({ open, setOpen, data, current }: ModalProps) {
           task.onComplete(() => setLoading(false));
 
           let fileUUID;
+
           if (reviewFile && commentType === "심사 의견 파일") {
             fileUUID = (await uploadFile(reviewFile)).uuid;
           } else if (current.file) {
