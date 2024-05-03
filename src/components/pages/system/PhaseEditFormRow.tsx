@@ -18,11 +18,17 @@ interface Props {
   end: string;
 }
 
+function GetDateTime(t: string): Date {
+  const offset = 9 * 60 * 60 * 1000;
+  const ctime = new Date(t).getTime() - offset;
+  return new Date(ctime);
+}
+
 function PhaseEditFormRow({ id, title, start, end }: Props) {
   const { onSubmit, getInputProps } = useForm<PhaseEditFormInputs>({
     initialValues: {
-      start: start !== null ? new Date(start) : null,
-      end: end !== null ? new Date(end) : null,
+      start: start !== null ? GetDateTime(start) : null,
+      end: end !== null ? GetDateTime(end) : null,
     },
     validate: {
       start: isNotEmpty("년월일시를 입력해주세요."),
@@ -49,12 +55,12 @@ function PhaseEditFormRow({ id, title, start, end }: Props) {
           <Group>
             <DateTimePicker
               {...getInputProps("start")}
-              defaultValue={start !== null ? new Date(start) : null}
+              defaultValue={start !== null ? GetDateTime(start) : null}
             />{" "}
             -
             <DateTimePicker
               {...getInputProps("end")}
-              defaultValue={end !== null ? new Date(end) : null}
+              defaultValue={end !== null ? GetDateTime(end) : null}
             />
             <Button key="edit" type="submit">
               즉시 실행
