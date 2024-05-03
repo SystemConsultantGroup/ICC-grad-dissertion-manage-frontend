@@ -86,6 +86,7 @@ function AdminStudentForm({ studentId }: Props) {
       setIsAdmin(false);
       login(accessToken);
       router.push("/");
+      router.refresh();
     } catch (err) {
       console.error(err);
     }
