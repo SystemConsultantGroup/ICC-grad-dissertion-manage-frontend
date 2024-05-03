@@ -11,6 +11,7 @@ export interface ReviewResultProps {
   presentation?: Status | null;
   comment?: string;
   commentFile?: string | null;
+  isFinal?: boolean;
 }
 
 export interface StudentReviewResultProps {
@@ -34,10 +35,15 @@ export function ReviewResult({
   presentation,
   comment,
   commentFile,
+  isFinal,
 }: ReviewResultProps) {
   let commentContent;
   if (stage === "MAIN") {
-    commentContent = (
+    commentContent = isFinal ? (
+      <Text>
+        최종 <b>{nameForStatus(thesis!)}</b>
+      </Text>
+    ) : (
       <Text>
         내용심사 <b>{nameForStatus(thesis!)}</b>, 구두심사 <b>{nameForStatus(presentation!)}</b>
       </Text>

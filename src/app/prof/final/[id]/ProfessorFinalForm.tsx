@@ -87,8 +87,8 @@ export function ProfessorFinalForm({
       }했습니다.`,
     });
 
+    router.push("/prof/final");
     router.refresh();
-    router.push("../final");
   });
 
   return (
@@ -100,10 +100,10 @@ export function ProfessorFinalForm({
           handleSubmit(input);
         } else {
           const hasCommentFile = previous.reviewFile
-            ? values.commentFile === null
+            ? values.commentFile !== null
             : !!values.commentFile;
-          if (values.comment === "" && hasCommentFile) {
-            showNotificationError({ message: <>심사 의견이나 심사 의견 파일을 첨부해주세요.</> });
+          if (!values.comment && !hasCommentFile) {
+            showNotificationError({ message: "심사 의견이나 심사 의견 파일을 첨부해주세요." });
             return;
           }
           setShowConfirmDialog(true);
@@ -130,6 +130,7 @@ export function ProfessorFinalForm({
         onClose={() => {
           setShowConfirmDialog(false);
         }}
+        isFinal
       />
     </form>
   );
