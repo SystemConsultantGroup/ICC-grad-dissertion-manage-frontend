@@ -18,6 +18,7 @@ export interface ReviewConfirmModalProps extends PropsWithChildren {
   opened: boolean;
   onConfirm: () => void;
   onClose: () => void;
+  isFinal?: boolean;
 }
 
 export function ReviewConfirmModal({
@@ -26,6 +27,7 @@ export function ReviewConfirmModal({
   opened,
   onConfirm,
   onClose,
+  isFinal,
 }: ReviewConfirmModalProps) {
   return (
     <MantineModal
@@ -57,6 +59,7 @@ export function ReviewConfirmModal({
             presentation={review.presentation}
             comment={review.comment}
             commentFile={review.commentFile}
+            isFinal={isFinal}
           />
         </Stack>
         <Stack style={{ flexShrink: 0 }} gap={0}>
