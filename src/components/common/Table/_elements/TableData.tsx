@@ -10,10 +10,8 @@ function TableData({ children }: Props) {
     <TableTd
       fz={16}
       style={{
-        whiteSpace: "nowrap",
         maxWidth: "500px",
-        overflow: "hidden",
-        textOverflow: "ellipsis",
+        wordBreak: "break-all",
       }}
     >
       {children}
