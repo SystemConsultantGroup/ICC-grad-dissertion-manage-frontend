@@ -3,6 +3,7 @@ import { Group, Stack, Text } from "@mantine/core";
 import { IconFile } from "@tabler/icons-react";
 import { Status } from "@/api/_types/common";
 import { ThesisReview } from "@/api/_types/reviews";
+import { ApiDownloadButton } from "@/components/common/Buttons";
 import { Stage } from "../ThesisInfo/ThesisInfo";
 
 export interface ReviewResultProps {
@@ -123,6 +124,11 @@ export function StudentReviewResult({ review }: StudentReviewResultProps) {
             <BasicRow.Text>
               <b>{nameForStudentStatus(review.contentStatus)}</b>
             </BasicRow.Text>
+          </BasicRow>
+        </RowGroup>
+        <RowGroup>
+          <BasicRow field="결과보고서 파일">
+            <ApiDownloadButton file={review.file} size="xs" />
           </BasicRow>
         </RowGroup>
       </Stack>
