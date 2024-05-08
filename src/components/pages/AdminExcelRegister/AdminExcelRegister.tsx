@@ -22,6 +22,7 @@ interface Props {
 
 function AdminExcelRegister({ isProf = false }: Props) {
   const [file, setFile] = useState<File | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleExcelDownload = async () => {
     try {
@@ -47,6 +48,7 @@ function AdminExcelRegister({ isProf = false }: Props) {
 
   const handleExcelUpload = async () => {
     try {
+      setIsSubmitting(true);
       if (file) {
         const formData = new FormData();
         formData.append("file", file);
@@ -69,6 +71,8 @@ function AdminExcelRegister({ isProf = false }: Props) {
       }
     } catch (error) {
       // clientAxios에서 오류 출력
+    } finally {
+      setIsSubmitting(false);
     }
   };
   return (
@@ -97,7 +101,7 @@ function AdminExcelRegister({ isProf = false }: Props) {
       <RowGroup>
         <ButtonRow
           buttons={[
-            <Button key="register" onClick={handleExcelUpload}>
+            <Button key="register" onClick={handleExcelUpload} loading={isSubmitting}>
               등록하기
             </Button>,
           ]}
