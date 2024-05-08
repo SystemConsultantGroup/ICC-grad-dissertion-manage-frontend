@@ -29,7 +29,7 @@ export default async function StudentResultPage() {
   }
 
   const thesisRes: MyReviewResponse = user.currentPhase === "PRELIMINARY" ? pre! : main!;
-                      
+
   const thesisInfo: ThesisInfoData = {
     title: thesisRes.title,
     stage: thesisRes.stage,
