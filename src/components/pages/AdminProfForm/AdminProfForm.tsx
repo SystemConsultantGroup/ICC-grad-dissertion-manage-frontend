@@ -131,6 +131,7 @@ function AdminProfForm({ professorId }: Props) {
       login(accessToken);
       router.push("/");
       router.refresh();
+
     } catch (err) {
       console.error(err);
     }
