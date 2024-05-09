@@ -8,7 +8,7 @@ import AchievementRegisterSection from "@/components/pages/achievement/Achieveme
 
 async function StudentAchievementRegisterPage() {
   const { token } = await AuthSSR({ userType: "STUDENT" });
-  const { within, start, end } = await checkPhase({ title: "논문 실적 제출", token });
+  const { within, start, end } = await checkPhase({ title: "연구 실적 제출", token });
 
   return within ? (
     <>
