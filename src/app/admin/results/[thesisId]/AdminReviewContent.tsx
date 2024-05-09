@@ -171,9 +171,10 @@ function ModalContent({ open, setOpen, data, current }: ModalProps) {
           }
 
           if (
-            commentType === undefined ||
-            (commentType === "심사 의견" && (comment === undefined || !comment)) ||
-            (commentType === "심사 의견 파일" && fileUUID === undefined)
+            data.stage !== "REVISION" &&
+            (commentType === undefined ||
+              (commentType === "심사 의견" && (comment === undefined || !comment)) ||
+              (commentType === "심사 의견 파일" && fileUUID === undefined))
           ) {
             showNotificationError({ message: "심사 의견이나 심사 의견 파일을 첨부해주세요." });
             return;
