@@ -51,6 +51,7 @@ function AdminProfForm({ professorId }: Props) {
     },
     validate: {
       loginId: isNotEmpty("아이디를 입력해주세요."),
+      password: isNotEmpty("비밀번호를 입력해주세요."),
       name: isNotEmpty("이름을 입력해주세요."),
       email: (value) =>
         value
@@ -115,7 +116,14 @@ function AdminProfForm({ professorId }: Props) {
                     ? undefined
                     : values.phone,
             }
-          : { ...values };
+          : {
+              loginId: values.loginId,
+              password: values.password,
+              name: values.name,
+              email: values.email === "" ? undefined : values.email,
+              phone: values.phone === "" ? undefined : values.phone,
+              deptId: values.deptId ? values.deptId : undefined,
+            };
         if (!professorId) {
           await ClientAxios.post(API_ROUTES.professor.post(), body);
           showNotificationSuccess({ message: "교수 등록이 완료되었습니다." });
