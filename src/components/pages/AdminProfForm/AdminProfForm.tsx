@@ -99,7 +99,7 @@ function AdminProfForm({ professorId }: Props) {
               loginId: previousProf!.loginId === values.loginId ? undefined : values.loginId,
               name: previousProf!.name === values.name ? undefined : values.name,
               deptId:
-                previousProf!.department.id === Number(values.deptId)
+                previousProf!.department?.id === Number(values.deptId)
                   ? undefined
                   : Number(values.deptId),
               email: previousProf!.email === values.email ? undefined : values.email,
