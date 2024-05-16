@@ -102,8 +102,18 @@ function AdminProfForm({ professorId }: Props) {
                 previousProf!.department?.id === Number(values.deptId)
                   ? undefined
                   : Number(values.deptId),
-              email: previousProf!.email === values.email ? undefined : values.email,
-              phone: previousProf!.phone === values.phone ? undefined : values.phone,
+              email:
+                previousProf!.email === values.email
+                  ? undefined
+                  : values.email === ""
+                    ? undefined
+                    : values.email,
+              phone:
+                previousProf!.phone === values.phone
+                  ? undefined
+                  : values.phone === ""
+                    ? undefined
+                    : values.phone,
             }
           : { ...values };
         if (!professorId) {
