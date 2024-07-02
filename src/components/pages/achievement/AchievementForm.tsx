@@ -107,9 +107,19 @@ function AchievementForm({ form, handleSubmit, isEdit, isAdmin }: Props) {
           <RowGroup>
             <BasicRow field="ISSN">
               <Group justify="space-between">
-                <InputBase w={100} component={IMaskInput} mask="0000" {...getInputProps("ISSN1")} />
+                <InputBase
+                  w={100}
+                  component={IMaskInput}
+                  mask={/^[0-9a-zA-Z]{1,4}$/}
+                  {...getInputProps("ISSN1")}
+                />
                 {" - "}
-                <InputBase w={100} component={IMaskInput} mask="0000" {...getInputProps("ISSN2")} />
+                <InputBase
+                  w={100}
+                  component={IMaskInput}
+                  mask={/^[0-9a-zA-Z]{1,4}$/}
+                  {...getInputProps("ISSN2")}
+                />
               </Group>
             </BasicRow>
           </RowGroup>
