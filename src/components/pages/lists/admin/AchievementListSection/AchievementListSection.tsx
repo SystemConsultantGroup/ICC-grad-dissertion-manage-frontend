@@ -70,6 +70,7 @@ function AchievementListSection() {
       [name]: value === "" ? undefined : value,
       pageNumber: REFRESH_DEFAULT_PAGE_NUMBER,
     })) as any);
+    setPageNumber(REFRESH_DEFAULT_PAGE_NUMBER);
   };
 
   // Todo: 파일명 및 필터 저장 방식 논의
@@ -222,7 +223,11 @@ function AchievementListSection() {
         ))}
       </Table>
       <Center>
-        <Pagination total={1} />
+        <Pagination
+          value={pageNumber}
+          onChange={setPageNumber}
+          total={pageData ? pageData?.totalPages : 1}
+        />
       </Center>
     </Stack>
   );
