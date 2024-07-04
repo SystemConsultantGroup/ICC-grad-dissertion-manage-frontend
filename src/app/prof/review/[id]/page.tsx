@@ -41,7 +41,6 @@ export default async function ProfessorReviewPage({
     title: thesisInfo.stage === "PRELIMINARY" ? "예심 심사" : "본심 심사",
     token,
   });
-
   return (
     <>
       <PageHeader
@@ -52,7 +51,7 @@ export default async function ProfessorReviewPage({
         {!within && (
           <PhaseReadyAlertRow title="논문 심사" start={formatTime(start)} end={formatTime(end)} />
         )}
-        <ThesisInfo thesis={thesisInfo} isAdvisor />
+        <ThesisInfo thesis={thesisInfo} reviewerRole={review.reviewerRole} />
         {!isPermanent ? (
           <ProfessorReviewForm
             reviewId={reviewId}

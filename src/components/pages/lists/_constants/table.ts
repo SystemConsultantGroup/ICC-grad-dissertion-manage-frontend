@@ -24,6 +24,7 @@ export const PROF_REVIEW_TABLE_HEADERS: TableHeaderProps[] = [
   { label: "저자", widthPercentage: 7 },
   { label: "학과", widthPercentage: 15 },
   { label: "논문 제목", widthPercentage: 35 },
+  { label: "심사 구분", widthPercentage: 7 },
   { label: "심사 현황", widthPercentage: 7 },
 ];
 

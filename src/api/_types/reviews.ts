@@ -45,6 +45,7 @@ export interface Review {
   department: string;
   stage: Stage;
   title: string;
+  reviewerRole: ReviewerRole;
   status: Status;
   contentStatus: Status;
   presentationStatus: Status;

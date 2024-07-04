@@ -1,12 +1,13 @@
 import { Badge, Stack } from "@mantine/core";
 import { ApiFileRow, BasicRow, LongContentRow, RowGroup, TitleRow } from "@/components/common/rows";
 import { File } from "@/api/_types/file";
+import { REVIEWER_ROLE_LOOKUP_TABLE, ReviewerRole } from "@/api/_types/reviews";
 
 export type Stage = "PRELIMINARY" | "MAIN" | "REVISION";
 
 interface ThesisInfoProps {
   thesis: ThesisInfoData;
-  isAdvisor?: boolean;
+  reviewerRole?: ReviewerRole;
   revision?: ThesisRevisionInfoData;
   simple?: boolean;
 }
@@ -30,7 +31,7 @@ export interface ThesisRevisionInfoData {
   revisionReport?: File;
 }
 
-export function ThesisInfo({ thesis, isAdvisor, revision, simple = false }: ThesisInfoProps) {
+export function ThesisInfo({ thesis, reviewerRole, revision, simple = false }: ThesisInfoProps) {
   const { stage } = thesis;
 
   return (
@@ -39,7 +40,15 @@ export function ThesisInfo({ thesis, isAdvisor, revision, simple = false }: Thes
         title="논문 정보"
         badge={
           <>
-            {isAdvisor && <Badge>지도 학생</Badge>}
+            {reviewerRole === "COMMITTEE_CHAIR" ? (
+              <Badge>심사위원장</Badge>
+            ) : reviewerRole === "COMMITTEE_MEMBER" ? (
+              <Badge>심사위원</Badge>
+            ) : reviewerRole === "ADVISOR" ? (
+              <Badge>지도교수</Badge>
+            ) : (
+              <></>
+            )}
             {stage === "MAIN" || stage === "REVISION" ? (
               <Badge>본심</Badge>
             ) : stage === "PRELIMINARY" ? (
