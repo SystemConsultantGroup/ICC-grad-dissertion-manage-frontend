@@ -12,6 +12,7 @@
 
 .contentInput {
   height: 100%;
+  white-space: pre-wrap;
 }
 
 .wrapper {

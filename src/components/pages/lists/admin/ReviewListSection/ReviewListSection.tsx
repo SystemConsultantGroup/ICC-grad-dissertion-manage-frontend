@@ -90,6 +90,7 @@ function ReviewListSection() {
       [name]: value === "" ? undefined : value,
       pageNumber: REFRESH_DEFAULT_PAGE_NUMBER,
     })) as any);
+    setPageNumber(REFRESH_DEFAULT_PAGE_NUMBER);
   };
 
   useEffect(() => {
@@ -155,7 +156,7 @@ function ReviewListSection() {
               data={[
                 { label: "예심", value: "PRELIMINARY" },
                 { label: "본심", value: "MAIN" },
-                { label: "수정 단계", value: "REVISION" },
+                // { label: "수정 단계", value: "REVISION" },
               ]}
             />
           </Table.Data>

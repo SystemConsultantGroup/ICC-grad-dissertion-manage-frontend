@@ -54,6 +54,7 @@ function ProfRevisionListSection() {
       [name]: value === "" ? undefined : value,
       pageNumber: REFRESH_DEFAULT_PAGE_NUMBER,
     })) as any);
+    setPageNumber(REFRESH_DEFAULT_PAGE_NUMBER);
   };
 
   useEffect(() => {
