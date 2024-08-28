@@ -53,7 +53,7 @@ export function ProfessorFinalForm({
   const { values } = form;
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [currentState, setCurrentState] = useState<null | "pending" | "submitted">(null);
-  const [commentType, setCommentType] = useState<string>();
+  const [commentType, setCommentType] = useState<string>("심사 의견");
 
   const handleSubmit = transactionTask(async (task, input: FormInput) => {
     setCurrentState("pending");
@@ -72,7 +72,7 @@ export function ProfessorFinalForm({
       {
         contentStatus: input.status,
         ...(commentType === "심사 의견" ? { comment: input.comment } : {}),
-        ...(commentType === "심사 의견 파일" ? { fileUUID } : {}),
+        // ...(commentType === "심사 의견 파일" ? { fileUUID } : {}),
       } satisfies UpdateReviewRequestBody,
       { baseURL: process.env.NEXT_PUBLIC_REVIEW_API_ENDPOINT }
     );
@@ -87,8 +87,8 @@ export function ProfessorFinalForm({
       }했습니다.`,
     });
 
+    router.push("/prof/final");
     router.refresh();
-    router.push("../final");
   });
 
   return (
@@ -100,10 +100,11 @@ export function ProfessorFinalForm({
           handleSubmit(input);
         } else {
           const hasCommentFile = previous.reviewFile
-            ? values.commentFile === null
+            ? values.commentFile !== null
             : !!values.commentFile;
-          if (values.comment === "" && hasCommentFile) {
-            showNotificationError({ message: <>심사 의견이나 심사 의견 파일을 첨부해주세요.</> });
+          if (!values.comment && !hasCommentFile) {
+            // showNotificationError({ message: "심사 의견이나 심사 의견 파일을 첨부해주세요." });
+            showNotificationError({ message: "종합 의견을 작성해주세요." });
             return;
           }
           setShowConfirmDialog(true);
@@ -130,6 +131,7 @@ export function ProfessorFinalForm({
         onClose={() => {
           setShowConfirmDialog(false);
         }}
+        isFinal
       />
     </form>
   );

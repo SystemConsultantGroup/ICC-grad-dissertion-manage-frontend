@@ -90,6 +90,7 @@ function ProfessorListSection() {
       [name]: value === "" ? undefined : value,
       pageNumber: REFRESH_DEFAULT_PAGE_NUMBER,
     })) as any);
+    setPageNumber(REFRESH_DEFAULT_PAGE_NUMBER);
   };
 
   useEffect(() => {
@@ -235,7 +236,7 @@ function ProfessorListSection() {
             <Table.Data>{professor.name}</Table.Data>
             <Table.Data>{professor.email}</Table.Data>
             <Table.Data>{professor.phone}</Table.Data>
-            <Table.Data>{professor.department.name}</Table.Data>
+            <Table.Data>{professor.department?.name}</Table.Data>
           </Table.Row>
         ))}
       </Table>

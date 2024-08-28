@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
 import { ActionIcon, Button, Center, Group, Popover, Select, Skeleton, Stack } from "@mantine/core";
 import { SectionHeader } from "@/components/common/SectionHeader";
-import { IconDownload } from "@tabler/icons-react";
+import { IconDownload, IconRotate } from "@tabler/icons-react";
 import { Table } from "@/components/common/Table";
 import Pagination from "@/components/common/Pagination";
 import { DepartmentSelect } from "@/components/common/selects/DepartmentSelect";
@@ -101,6 +101,7 @@ function ReviewResultListSection() {
       [name]: value === "" ? undefined : value,
       pageNumber: REFRESH_DEFAULT_PAGE_NUMBER,
     })) as any);
+    setPageNumber(REFRESH_DEFAULT_PAGE_NUMBER);
   };
 
   useEffect(() => {
@@ -181,7 +182,7 @@ function ReviewResultListSection() {
               data={[
                 { label: "예심", value: "PRELIMINARY" },
                 { label: "본심", value: "MAIN" },
-                { label: "수정 단계", value: "REVISION" },
+                // { label: "수정 단계", value: "REVISION" },
               ]}
             />
           </Table.Data>

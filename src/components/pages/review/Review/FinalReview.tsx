@@ -4,6 +4,7 @@ import { UseFormReturnType } from "@mantine/form";
 import {
   BasicRow,
   ButtonRow,
+  CommentTypeRow,
   FileUploadRow,
   RowGroup,
   TextAreaRow,
@@ -23,7 +24,7 @@ export interface FinalReviewProps {
   previousCommentFile: ApiFile | undefined;
   currentState: null | "pending" | "submitted";
   commentType?: string;
-  setCommentType: Dispatch<SetStateAction<string | undefined>>;
+  setCommentType: Dispatch<SetStateAction<string>>;
 }
 
 export function FinalReview({
@@ -54,13 +55,14 @@ export function FinalReview({
           </StatusButtons>
         </BasicRow>
       </RowGroup>
+      {/* <CommentTypeRow commentType={commentType} setCommentType={setCommentType} /> */}
       <TextAreaRow
-        field="심사 의견"
+        field="종합 의견"
         form={form}
         formKey="comment"
         disabled={commentType !== "심사 의견"}
       />
-      <RowGroup>
+      {/* <RowGroup>
         <FileUploadRow
           field="심사 의견 파일"
           form={form}
@@ -68,7 +70,7 @@ export function FinalReview({
           formKey="commentFile"
           disabled={commentType !== "심사 의견 파일"}
         />
-      </RowGroup>
+      </RowGroup> */}
       <RowGroup withBorderBottom={false}>
         <ButtonRow
           buttons={[
