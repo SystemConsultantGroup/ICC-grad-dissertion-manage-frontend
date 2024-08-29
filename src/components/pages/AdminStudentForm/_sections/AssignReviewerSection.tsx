@@ -130,12 +130,14 @@ function AssignReviewerSection({
       let data: ComboboxData = [];
       if (!isLoadingProf) {
         data = professors
-          ? professors.map((professor) => ({
-              label: professor.department
-                ? `${professor.name} (${professor.department.name})`
-                : `${professor.name}`,
-              value: String(professor.id),
-            }))
+          ? professors
+              .map((professor) => ({
+                label: professor.department
+                  ? `${professor.name} (${professor.department.name})`
+                  : `${professor.name}`,
+                value: String(professor.id),
+              }))
+              .sort((a, b) => a.label.localeCompare(b.label))
           : [];
       }
       setProfessorsSelectData(data);
