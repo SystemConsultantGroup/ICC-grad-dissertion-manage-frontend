@@ -52,7 +52,7 @@ export default async function ProfessorFinalPage({
         {!within && (
           <PhaseReadyAlertRow title="최종 판정" start={formatTime(start)} end={formatTime(end)} />
         )}
-        <ThesisInfo thesis={thesisInfo} isAdvisor />
+        <ThesisInfo thesis={thesisInfo} reviewerRole={final.finalReview.reviewerRole} />
         {final.otherReviews && (
           <ReviewList
             title={review.stage === "REVISION" ? "수정지시사항 확인 현황" : "심사 의견"}

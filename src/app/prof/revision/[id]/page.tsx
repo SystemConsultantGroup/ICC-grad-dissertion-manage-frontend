@@ -56,7 +56,6 @@ export default async function ProfessorRevisionPage({
             revisionReport: revision.thesisFiles.find((file) => file.type === "REVISION_REPORT")
               ?.file,
           }}
-          isAdvisor
         />
         {/* {!isPermanent ? <RevisionCheckForm /> : <RevisionCheckResult />} */}
         <RevisionCheckForm
