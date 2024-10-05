@@ -11,7 +11,17 @@ import { PAGE_SIZES } from "@/constants/pageSize";
 import { useDebouncedState } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
-import { ActionIcon, Button, Center, Group, Popover, Select, Skeleton, Stack } from "@mantine/core";
+import {
+  ActionIcon,
+  Badge,
+  Button,
+  Center,
+  Group,
+  Popover,
+  Select,
+  Skeleton,
+  Stack,
+} from "@mantine/core";
 import { SectionHeader } from "@/components/common/SectionHeader";
 import { IconDownload } from "@tabler/icons-react";
 import { Table } from "@/components/common/Table";
@@ -188,6 +198,7 @@ function ProfReviewListSection({ isFinal }: Props) {
               }}
             />
           </Table.Data>
+          <Table.Data>-</Table.Data>
           <Table.Data>
             <Select
               w="100%"
@@ -216,6 +227,17 @@ function ProfReviewListSection({ isFinal }: Props) {
             <Table.Data>{review.student}</Table.Data>
             <Table.Data>{review.department}</Table.Data>
             <Table.Data>{review.title}</Table.Data>
+            <Table.Data>
+              {review.reviewerRole === "COMMITTEE_CHAIR" ? (
+                <Badge>심사위원장</Badge>
+              ) : review.reviewerRole === "COMMITTEE_MEMBER" ? (
+                <Badge>심사위원</Badge>
+              ) : review.reviewerRole === "ADVISOR" ? (
+                <Badge>지도교수</Badge>
+              ) : (
+                <></>
+              )}
+            </Table.Data>
             <Table.Data>{review.status === "PENDING" ? "진행중" : "심사 완료"}</Table.Data>
           </Table.Row>
         ))}
