@@ -1,4 +1,6 @@
-import { Button, Stack, Text } from "@mantine/core";
+"use client";
+
+import { Button, Group, Stack, Text } from "@mantine/core";
 import Link from "next/link";
 import { UseFormReturnType } from "@mantine/form";
 import {
@@ -35,7 +37,6 @@ export function FinalReview({
   setCommentType,
 }: FinalReviewProps) {
   const { status } = form.values;
-  const hasPending = status === "PENDING";
 
   return (
     <Stack gap={0}>
@@ -71,17 +72,34 @@ export function FinalReview({
           disabled={commentType !== "심사 의견 파일"}
         />
       </RowGroup> */}
+      <Group justify="right" align="center" p={12}>
+        <Text fz={14} c="gray">
+          임시저장 시 합격여부는 자동으로 보류로 선택됩니다.
+        </Text>
+      </Group>
       <RowGroup withBorderBottom={false}>
         <ButtonRow
           buttons={[
             <Button
-              key="save"
-              color={hasPending ? "violet" : "blue"}
+              key="temp_save"
+              onClick={() => {
+                form.setValues({ status: "PENDING" });
+              }}
+              color="violet"
               type="submit"
               loading={currentState === "pending"}
               disabled={currentState === "submitted"}
             >
-              {hasPending ? "임시저장" : "최종저장"}
+              임시저장
+            </Button>,
+            <Button
+              key="save"
+              color="blue"
+              type="submit"
+              loading={currentState === "pending"}
+              disabled={currentState === "submitted"}
+            >
+              최종저장
             </Button>,
             <Button key="back" variant="outline" component={Link} href="../final">
               목록으로

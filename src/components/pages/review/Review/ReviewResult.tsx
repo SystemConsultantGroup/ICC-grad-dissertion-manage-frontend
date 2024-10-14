@@ -127,7 +127,7 @@ export function StudentReviewResult({ review }: StudentReviewResultProps) {
           </BasicRow>
         </RowGroup>
         <RowGroup>
-          <BasicRow field="결과보고서 파일">
+          <BasicRow field="최종판정 결과보고서">
             <ApiDownloadButton file={review.file} size="xs" />
           </BasicRow>
         </RowGroup>
