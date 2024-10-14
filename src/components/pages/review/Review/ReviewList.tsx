@@ -46,13 +46,13 @@ export function ReviewList({ title, stage, reviews }: ReviewListProps) {
           { label: "내용 심사 결과", widthPercentage: 10 },
           { label: "구두 심사 결과", widthPercentage: 10 },
           { label: "심사 의견", widthPercentage: 56 },
-          { label: "심사 의견 파일" },
+          { label: "개별심사 결과보고서" },
         ]
       : [
           { label: "심사위원", widthPercentage: 12 },
           { label: "심사 결과", widthPercentage: 10 },
           { label: "심사 의견", widthPercentage: 62 },
-          { label: "심사 의견 파일" },
+          { label: "개별심사 결과보고서" },
         ];
   const table =
     stage === "REVISION" ? (
