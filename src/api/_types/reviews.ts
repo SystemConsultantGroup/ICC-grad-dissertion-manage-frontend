@@ -77,7 +77,7 @@ export interface FinalReviewResponse extends CommonApiResponse {
 export interface UpdateReviewRequestBody {
   contentStatus: Status;
   presentationStatus?: Status | null;
-  comment?: string;
+  comment?: string | null;
   fileUUID?: string;
 }
 
