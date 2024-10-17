@@ -153,7 +153,12 @@ export function ProfessorReviewForm({
               : previous.contentStatus === "PENDING"
                 ? previous.comment
                 : "",
-          commentFile: commentType === "심사 의견 파일" ? values.commentFile?.name ?? null : null,
+          commentFile:
+            commentType === "심사 의견 파일"
+              ? values.commentFile?.name ?? null
+              : previous.contentStatus === "PENDING"
+                ? previous.reviewFile?.name ?? null
+                : null,
         }}
         opened={showConfirmDialog}
         onConfirm={() => handleSubmit(values)}
