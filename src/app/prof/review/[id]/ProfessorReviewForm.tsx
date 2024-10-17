@@ -90,6 +90,11 @@ export function ProfessorReviewForm({
         presentationStatus: input.presentation,
         ...(commentType === "심사 의견" ? { comment: input.comment } : {}),
         ...(commentType === "심사 의견 파일" ? { fileUUID } : {}),
+        ...(commentType === undefined
+          ? previous.reviewFile
+            ? { fileUUID: previous.reviewFile.uuid }
+            : { comment: previous.comment }
+          : {}),
       } satisfies UpdateReviewRequestBody,
       { baseURL: process.env.NEXT_PUBLIC_REVIEW_API_ENDPOINT }
     );
@@ -142,7 +147,12 @@ export function ProfessorReviewForm({
         review={{
           thesis: values.thesis,
           presentation: values.presentation,
-          comment: commentType === "심사 의견" ? values.comment : "",
+          comment:
+            commentType === "심사 의견"
+              ? values.comment
+              : previous.contentStatus === "PENDING"
+                ? previous.comment
+                : "",
           commentFile: commentType === "심사 의견 파일" ? values.commentFile?.name ?? null : null,
         }}
         opened={showConfirmDialog}

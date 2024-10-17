@@ -10,7 +10,7 @@ export interface ReviewResultProps {
   stage: Stage;
   thesis?: Status;
   presentation?: Status | null;
-  comment?: string;
+  comment?: string | null;
   commentFile?: string | null;
   isFinal?: boolean;
 }
