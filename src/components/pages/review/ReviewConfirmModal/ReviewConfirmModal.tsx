@@ -12,7 +12,7 @@ export interface ReviewConfirmModalProps extends PropsWithChildren {
   review: {
     thesis: Status;
     presentation: Status | null;
-    comment: string;
+    comment: string | null;
     commentFile: string | null;
   };
   opened: boolean;
