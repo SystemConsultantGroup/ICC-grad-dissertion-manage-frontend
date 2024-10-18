@@ -51,6 +51,9 @@ function AchievementEditSection({ id, isAdmin }: Props) {
         publicationDate: new Date(data.publicationDate),
         ISSN1: data.ISSN ? data.ISSN.slice(0, 4) : "",
         ISSN2: data.ISSN ? data.ISSN.slice(-4) : "",
+        professorIds: [data.professorId1, data.professorId2].filter(
+          (pid) => pid !== undefined && pid !== null
+        ),
       });
     }
   }, [data]);

@@ -11,6 +11,9 @@ export const MOCKUP_ACHIEVEMENT: Achievement = {
   authorNumbers: 3,
   name: "홍길동",
   department: "department",
+  professorIds: [],
+  professorId1: 0,
+  professorId2: 0,
 };
 
 export const MOCKUP_ACHIEVEMENT_LIST: PagedAchievementResponse = {
@@ -31,6 +34,9 @@ export const MOCKUP_ACHIEVEMENT_LIST: PagedAchievementResponse = {
       authorNumbers: 3,
       name: "홍길동",
       department: "department",
+      professorIds: [],
+      professorId1: 0,
+      professorId2: 0,
     },
     {
       id: 2,
@@ -43,6 +49,9 @@ export const MOCKUP_ACHIEVEMENT_LIST: PagedAchievementResponse = {
       authorNumbers: 3,
       name: "홍길동",
       department: "department",
+      professorIds: [],
+      professorId1: 0,
+      professorId2: 0,
     },
     {
       id: 3,
@@ -55,6 +64,9 @@ export const MOCKUP_ACHIEVEMENT_LIST: PagedAchievementResponse = {
       authorNumbers: 3,
       name: "홍길동",
       department: "department",
+      professorIds: [],
+      professorId1: 0,
+      professorId2: 0,
     },
     {
       id: 4,
@@ -67,6 +79,9 @@ export const MOCKUP_ACHIEVEMENT_LIST: PagedAchievementResponse = {
       authorNumbers: 3,
       name: "홍길동",
       department: "department",
+      professorIds: [],
+      professorId1: 0,
+      professorId2: 0,
     },
     {
       id: 5,
@@ -79,6 +94,9 @@ export const MOCKUP_ACHIEVEMENT_LIST: PagedAchievementResponse = {
       authorNumbers: 3,
       name: "홍길동",
       department: "department",
+      professorIds: [],
+      professorId1: 0,
+      professorId2: 0,
     },
   ],
 };
