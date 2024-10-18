@@ -4,7 +4,7 @@ import { Section } from "@/components/common/Section";
 import StudentAchievementListSection from "@/components/pages/lists/StudentAchievementListSection/StudentAchievementListSection";
 
 async function StudentAchievementPage() {
-  await AuthSSR({ userType: "STUDENT" });
+  await AuthSSR({ userType: "STUDENT", otherUserType: "PHD" });
   return (
     <>
       <PageHeader
