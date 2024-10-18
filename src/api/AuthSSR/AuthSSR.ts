@@ -7,15 +7,18 @@ import { Role } from "@/api/_types/user";
 
 interface Props {
   userType: Role;
+  otherUserType?: Role;
 }
 
-export async function AuthSSR({ userType }: Props): Promise<{ token: string }> {
+export async function AuthSSR({ userType, otherUserType }: Props): Promise<{ token: string }> {
   const token = cookies().get(JWT_COOKIE_NAME)?.value;
   if (token) {
     // already logged in
     const claims: CustomJwtPayload = jwtDecode(token);
 
     if (claims.type === userType) {
+      return { token };
+    } else if (otherUserType && claims.type === otherUserType) {
       return { token };
     }
   }

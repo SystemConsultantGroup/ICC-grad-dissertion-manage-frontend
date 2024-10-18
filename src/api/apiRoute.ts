@@ -40,10 +40,12 @@ export const API_ROUTES = {
   student: {
     get: (studentId?: ApiId | null) => `/students/${studentId ?? ""}`, // GET: 학생 목록 및 상세 조회
     post: () => "/students", // POST: 학생 생성 (관리자)
+    phd: () => "/students/phd", // POST: 박사 과정 학생 생성 (관리자)
     put: (studentId: ApiId) => `/students/${studentId}`, // PUT: 학생 정보 수정 (학생 및 관리자)
     excel: {
       get: () => "/students/excel", // GET: 학생 일괄 다운로드 (관리자)
       post: () => "/students/excel", // POST: 학생 일괄 업로드 (관리자)
+      phd: () => "/students/excel/phd", // POST: 박사 과정 학생 일괄 업로드 (관리자)
     },
     getSystem: (studentId: ApiId) => `/students/${studentId}/system`, // GET: 학생 시스템 정보 조회
     putSystem: (studentId: ApiId) => `/students/${studentId}/system`, // PUT: 학생 시스템 정보 수정

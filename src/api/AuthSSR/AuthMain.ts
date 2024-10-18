@@ -14,7 +14,7 @@ export async function AuthMain() {
       redirect("/admin");
     } else if (claims.type === "PROFESSOR") {
       redirect("/prof");
-    } else if (claims.type === "STUDENT") {
+    } else if (claims.type === "STUDENT" || claims.type === "PHD") {
       redirect("/student");
     }
   }

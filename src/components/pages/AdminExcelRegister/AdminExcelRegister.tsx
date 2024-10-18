@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { uploadFile } from "@/api/_utils/uploadFile";
 import { handleDownloadFile } from "@/api/_utils/handleDownloadFile";
-import { Stack, Button } from "@mantine/core";
+import { Stack, Button, Switch } from "@mantine/core";
 import { API_ROUTES } from "@/api/apiRoute";
 import { ClientAxios } from "@/api/ClientAxios";
 import {
@@ -23,6 +23,7 @@ interface Props {
 function AdminExcelRegister({ isProf = false }: Props) {
   const [file, setFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isPhd, setIsPhd] = useState<boolean>(false);
 
   const handleExcelDownload = async () => {
     try {
@@ -58,6 +59,12 @@ function AdminExcelRegister({ isProf = false }: Props) {
             method: "POST",
             data: formData,
           });
+        } else if (isPhd) {
+          await ClientAxios({
+            url: API_ROUTES.student.excel.phd(),
+            method: "POST",
+            data: formData,
+          });
         } else {
           await ClientAxios({
             url: API_ROUTES.student.excel.post(),
@@ -88,8 +95,31 @@ function AdminExcelRegister({ isProf = false }: Props) {
         }
       />
       <RowGroup>
-        <NoticeRow text="첨부파일 우측 상단의 안내사항을 참고하시기 바랍니다." />
+        <NoticeRow
+          text="첨부파일 우측 상단의 안내사항을 참고하시기 바랍니다."
+          withBorderBottom={false}
+        />
       </RowGroup>
+      {!isProf && (
+        <RowGroup>
+          <NoticeRow
+            text="박사과정 등록시 심사과정, 논문 제목, 지도교수 및 심사위원 정보를 제외하고 입력해주세요."
+            withBorderBottom={false}
+          />
+        </RowGroup>
+      )}
+      {!isProf && (
+        <RowGroup>
+          <BasicRow field="박사 과정">
+            <Switch
+              checked={isPhd}
+              onChange={(e) => {
+                setIsPhd(e.currentTarget.checked);
+              }}
+            ></Switch>
+          </BasicRow>
+        </RowGroup>
+      )}
       <RowGroup>
         <BasicRow field="엑셀 양식">
           <Button onClick={handleExcelDownload}>다운로드</Button>

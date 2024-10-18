@@ -116,6 +116,19 @@ export const PROF_NAVBAR_LIST: Props[] = [
   { label: "수정사항 확인", href: "/prof/revision", icon: <IconFileCheck size="24" stroke={1} /> },
   { label: "회원정보 수정", href: "/prof/account", icon: <IconSettings size="24" stroke={1} /> },
 ];
+export const PHD_NAVBAR_LIST: Props[] = [
+  { label: "메인", href: "/", icon: <IconHome size="24" stroke={1} /> },
+  {
+    label: "연구실적",
+    href: "/student/achievement",
+    icon: <IconMicroscope size="24" stroke={1} />,
+  },
+  {
+    label: "회원정보 수정",
+    href: "/student/account",
+    icon: <IconSettings size="24" stroke={1} />,
+  },
+];
 
 export const ADMIN_MAIN = "/admin";
 export const STUDENT_MAIN = "/student";
@@ -125,4 +138,5 @@ export const USER_TYPE_MAIN = {
   ADMIN: ADMIN_MAIN,
   PROFESSOR: PROF_MAIN,
   STUDENT: STUDENT_MAIN,
+  PHD: STUDENT_MAIN,
 };

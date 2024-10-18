@@ -2,7 +2,7 @@ import { File } from "@/api/_types/file";
 import { CommonApiResponse, Stage } from "./common";
 import { Department } from "./department";
 
-export type Role = "ADMIN" | "PROFESSOR" | "STUDENT";
+export type Role = "ADMIN" | "PROFESSOR" | "STUDENT" | "PHD";
 
 export interface User {
   id: number;
