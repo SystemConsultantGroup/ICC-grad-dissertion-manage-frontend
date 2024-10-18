@@ -17,9 +17,18 @@ interface Props {
   handleIsPwEditing: Dispatch<SetStateAction<boolean>>;
   open: () => void;
   token?: boolean;
+  isPhd?: boolean;
 }
 
-function BasicInfoSection({ form, studentId, isPwEditing, handleIsPwEditing, open, token }: Props) {
+function BasicInfoSection({
+  form,
+  studentId,
+  isPwEditing,
+  handleIsPwEditing,
+  open,
+  token,
+  isPhd,
+}: Props) {
   const [phase, setPhase] = useState<Phase>();
   const [defaultDepartmentId, setDefaultDepartmentId] = useState<string | null>(null);
 
@@ -126,38 +135,40 @@ function BasicInfoSection({ form, studentId, isPwEditing, handleIsPwEditing, ope
             )}
           </BasicRow>
         </RowGroup>
-        <RowGroup>
-          <BasicRow field="시스템 단계">
-            {studentId ? (
-              <>
-                <Text style={{ width: 310 }}>{phase?.title}</Text>
-                {phase?.id === 3 && (
-                  <ButtonRow
-                    buttons={[
-                      <Button key="switch" onClick={open}>
-                        본심 전환
-                      </Button>,
-                    ]}
-                  />
-                )}
-              </>
-            ) : (
-              <Select
-                placeholder="예심/본심 여부 선택"
-                data={[
-                  { value: "PRELIMINARY", label: "예심" },
-                  { value: "MAIN", label: "본심" },
-                ]}
-                styles={{
-                  wrapper: {
-                    width: 300,
-                  },
-                }}
-                {...form.getInputProps("stage")}
-              />
-            )}
-          </BasicRow>
-        </RowGroup>
+        {!isPhd && (
+          <RowGroup>
+            <BasicRow field="시스템 단계">
+              {studentId ? (
+                <>
+                  <Text style={{ width: 310 }}>{phase?.title}</Text>
+                  {phase?.id === 3 && (
+                    <ButtonRow
+                      buttons={[
+                        <Button key="switch" onClick={open}>
+                          본심 전환
+                        </Button>,
+                      ]}
+                    />
+                  )}
+                </>
+              ) : (
+                <Select
+                  placeholder="예심/본심 여부 선택"
+                  data={[
+                    { value: "PRELIMINARY", label: "예심" },
+                    { value: "MAIN", label: "본심" },
+                  ]}
+                  styles={{
+                    wrapper: {
+                      width: 300,
+                    },
+                  }}
+                  {...form.getInputProps("stage")}
+                />
+              )}
+            </BasicRow>
+          </RowGroup>
+        )}
       </Stack>
     </Stack>
   );

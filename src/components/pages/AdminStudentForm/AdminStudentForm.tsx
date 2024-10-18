@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Stack, Button, Modal, Group, Text } from "@mantine/core";
+import { Stack, Button, Modal, Group, Text, Switch } from "@mantine/core";
 import { ClientAxios } from "@/api/ClientAxios";
 import { useRouter } from "next/navigation";
 import { API_ROUTES } from "@/api/apiRoute";
 import { useForm, isNotEmpty } from "@mantine/form";
-import { RowGroup, ButtonRow } from "@/components/common/rows";
+import { RowGroup, ButtonRow, BasicRow } from "@/components/common/rows";
 import { CommonApiResponse } from "@/api/_types/common";
 import { showNotificationError, showNotificationSuccess } from "@/components/common/Notifications";
 import { useAuth } from "@/components/common/AuthProvider/AuthProvider";
@@ -40,6 +40,7 @@ function AdminStudentForm({ studentId }: Props) {
     handleReviewerAdd,
     handleReviewersSet,
   } = useReviewersAssign();
+  const [isPhd, setIsPhd] = useState<boolean>(false);
 
   const form = useForm<AdminStudentFormInputs>({
     initialValues: {
@@ -74,7 +75,8 @@ function AdminStudentForm({ studentId }: Props) {
       },
 
       // 등록시에만 validate 적용
-      stage: (value) => (studentId ? undefined : value ? null : "예심/본심 단계를 선택해주세요."),
+      stage: (value) =>
+        studentId || isPhd ? undefined : value ? null : "예심/본심 단계를 선택해주세요.",
     },
   });
 
@@ -238,6 +240,62 @@ function AdminStudentForm({ studentId }: Props) {
     }
   };
 
+  const handlePhd = async () => {
+    try {
+      if (isPwEditing && form.values.basicInfo.password === undefined) {
+        showNotificationError({
+          message: "수정할 비밀번호를 입력하거나, 수정 취소 버튼을 눌러주세요.",
+        });
+      } else {
+        let previous;
+        if (studentId) {
+          previous = (await ClientAxios.get(API_ROUTES.student.get(studentId))).data;
+        }
+        const basicInfo = studentId
+          ? {
+              ...(isPwEditing ? { password: form.values.basicInfo.password } : {}),
+              loginId:
+                previous.loginId === form.values.basicInfo.loginId
+                  ? undefined
+                  : form.values.basicInfo.loginId,
+              name:
+                previous.name === form.values.basicInfo.name
+                  ? undefined
+                  : form.values.basicInfo.name,
+              deptId:
+                previous.deptId === form.values.basicInfo.deptId
+                  ? undefined
+                  : Number(form.values.basicInfo.deptId),
+              email:
+                previous.email === form.values.basicInfo.email
+                  ? undefined
+                  : form.values.basicInfo.email,
+              phone:
+                previous.phone === form.values.basicInfo.phone
+                  ? undefined
+                  : form.values.basicInfo.phone,
+            }
+          : {
+              ...form.values.basicInfo,
+            };
+        if (!studentId) {
+          await ClientAxios.post(API_ROUTES.student.phd(), basicInfo);
+          showNotificationSuccess({ message: "학생 등록이 완료되었습니다." });
+          router.push("/admin/students");
+        } else {
+          await ClientAxios.post(API_ROUTES.student.put(studentId), basicInfo);
+          showNotificationSuccess({ message: "학생 정보 수정이 완료되었습니다." });
+          router.push(`/admin/students/${studentId}`);
+          router.refresh();
+        }
+      }
+    } catch (error) {
+      let message = "Unknown Error";
+      if (error instanceof Error) message = error.message;
+      showNotificationError({ message });
+    }
+  };
+
   const checkReviewersLength = (list: SelectedProfessor[]) => list.length >= 1 && list.length <= 2;
 
   useEffect(() => {
@@ -246,6 +304,7 @@ function AdminStudentForm({ studentId }: Props) {
     }
   }, [isLoading]);
 
+  useEffect(() => {}, [isPhd]);
   return (
     <>
       <Modal
@@ -273,7 +332,7 @@ function AdminStudentForm({ studentId }: Props) {
       {studentId && (
         <MainRegisterModal studentId={studentId} opened={opened} close={close} token={isAdmin} />
       )}
-      <form onSubmit={form.onSubmit(handleSubmit)}>
+      <form onSubmit={isPhd ? form.onSubmit(handlePhd) : form.onSubmit(handleSubmit)}>
         <Stack gap="xl">
           {studentId && (
             <RowGroup withBorderBottom={false}>
@@ -292,6 +351,16 @@ function AdminStudentForm({ studentId }: Props) {
               />
             </RowGroup>
           )}
+          {!studentId && (
+            <RowGroup withBorderBottom={false}>
+              <BasicRow field="박사과정">
+                <Switch
+                  checked={isPhd}
+                  onChange={(e) => setIsPhd(e.currentTarget.checked)}
+                ></Switch>
+              </BasicRow>
+            </RowGroup>
+          )}
           <BasicInfoSection
             form={form}
             studentId={studentId}
@@ -299,21 +368,28 @@ function AdminStudentForm({ studentId }: Props) {
             handleIsPwEditing={setIsPwEditing}
             open={open}
             token={isAdmin}
+            isPhd={isPhd}
           />
-          <AssignReviewerSection
-            studentId={studentId}
-            headReviewer={headReviewer}
-            advisors={advisors}
-            committees={committees}
-            onChangeReviewerAdd={handleReviewerAdd}
-            onChangeReviewerCancle={handleReviewerCancel}
-            onChangeReviewersSet={handleReviewersSet}
-            token={isAdmin}
-          />
-          {studentId ? (
-            <ThesisInfoSection studentId={studentId} token={isAdmin} />
+          {!isPhd && (
+            <AssignReviewerSection
+              studentId={studentId}
+              headReviewer={headReviewer}
+              advisors={advisors}
+              committees={committees}
+              onChangeReviewerAdd={handleReviewerAdd}
+              onChangeReviewerCancle={handleReviewerCancel}
+              onChangeReviewersSet={handleReviewersSet}
+              token={isAdmin}
+            />
+          )}
+          {!isPhd ? (
+            studentId ? (
+              <ThesisInfoSection studentId={studentId} token={isAdmin} />
+            ) : (
+              <ThesisTitleSection form={form} />
+            )
           ) : (
-            <ThesisTitleSection form={form} />
+            <></>
           )}
           <RowGroup>
             {studentId ? (
