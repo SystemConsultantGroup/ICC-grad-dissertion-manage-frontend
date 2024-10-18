@@ -1,6 +1,16 @@
 import { BasicRow, RowGroup } from "@/components/common/rows";
 import { DATE_FORMAT } from "@/constants/date";
-import { Button, Group, InputBase, Modal, NumberInput, Select, Stack, Text } from "@mantine/core";
+import {
+  Button,
+  ComboboxData,
+  Group,
+  InputBase,
+  Modal,
+  NumberInput,
+  Select,
+  Stack,
+  Text,
+} from "@mantine/core";
 import { IMaskInput } from "react-imask";
 import { DateInput } from "@mantine/dates";
 import { IconCalendar } from "@tabler/icons-react";
@@ -13,9 +23,12 @@ import {
 import { UseFormReturnType } from "@mantine/form";
 import { ClientAxios } from "@/api/ClientAxios";
 import { API_ROUTES } from "@/api/apiRoute";
-import { showNotificationSuccess } from "@/components/common/Notifications";
+import { showNotificationError, showNotificationSuccess } from "@/components/common/Notifications";
 import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useProfessors } from "@/api/SWR";
+import { PAGE_NUMBER_GET_ALL, PAGE_SIZE_GET_ALL } from "@/constants/pagination";
+import { SelectedProfessor } from "../AdminStudentForm/_types/AdminStudentForm";
 
 export interface AchievementFormInput {
   performance: AchievementType;
@@ -26,6 +39,7 @@ export interface AchievementFormInput {
   publicationDate: Date;
   authorType: AchievementAuthorType;
   authorNumbers: number;
+  professorIds: number[];
 }
 
 interface Props {
@@ -35,11 +49,62 @@ interface Props {
   isAdmin?: boolean;
 }
 
+interface SelectedAdvisor {
+  value: string;
+  label: string;
+}
+
 function AchievementForm({ form, handleSubmit, isEdit, isAdmin }: Props) {
   const { onSubmit, getInputProps, values } = form;
   const [isDeleting, setIsDeleting] = useState(false);
   const router = useRouter();
   const { id } = useParams();
+
+  const {
+    data: professors,
+    isLoading: isLoadingProf,
+    error: errorProf,
+  } = useProfessors({ pageNumber: PAGE_NUMBER_GET_ALL, pageSize: PAGE_SIZE_GET_ALL }, true);
+  const [professorsSelectData, setProfessorsSelectData] = useState<ComboboxData>();
+  const [advisors, setAdvisors] = useState<number[]>([]);
+  const [selectedAdvisors, setSelectedAdvisors] = useState<SelectedAdvisor[]>([]);
+  const [selectedAdvisor, setSelectedAdvisor] = useState<SelectedProfessor>({
+    profId: null,
+  });
+  const [cancleReviewerId, setCancleReviewerId] = useState<string | null>();
+
+  const handleAdvisorSelect = () => {
+    const isDuplicate = selectedAdvisors.some(
+      (reviewer) => reviewer.value === selectedAdvisor.profId
+    );
+
+    if (isDuplicate) {
+      showNotificationError({ message: "중복된 배정입니다. 배정 교수 목록을 확인해주세요." });
+    } else {
+      setSelectedAdvisors((prev) => [
+        ...prev,
+        {
+          value: selectedAdvisor.profId as string,
+          label: professors?.find((prof) => prof.id === Number(selectedAdvisor.profId))?.name || "",
+        },
+      ]);
+      const profId = Number(selectedAdvisor.profId);
+      setAdvisors((prev) => [...prev, profId]);
+      selectedAdvisor.profId = null;
+    }
+  };
+
+  const handleCancle = () => {
+    if (cancleReviewerId) {
+      const newSelectedAdvisors = selectedAdvisors.filter(
+        (advisor) => advisor.value !== cancleReviewerId
+      );
+      const newAdvisors = advisors.filter((advisor) => advisor !== Number(cancleReviewerId));
+      setSelectedAdvisors(newSelectedAdvisors);
+      setAdvisors(newAdvisors);
+      setCancleReviewerId(null);
+    }
+  };
 
   const transformedAchievementTypeList = Object.entries(ACHIEVEMENT_TYPE_LOOKUP_TABLE).map(
     ([key, value]) => ({ value: key, label: value })
@@ -57,6 +122,47 @@ function AchievementForm({ form, handleSubmit, isEdit, isAdmin }: Props) {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    form.setValues({
+      professorIds: advisors,
+    });
+  }, [advisors]);
+
+  useEffect(() => {
+    if (isEdit && values.professorIds) {
+      const profIds = values.professorIds;
+      const selectedProfessors = profIds.map((pid) => {
+        const professor = professors?.find((prof) => prof.id === pid);
+        return {
+          value: String(pid),
+          label: professor?.name || "",
+        };
+      });
+      setSelectedAdvisors(selectedProfessors);
+      setAdvisors(profIds);
+    }
+  }, [professors, values.professorIds]);
+
+  useEffect(() => {
+    const setProfessorsData = () => {
+      let data: ComboboxData = [];
+      if (!isLoadingProf) {
+        data = professors
+          ? professors
+              .map((professor) => ({
+                label: professor.department
+                  ? `${professor.name} (${professor.department.name})`
+                  : `${professor.name}`,
+                value: String(professor.id),
+              }))
+              .sort((a, b) => a.label.localeCompare(b.label))
+          : [];
+      }
+      setProfessorsSelectData(data);
+    };
+    setProfessorsData();
+  }, [isLoadingProf]);
 
   return (
     <>
@@ -144,6 +250,47 @@ function AchievementForm({ form, handleSubmit, isEdit, isAdmin }: Props) {
               <Group wrap="nowrap">
                 <NumberInput allowNegative={false} {...getInputProps("authorNumbers")} /> 명
               </Group>
+            </BasicRow>
+          </RowGroup>
+          <RowGroup>
+            <BasicRow field="지도교수 목록">
+              <Select
+                placeholder="배정된 교수 조회"
+                onChange={setCancleReviewerId}
+                value={cancleReviewerId}
+                styles={{
+                  wrapper: {
+                    width: 300,
+                  },
+                }}
+                data={selectedAdvisors}
+              />
+              <Button color="red" style={{ marginLeft: "20px" }} onClick={handleCancle}>
+                등록 취소
+              </Button>
+            </BasicRow>
+          </RowGroup>
+          <RowGroup>
+            <BasicRow field="지도교수 추가">
+              <Select
+                placeholder="교수를 선택해주세요"
+                styles={{
+                  wrapper: {
+                    width: 300,
+                  },
+                }}
+                data={professorsSelectData}
+                value={selectedAdvisor.profId}
+                onChange={(value) => {
+                  setSelectedAdvisor((prev) => ({
+                    ...prev,
+                    profId: value,
+                  }));
+                }}
+              />
+              <Button style={{ marginLeft: "20px" }} onClick={handleAdvisorSelect}>
+                등록
+              </Button>
             </BasicRow>
           </RowGroup>
           <RowGroup justify="center" withBorderBottom={false}>
