@@ -10,7 +10,7 @@ interface Props {
 }
 
 async function StudentAchievementPage({ params: { id } }: Props) {
-  await AuthSSR({ userType: "STUDENT" });
+  await AuthSSR({ userType: "STUDENT", otherUserType: "PHD" });
   return (
     <>
       <PageHeader title="연구실적 상세보기" />

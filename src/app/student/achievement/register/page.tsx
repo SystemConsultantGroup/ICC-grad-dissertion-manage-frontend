@@ -7,7 +7,7 @@ import PhaseReady from "@/components/pages/PhaseReady/PhaseReady";
 import AchievementRegisterSection from "@/components/pages/achievement/AchievementRegisterSection";
 
 async function StudentAchievementRegisterPage() {
-  const { token } = await AuthSSR({ userType: "STUDENT" });
+  const { token } = await AuthSSR({ userType: "STUDENT", otherUserType: "PHD" });
   const { within, start, end } = await checkPhase({ title: "연구 실적 제출", token });
 
   return within ? (

@@ -4,6 +4,7 @@ import NavLink from "@/components/common/AppShell/_elements/NavLink";
 import { Role } from "@/api/_types/user";
 import {
   ADMIN_NAVBAR_LIST,
+  PHD_NAVBAR_LIST,
   PROF_NAVBAR_LIST,
   STUDENT_NAVBAR_LIST,
   USER_TYPE_MAIN,
@@ -18,6 +19,7 @@ const USER_TYPE_NAVBAR_LIST = {
   ADMIN: ADMIN_NAVBAR_LIST,
   PROFESSOR: PROF_NAVBAR_LIST,
   STUDENT: (modificationFlag?: boolean) => STUDENT_NAVBAR_LIST(modificationFlag),
+  PHD: PHD_NAVBAR_LIST,
 };
 
 function NavbarList({ userType, modificationFlag }: Props) {
