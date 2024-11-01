@@ -26,12 +26,15 @@ import { SectionHeader } from "@/components/common/SectionHeader";
 import { IconDownload } from "@tabler/icons-react";
 import { Table } from "@/components/common/Table";
 import Pagination from "@/components/common/Pagination";
-import { PagedReviewsRequestQuery } from "@/api/_types/reviews";
+import { PagedProfReviewsRequestQuery, PagedReviewsRequestQuery } from "@/api/_types/reviews";
 import useReviews from "@/api/SWR/useReviews";
 import { DATE_TIME_FORMAT_HYPHEN } from "@/constants/date";
 import { DepartmentSelect } from "@/components/common/selects/DepartmentSelect";
 import { PAGE_NUMBER_GET_ALL, PAGE_SIZE_GET_ALL } from "@/constants/pagination";
 import { STAGE_LOOKUP_TABLE } from "@/api/_types/common";
+import { fetcher } from "@/api/fetcher";
+import { PhasesResponse } from "@/api/_types/phase";
+import { useAuth } from "@/components/common/AuthProvider";
 import { REFRESH_DEFAULT_PAGE_NUMBER } from "../_constants/page";
 import { TChangeQueryArg } from "../_types/common";
 import { PROF_REVIEW_TABLE_HEADERS } from "../_constants/table";
@@ -41,11 +44,18 @@ interface Props {
 }
 
 function ProfReviewListSection({ isFinal }: Props) {
+  const { token } = useAuth();
   const { push } = useRouter();
+
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+  const [dateLoading, setDateLoading] = useState(false);
+
   const [pageSize, setPageSize] = useState<string | null>(String(PAGE_SIZES[0]));
   const [pageNumber, setPageNumber] = useState(1);
   const pageSizeNumber = Number(pageSize);
-  const [query, setQuery] = useDebouncedState<PagedReviewsRequestQuery>(
+
+  const [query, setQuery] = useDebouncedState<PagedProfReviewsRequestQuery>(
     {
       pageNumber,
       pageSize: pageSizeNumber,
@@ -56,7 +66,11 @@ function ProfReviewListSection({ isFinal }: Props) {
     data: reviews,
     isLoading,
     pageData,
-  } = useReviews({ ...query, pageNumber, pageSize: pageSizeNumber }, isFinal);
+  } = useReviews(
+    { startDate, endDate, ...query, pageNumber, pageSize: pageSizeNumber },
+    isFinal,
+    dateLoading
+  );
 
   const { startNumber } = getPageSizeStartEndNumber({
     pageNumber,
@@ -77,6 +91,8 @@ function ProfReviewListSection({ isFinal }: Props) {
       ...query,
       pageSize: PAGE_SIZE_GET_ALL,
       pageNumber: PAGE_NUMBER_GET_ALL,
+      startDate: query.startDate ? query.startDate.toISOString() : undefined,
+      endDate: query.endDate ? query.endDate.toISOString() : undefined,
     });
 
     const isAll = option === "all";
@@ -104,6 +120,22 @@ function ProfReviewListSection({ isFinal }: Props) {
   useEffect(() => {
     setPageNumber(REFRESH_DEFAULT_PAGE_NUMBER);
   }, [pageSize]);
+
+  useEffect(() => {
+    const fetchDate = async () => {
+      setDateLoading(false);
+      const data = (await fetcher({ url: API_ROUTES.phase.get(), token })) as PhasesResponse;
+      const thesisPhase = data.phases.find((phase) => phase.title.includes("예심 논문 제출"));
+      const reviewPhase = data.phases.find((phase) => phase.title.includes("본심 최종 심사"));
+
+      setStartDate(thesisPhase?.start ? new Date(thesisPhase.start) : null);
+      setEndDate(reviewPhase?.end ? new Date(reviewPhase.end) : null);
+      setDateLoading(true);
+    };
+    if (token) {
+      fetchDate();
+    }
+  }, [token]);
 
   return (
     <Stack>
