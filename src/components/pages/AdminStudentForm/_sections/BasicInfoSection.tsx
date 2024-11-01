@@ -18,6 +18,7 @@ interface Props {
   open: () => void;
   token?: boolean;
   isPhd?: boolean;
+  phdLoading?: boolean;
 }
 
 function BasicInfoSection({
@@ -28,6 +29,7 @@ function BasicInfoSection({
   open,
   token,
   isPhd,
+  phdLoading,
 }: Props) {
   const [phase, setPhase] = useState<Phase>();
   const [defaultDepartmentId, setDefaultDepartmentId] = useState<string | null>(null);
@@ -42,9 +44,11 @@ function BasicInfoSection({
           const studentDetails = response.data;
 
           // 시스템 정보 조회
-          const sysResponse = await ClientAxios.get(API_ROUTES.student.getSystem(studentId));
-          const sysDetails = sysResponse.data;
-          setPhase(sysDetails.phase);
+          if (!isPhd && !phdLoading) {
+            const sysResponse = await ClientAxios.get(API_ROUTES.student.getSystem(studentId));
+            const sysDetails = sysResponse.data;
+            setPhase(sysDetails.phase);
+          }
 
           form.setFieldValue("basicInfo", {
             loginId: studentDetails.loginId,
