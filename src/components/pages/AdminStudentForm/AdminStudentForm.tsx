@@ -22,9 +22,10 @@ import MainRegisterModal from "./_sections/MainRegisterModal";
 
 interface Props {
   studentId?: string | number;
+  token?: string;
 }
 
-function AdminStudentForm({ studentId }: Props) {
+function AdminStudentForm({ studentId, token }: Props) {
   const router = useRouter();
   const { login, isLoading, user } = useAuth();
   const [isPwEditing, setIsPwEditing] = useState<boolean>(false);
@@ -41,6 +42,7 @@ function AdminStudentForm({ studentId }: Props) {
     handleReviewersSet,
   } = useReviewersAssign();
   const [isPhd, setIsPhd] = useState<boolean>(false);
+  const [phdLoading, setPhdLoading] = useState<boolean>(true);
 
   const form = useForm<AdminStudentFormInputs>({
     initialValues: {
@@ -283,7 +285,7 @@ function AdminStudentForm({ studentId }: Props) {
           showNotificationSuccess({ message: "학생 등록이 완료되었습니다." });
           router.push("/admin/students");
         } else {
-          await ClientAxios.post(API_ROUTES.student.put(studentId), basicInfo);
+          await ClientAxios.put(API_ROUTES.student.put(studentId), basicInfo);
           showNotificationSuccess({ message: "학생 정보 수정이 완료되었습니다." });
           router.push(`/admin/students/${studentId}`);
           router.refresh();
@@ -304,7 +306,23 @@ function AdminStudentForm({ studentId }: Props) {
     }
   }, [isLoading]);
 
-  useEffect(() => {}, [isPhd]);
+  useEffect(() => {
+    const fetchPhd = async () => {
+      if (studentId && token) {
+        const { data } = await ClientAxios.get(API_ROUTES.student.get(studentId), {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (data.type === "PHD") {
+          setIsPhd(true);
+        }
+        setPhdLoading(false);
+      }
+    };
+    fetchPhd();
+  }, [studentId, token]);
+
   return (
     <>
       <Modal
@@ -329,7 +347,7 @@ function AdminStudentForm({ studentId }: Props) {
           </Group>
         </Stack>
       </Modal>
-      {studentId && (
+      {studentId && !isPhd && !phdLoading && (
         <MainRegisterModal studentId={studentId} opened={opened} close={close} token={isAdmin} />
       )}
       <form onSubmit={isPhd ? form.onSubmit(handlePhd) : form.onSubmit(handleSubmit)}>
@@ -369,8 +387,9 @@ function AdminStudentForm({ studentId }: Props) {
             open={open}
             token={isAdmin}
             isPhd={isPhd}
+            phdLoading={phdLoading}
           />
-          {!isPhd && (
+          {!isPhd && !phdLoading ? (
             <AssignReviewerSection
               studentId={studentId}
               headReviewer={headReviewer}
@@ -380,9 +399,13 @@ function AdminStudentForm({ studentId }: Props) {
               onChangeReviewerCancle={handleReviewerCancel}
               onChangeReviewersSet={handleReviewersSet}
               token={isAdmin}
+              isPhd={isPhd}
+              phdLoading={phdLoading}
             />
+          ) : (
+            <></>
           )}
-          {!isPhd ? (
+          {!isPhd && !phdLoading ? (
             studentId ? (
               <ThesisInfoSection studentId={studentId} token={isAdmin} />
             ) : (

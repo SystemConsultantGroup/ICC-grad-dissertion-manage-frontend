@@ -33,6 +33,9 @@ interface Props {
     _advisors: Professor[],
     _committees: Professor[]
   ) => void;
+
+  isPhd: boolean;
+  phdLoading: boolean;
 }
 
 interface SelectedReviewer {
@@ -49,6 +52,8 @@ function AssignReviewerSection({
   committees,
   studentId,
   token = false,
+  isPhd,
+  phdLoading,
 }: Props) {
   /** 교수 목록, 학과 목록 조회 */
   const {
@@ -144,7 +149,7 @@ function AssignReviewerSection({
     };
 
     const fetchReviewer = async () => {
-      if (studentId && onChangeReviewersSet && token) {
+      if (studentId && onChangeReviewersSet && token && !isPhd && !phdLoading) {
         const response = await ClientAxios.get(API_ROUTES.student.getReviewer(Number(studentId)));
         const reviewerDetails = response.data;
         onChangeReviewersSet(

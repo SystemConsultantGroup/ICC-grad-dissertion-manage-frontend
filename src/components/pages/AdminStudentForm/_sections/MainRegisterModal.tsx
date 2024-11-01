@@ -88,6 +88,8 @@ function MainRegisterModal({ studentId, opened, close, token }: Props) {
             onChangeReviewerCancle={handleReviewerCancel}
             onChangeReviewersSet={handleReviewersSet}
             token={token}
+            isPhd={false}
+            phdLoading={false}
           />
           <ThesisTitleSection form={sysMainForm} />
           <RowGroup>

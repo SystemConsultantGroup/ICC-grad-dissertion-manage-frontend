@@ -10,13 +10,13 @@ interface Props {
 }
 
 export default async function StudentRegisterPage({ params: { id } }: Props) {
-  await AuthSSR({ userType: "ADMIN" });
+  const auth = await AuthSSR({ userType: "ADMIN" });
 
   return (
     <>
       <PageHeader title="학생 현황 및 수정" />
       <Section>
-        <AdminStudentForm studentId={id} />
+        <AdminStudentForm studentId={id} token={auth.token} />
       </Section>
     </>
   );
