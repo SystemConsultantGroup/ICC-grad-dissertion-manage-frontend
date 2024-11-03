@@ -125,11 +125,10 @@ function ProfReviewListSection({ isFinal }: Props) {
     const fetchDate = async () => {
       setDateLoading(false);
       const data = (await fetcher({ url: API_ROUTES.phase.get(), token })) as PhasesResponse;
-      const thesisPhase = data.phases.find((phase) => phase.title.includes("예심 논문 제출"));
-      const reviewPhase = data.phases.find((phase) => phase.title.includes("본심 최종 심사"));
+      const thesisPhase = data.phases.find((phase) => phase.title.includes("금학기 기간 설정"));
 
       setStartDate(thesisPhase?.start ? new Date(thesisPhase.start) : null);
-      setEndDate(reviewPhase?.end ? new Date(reviewPhase.end) : null);
+      setEndDate(thesisPhase?.end ? new Date(thesisPhase.end) : null);
       setDateLoading(true);
     };
     if (token) {
