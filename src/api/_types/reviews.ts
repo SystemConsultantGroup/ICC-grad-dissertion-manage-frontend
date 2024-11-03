@@ -110,6 +110,18 @@ export type PagedReviewsRequestQuery = PagedQueryRequest &
     summary: Status;
   }>;
 
+export type PagedProfReviewsRequestQuery = PagedQueryRequest &
+  Partial<{
+    author: string;
+    department: string;
+    stage: Stage;
+    title: string;
+    status: Status;
+    summary: Status;
+    startDate: Date | null;
+    endDate: Date | null;
+  }>;
+
 export type PagedRevisionRequestQuery = PagedQueryRequest &
   Partial<{ author: string; department: string; title: string; contentStatus: Status }>;
 
