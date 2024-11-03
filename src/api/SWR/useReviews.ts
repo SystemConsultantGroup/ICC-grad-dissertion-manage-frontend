@@ -3,7 +3,7 @@
 import { API_ROUTES } from "@/api/apiRoute";
 import { useAuth } from "@/components/common/AuthProvider";
 import { useConditionalSWR } from "./useConditionalSWR";
-import { PagedReviewsRequestQuery, PagedReviewsResponse } from "../_types/reviews";
+import { PagedProfReviewsRequestQuery, PagedReviewsResponse } from "../_types/reviews";
 
 /**
  * @description 심사대상 목록 조회
@@ -12,7 +12,11 @@ import { PagedReviewsRequestQuery, PagedReviewsResponse } from "../_types/review
  * @param isFinal true면 최종심사, false 기본값
  * @default shouldFetch = true
  */
-function useReviews(queryParams: PagedReviewsRequestQuery, isFinal: boolean, shouldFetch = true) {
+function useReviews(
+  queryParams: PagedProfReviewsRequestQuery,
+  isFinal: boolean,
+  shouldFetch = true
+) {
   const { token } = useAuth();
   const query = { ...queryParams };
 
