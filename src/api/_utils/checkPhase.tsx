@@ -13,8 +13,11 @@ export async function checkPhase({ title, token }: Params) {
   const targetPhase = data.phases.find((phase) => phase.title.includes(title));
 
   const now = new Date();
+  now.setHours(now.getHours() + 9);
+
   const start = new Date(targetPhase!.start);
   const end = new Date(targetPhase!.end);
+
   const within = start <= now && now <= end;
   const after = end < now;
 

@@ -32,6 +32,8 @@ function BasicInfoSection({
   phdLoading,
 }: Props) {
   const [phase, setPhase] = useState<Phase>();
+  const [phaseLoading, setPhaseLoading] = useState<boolean>(true);
+
   const [defaultDepartmentId, setDefaultDepartmentId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -42,13 +44,6 @@ function BasicInfoSection({
           // 기본 정보 조회
           const response = await ClientAxios.get(API_ROUTES.student.get(studentId));
           const studentDetails = response.data;
-
-          // 시스템 정보 조회
-          if (!isPhd && !phdLoading) {
-            const sysResponse = await ClientAxios.get(API_ROUTES.student.getSystem(studentId));
-            const sysDetails = sysResponse.data;
-            setPhase(sysDetails.phase);
-          }
 
           form.setFieldValue("basicInfo", {
             loginId: studentDetails.loginId,
@@ -66,6 +61,23 @@ function BasicInfoSection({
     };
     fetchStudentDetails();
   }, [studentId, token]);
+
+  useEffect(() => {
+    const loadPhase = async () => {
+      setPhaseLoading(true);
+      // 시스템 정보 조회
+      if (!isPhd && !phdLoading && studentId) {
+        const sysResponse = await ClientAxios.get(API_ROUTES.student.getSystem(studentId));
+        const sysDetails = sysResponse.data;
+        setPhase(sysDetails.phase);
+      }
+      setPhaseLoading(false);
+    };
+
+    if (studentId) {
+      loadPhase();
+    }
+  }, [isPhd, phdLoading, studentId]);
 
   return (
     <Stack gap={0}>
@@ -143,18 +155,21 @@ function BasicInfoSection({
           <RowGroup>
             <BasicRow field="시스템 단계">
               {studentId ? (
-                <>
-                  <Text style={{ width: 310 }}>{phase?.title}</Text>
-                  {phase?.id === 3 && (
-                    <ButtonRow
-                      buttons={[
-                        <Button key="switch" onClick={open}>
-                          본심 전환
-                        </Button>,
-                      ]}
-                    />
-                  )}
-                </>
+                !phaseLoading &&
+                phase && (
+                  <>
+                    <Text style={{ width: 310 }}>{phase?.title}</Text>
+                    {phase?.id === 3 && (
+                      <ButtonRow
+                        buttons={[
+                          <Button key="switch" onClick={open}>
+                            본심 전환
+                          </Button>,
+                        ]}
+                      />
+                    )}
+                  </>
+                )
               ) : (
                 <Select
                   placeholder="예심/본심 여부 선택"
