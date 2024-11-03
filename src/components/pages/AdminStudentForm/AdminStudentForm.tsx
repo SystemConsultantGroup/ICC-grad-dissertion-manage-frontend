@@ -321,6 +321,9 @@ function AdminStudentForm({ studentId, token }: Props) {
       }
     };
     fetchPhd();
+    if (!studentId) {
+      setPhdLoading(false);
+    }
   }, [studentId, token]);
 
   return (
