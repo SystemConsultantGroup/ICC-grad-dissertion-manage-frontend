@@ -27,6 +27,9 @@ export default function RootLayout({ children }: Props) {
             <AuthProvider>
               <Notifications />
               <AppShell>{children}</AppShell>
+              <footer style={{ textAlign: "center", fontSize: "12px" }}>
+                Copyright © 2024 성균관대학교 시스템컨설턴트그룹 All rights reserved.
+              </footer>
             </AuthProvider>
           </MantineProvider>
         </SWRProvider>
