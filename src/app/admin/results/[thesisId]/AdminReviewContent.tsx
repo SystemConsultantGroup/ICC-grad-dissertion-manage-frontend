@@ -165,9 +165,18 @@ function ModalContent({ open, setOpen, data, current }: ModalProps) {
             fileUUID = current.file.uuid ?? undefined;
           }
 
-          if (thesis === "UNEXAMINED" || presentation === "UNEXAMINED") {
-            showNotificationError({ message: "합격 여부를 선택해주세요." });
-            return;
+          if (current.isFinal !== false) {
+            // 최종 심사가 아닌경우, 둘 다 확인
+            if (thesis === "UNEXAMINED" || presentation === "UNEXAMINED") {
+              showNotificationError({ message: "합격 여부를 선택해주세요." });
+              return;
+            }
+          } else {
+            if (thesis === "UNEXAMINED") {
+              // 최종심사이면, 내용만 확인
+              showNotificationError({ message: "합격 여부를 선택해주세요." });
+              return;
+            }
           }
 
           if (
