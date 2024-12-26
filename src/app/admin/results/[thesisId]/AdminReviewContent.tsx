@@ -177,6 +177,7 @@ function ModalContent({ open, setOpen, data, current }: ModalProps) {
             }
           }
 
+          
           if (
             data.stage !== "REVISION" &&
             (commentType === undefined ||
