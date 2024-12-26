@@ -63,26 +63,12 @@ export interface Achievement {
   department: string;
   publicationDate: string;
   paperTitle: string;
-  professorIds: number[];
-  professorId1: number;
-  professorId2: number;
 }
 
 export interface PagedAchievementResponse extends PagedApiResponse<Achievement> {}
 export type PagedAchievementRequestQuery = PagedQueryRequest &
   Partial<
-    Omit<
-      Achievement,
-      | "name"
-      | "id"
-      | "department"
-      | "ISSN"
-      | "authorNumbers"
-      | "authorType"
-      | "professorIds"
-      | "professorId1"
-      | "professorId2"
-    > & {
+    Omit<Achievement, "name" | "id" | "department" | "ISSN" | "authorNumbers" | "authorType"> & {
       studentNumber: string;
       author: string;
       departmentId: string;
