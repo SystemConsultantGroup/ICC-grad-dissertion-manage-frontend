@@ -171,12 +171,10 @@ function ModalContent({ open, setOpen, data, current }: ModalProps) {
               showNotificationError({ message: "합격 여부를 선택해주세요." });
               return;
             }
-          } else {
-            if (thesis === "UNEXAMINED") {
-              // 최종심사이면, 내용만 확인
-              showNotificationError({ message: "합격 여부를 선택해주세요." });
-              return;
-            }
+          } else if (thesis === "UNEXAMINED") {
+            // 최종심사이면, 내용만 확인
+            showNotificationError({ message: "합격 여부를 선택해주세요." });
+            return;
           }
 
           if (
