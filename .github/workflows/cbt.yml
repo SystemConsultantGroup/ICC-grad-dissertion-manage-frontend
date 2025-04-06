@@ -5,7 +5,7 @@ on:
     branches: ["cbt"]
 env:
   dockerimage_tag: ${{ github.sha }}
-  dockerimage_name: harbor.k8s.scg.skku.ac.kr/library/ice-gs-thesis-fe
+  dockerimage_name: scgskku/ice-gs-thesis-fe-cbt
 jobs:
   build:
     runs-on: ubuntu-latest
