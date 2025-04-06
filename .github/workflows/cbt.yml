@@ -40,7 +40,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: env 파일 생성
         run: |
-          echo NEXT_PUBLIC_API_ENDPOINT=${{secrets.API_ENDPOINT}} >> .env
+          echo NEXT_PUBLIC_API_ENDPOINT=${{secrets.API_ENDPOINT_CBT}} >> .env
           cat .env
       - name: Docker 이미지 빌드+푸시
         id: build-and-push
